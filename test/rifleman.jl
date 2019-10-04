@@ -1,5 +1,11 @@
 # From Example From Causality, Page 212
 using MiniOmega
+using Test
+# The court orders an executiion with probability 0.5
+court_order = rv(bernoulli)
+
+# With probability 0.5 the rifleman is nervous and fires
+A_nervous = rv(bernoulli)
 
 # Rifleman A and B both fire if the court orders the exectuion
 # Hint: Functions (such as | 'or' ) of random variables are defined pointwise
@@ -19,4 +25,8 @@ alt_dead = doo(dead, riflemanA => false)
 counterfactual_dead = cond(!alt_dead, dead)
 
 # Hint: Use sample average to approximate mean
-prob(counterfactual_dead)
+p = prob(counterfactual_dead)
+
+
+# prob ≈ 0.33
+@test isapprox(p, 0.33, atol = 0.01)
