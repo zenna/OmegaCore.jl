@@ -1,17 +1,17 @@
 module MiniOmega
 
-using Distributions: Distribution
-import Distributions: logpdf
-
 const ID = NTuple{N, Int} where N
 
-include("tags.jl")
-include("omega.jl")
-include("var.jl")
+include("util.jl")              # Utilitiess
+include("tags.jl")              # Tags
+include("var.jl")               # Variables
+include("omega.jl")             # Sample Space / Distributions
+                                # Primitive Distributions
+include("primparam.jl")         # Primitive Parameters
 include("phi.jl")
-include("interventions.jl")
+include("interventions.jl")     # Causal interventions
 
-# include("pointwise.jl")
+# include("pointwise.jl")       # Syntactic sugar
 
 
 end

@@ -1,10 +1,10 @@
 using MiniOmega
 
-
-n = ~ finite(1:10)
-μ = ~ [normal(0, 1) for i = 1:n]
-s = sum(μ)
-
+@omega begin
+  n = ~ finite(1:10)
+  μ = ~ [normal(0, 1) for i = 1:n]
+  s = sum(μ)
+end
 
 μ = var(Real)
 b = Normal(μ, 1)

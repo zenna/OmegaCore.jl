@@ -1,19 +1,9 @@
 "Parameter space object"
-struct Φ{T}
+struct ΦStatic{T}
   data::T
 end
 
-unit(ϕ::Φ, T::Type{DT}) where DT = ...
+unit(ϕπ::Proj{<:ΦStatic}, T::Type{DT}) where DT = unproj(ϕπ).unit[ϕπ.id]
 choice(ϕ::Φ, T::Type{Bool}) = ...
 bounded(ϕ::Φ, T::Type{Bool}, lb, ub) = ...
 finite(ϕ::Φ, vals) = ...
-
-
-Ξ
-Ππ
-Ψ
-ψ
-Ψ
-Γ
-γ
-Λλ

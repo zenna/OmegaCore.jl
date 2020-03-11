@@ -1,60 +1,24 @@
-"""
 
-"""
-module Var
+# A projection of ω to some index id is simply ω[id]
+# Proj is a symbolic representation of this projection
+# It's useful to maintain a reference to the parent ω
 
-export unit, bounded, choice, finite, mix
-
-
-# # Primitives
-
-"""
-Choice over Boolean valued variable.
-
-`choice(ϕ, T)`
-"""
-function choice end
-
-"""
-A variable of type T bounded between 0 and 1
-
-```
-x(ϕ) = unit(ϕ, Float16)
-```
-"""
-function unit end
-
-"""
-A variable of type T bounded between `lb` and `ub`
-
-```julia
-function f(φ)
-  x = 1 ~ bounded(φ, Float64, 0.0, 10.0)
-  y = 2 ~ bounded(φ, Float64, 0.0, 10.0)
-  x + y
-end
-```
-"""
-bounded(φ, T, lb, ub) = unit(φ, T) * (ub - lb) + lb
-
-"""
-Variable ranging over finite set
-
-```
-finite(φ, 1:10)
-finite(φ, (1,2,3))
-```
-"""
-function finite end
-
-# # Composition
-
-"Mixture of free-variables"
-function mix(vars...)
-  function (ϕ)
-    i = finite(ϕ, 1:length(vars))
-    vars[i](ϕ)
-  end
+"id'th element of ω, with reference to parent"
+struct Proj{OM}
+  ω::OM
+  id::ID
 end
 
-end
+"Project `ω` onto `id`"
+proj(ω::Ω, id) = Proj(ω, id)
+proj(tω::Tagged{Ω{Z}}, id) where {Z} = copytag(tω, proj(tω.val, id))
+@inline unproj(π::Proj) = π.ω
+
+# # Conditional Independence
+
+appendscope(ω, id::ID) = tag(ω, (scope = ID,))
+rmscope(ω::Tagged) = rmkeys(ω, :scope)
+
+@inline ciid(f, id) = ω -> f(appendscope(ω, id))
+~(id, f) = ciid(f, id)
+~(f) = ω -> f(rmscope(ω))
