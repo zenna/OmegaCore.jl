@@ -17,7 +17,7 @@ function had(x, i::Intervention)
   end
 end
 
-function Cassette.overdub(ctx::HadCtx{Intervention{X, V}}, x::X, ω::Ω) where {X, V}
+function Cassette.overdub(ctx::HadCtx{Intervention{X, V}}, x::X, ω::AbstractΩ) where {X, V}
   if x == ctx.metadata.x
     @show :true
     ctx.metadata.v

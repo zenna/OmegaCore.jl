@@ -1,22 +1,30 @@
 using MiniOmega
 
-@omega begin
+function test_somwething()
   n = ~ finite(1:10)
-  μ = ~ [normal(0, 1) for i = 1:n]
+  μ = [~ normal(0, 1) for i = 1:n]
   s = sum(μ)
 end
 
-μ = var(Real)
-b = Normal(μ, 1)
-μmax = argmax(μ, entropy(b))
+function test_maximum_entropy()
+  x = 1 ~ normal(0, 1)
+  y = 2 ~ bounded(-4.0, 1.0)
+  z(ω) = x(ω) + y(ω)
 
-degree = poisson(0.9)
-function poly(φ)
-  x = 0.0
-  function f(x)
-    for i = 1:degree(φ)
-      x += var(Real)(φ)
+  # Find y which maximises entropy of x
+  argmax(y, mean(z))
+end
+
+function test_polynomial()
+  function polynomial(ω)
+    n = finite(ω, 1:10)
+    function (x)
+      y = 0.0
+      for i = 1:n
+        y += ~ normal(ω, 0, 1) * x^i
+      end
+      y
     end
-    x
   end
 end
+

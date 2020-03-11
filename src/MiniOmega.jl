@@ -1,14 +1,18 @@
 module MiniOmega
 
-const ID = NTuple{N, Int} where N
+
+export sample, ID
 
 include("util.jl")              # Utilitiess
 include("tags.jl")              # Tags
+
+include("space.jl")             # Sample/Paramter Spaces
 include("var.jl")               # Variables
-include("omega.jl")             # Sample Space / Distributions
-                                # Primitive Distributions
+
 include("primparam.jl")         # Primitive Parameters
-include("phi.jl")
+include("omega.jl")             # Sample Space / Distributions
+include("dist.jl")              # Primitive Distributions
+# include("phi.jl")
 include("interventions.jl")     # Causal interventions
 
 # include("pointwise.jl")       # Syntactic sugar

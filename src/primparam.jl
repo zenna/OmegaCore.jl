@@ -3,10 +3,13 @@
 """
 module Var
 
-export unit, bounded, choice, finite, mix
+export unit, bounded, choice, finite
+export isprimparam, PrimParam
 
 
 # # Primitives
+
+
 
 """
 Choice over Boolean valued variable.
@@ -47,14 +50,10 @@ finite(φ, (1,2,3))
 """
 function finite end
 
-# # Composition
 
-"Mixture of free-variables"
-function mix(vars...)
-  function (ϕ)
-    i = finite(ϕ, 1:length(vars))
-    vars[i](ϕ)
-  end
-end
+"Trait: Is `T` a primitive parameter function -- by default no"
+isprimparam(::Type{T}) where T = false
+# isprimparam(t::Type{T}) where {T <: Union{choice, unit, finite, bounded}} = true
+PrimParam = Union{typeof(choice), typeof(unit), typeof(finite), typeof(bounded)}
 
 end

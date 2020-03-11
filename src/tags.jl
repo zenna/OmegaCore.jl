@@ -1,4 +1,12 @@
 # # Tags
+# Tags attach meta-data which modulates the executuon of a model
+# This could be more elegantly performed with librarie ssuch as Cassette, but for performance reasons
+# we use ordinary julia.
+
+# Tags include:
+# logdensity  - accumulation of logdensity score of trace
+# rng         - random number generator
+# mem         - used for memoization
 
 "A value `val` tagged with data `tag`"
 struct Tagged{T, NT}
@@ -16,6 +24,17 @@ copytag(t1, t2) = Tagged(t2, t1.tag)
 copytag(t1, t2::Tagged) = error("t2 has tags, implement this")
 
 # Named Tuple stuff
+hastag(::Type{Tagged{T, NamedTuple{K, V}}}, tag) where {T, K, V} = tag in K
+@generated function hastag(t::T, tag::Type{Val{TAG}}) where {T <: Tagged, TAG}
+  hastag(T, TAG)
+end
+
+
+# # Random number generator
+using Random:AbstractRNG
+rng(t::Tagged) = t.tags.rng
+hasrng(::Type{T}) where {T <: Tagged} = hastag(T, Val{:rmg})
+tagrng(ω, rng::AbstractRNG) = tag(ω, (rng = rng,))
 
 """
 

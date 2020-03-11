@@ -1,46 +1,70 @@
 using Distributions: Distribution
 import Distributions: logpdf
 
-# # Sample Space / Trace
+(T::Type{<:Distribution})(ω::TAG{<:AbstractΩ}, args...) = T(proj(ω, (1,)), args...)
 
-"Sample space object"
-struct Ω{T}
+# # Simple Omega
+# Simplest, immutable Oemgas
+
+struct SimpleΩ{T} <: AbstractΩ
   data::T
 end
 
-# # Sampling
+(T::Type{<:Distribution})(ωπ::Proj{<:SimpleΩ}, args...) = π.ω.data[π.id]
+finite(π::Proj{<:SimpleΩ}, range) =  π.ω.data[π.id]
 
-# "Sample a random ω ∈ Ω"
-# sample(::Type{Ω{T}}) where T = Ω(T())
-# sample(f) = f(sample(Ω))
+# # Lazy Omega
+# Lazily constructs random values.
 
-# # Primitive Distributions
+"Sample space object"
+struct LazyΩ{T} <: AbstractΩ
+  data::T
+end
+
+LazyΩ{T}() where T = LazyΩ(T())
 
 # FIXME: get! should be omega type dependent
-(T::Type{<:Distribution})(ωπ::ΩProj, args...) =
-  get!(ωπ.ω.data, ωπ.id, rand(T(args...)))
+using Random
+rng(x) = Random.GLOBAL_RNG
+(T::Type{<:Distribution})(ωπ::Proj{<:LazyΩ}, args...) = get!(ωπ.ω.data, ωπ.id, rand(rng(ωπ), T(args...)))
 
-(T::Type{<:Distribution})(ω::TAG{Ω{Z}}, args...) where {Z} = T(proj(ω, (1,)), args...)
+sample(rng::AbstractRNG, ::Type{Ω}) where {Ω <: LazyΩ} = tagrng(Ω(), rng)
 
-# # Log pdf
+# Where is init defined?
+finite(π::Proj{<:LazyΩ}, range) =  get!(π.ω.data, π.id, init(range))
 
-"Logdensity of `rv` on input `ω`"
-function logpdf(rv, ω)
-  # FIXME: Don't double count
-  tω = Tagged(ω, (logpdf = Box(0.0), seen = Set{ID}()))
-  rv(tω)  
-  tω.tag.logpdf.val
-end
+# # Static Omega
+# Static Omega
 
-function (T::Type{<:Distribution})(ωπ::Tagged{ΩProj{OM}}, args...) where {OM}
-  ctx = ωπ.tag
-  ret = T(ωπ.val, args...)
+# "Static Omega"
+# struct StaticΩ{F} <: AbstractΩ
+#   f::F
+# end
 
-  # Avoid double counting
-  if ωπ.val.id ∉ ctx.seen
-    ctx.logpdf.val += logpdf(T(args...), ret)
-    push!(ctx.seen, ωπ.val.id)
-  end
-  ret
-end
+# g(x) =   
 
+# # Defaults
+
+"Default sample space"
+defΩ(args...) = LazyΩ{Dict{ID, Any}}
+
+
+
+
+# WHat's wrong with this
+# # - Should I use different types for param for distribution.
+=
+# Another way is to merge the ids as we did before
+
+
+
+# 4. Distributions over parameterixed functions. (unsure)
+
+# - What's to stop things from returning the wrong type of value
+# - type constraints
+# - unclear where init is deifned, or if thats how you want to definer params
+
+## How are we going to use this.  1. to just run the model
+## To manupulate these values
+# - should i be using a trait instead?
+# - doesn't work with rand
