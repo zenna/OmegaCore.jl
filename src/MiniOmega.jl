@@ -8,7 +8,10 @@ const ID = NTuple{N, Int} where N
 include("tags.jl")
 include("omega.jl")
 include("var.jl")
+include("phi.jl")
 include("interventions.jl")
+
+# include("pointwise.jl")
 
 
 end

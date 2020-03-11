@@ -1,41 +1,59 @@
-"""Free Variables
-How should variables and random vmariables interact
-
-opt 1:
-either I have free variables over parameters or random variables over free parameters
-\Omega -> \Phi -> \tau
-
-opt 2.
-\Phi -> \Omega -> \tau
-
-opt 3. combine them
-
-Ideally we'd have the flexibility to 
-resolve with values for free parametsr and get a random variables
-resolve with omega nad get a free parameter
-resolve with both
-
+"""
 
 """
 module Var
 
-function f(ϕ)
-  a = Real⁺(φ)
-  b = Normal(ω, 0, a)
+export unit, bounded, choice, finite, mix
+
+
+# # Primitives
+
+"""
+Choice over Boolean valued variable.
+
+`choice(ϕ, T)`
+"""
+function choice end
+
+"""
+A variable of type T bounded between 0 and 1
+
+```
+x(ϕ) = unit(ϕ, Float16)
+```
+"""
+function unit end
+
+"""
+A variable of type T bounded between `lb` and `ub`
+
+```julia
+function f(φ)
+  x = 1 ~ bounded(φ, Float64, 0.0, 10.0)
+  y = 2 ~ bounded(φ, Float64, 0.0, 10.0)
+  x + y
 end
+```
+"""
+bounded(φ, T, lb, ub) = unit(φ, T) * (ub - lb) + lb
 
-μ = var(Real)
-b = Normal(μ, 1)
-μmax = argmax(μ, entropy(b))
+"""
+Variable ranging over finite set
 
-degree = poisson(0.9)
-function poly(φ)
-  x = 0.0
-  function f(x)
-    for i = 1:degree(φ)
-      x += var(Real)(φ)
-    end
-    x
+```
+finite(φ, 1:10)
+finite(φ, (1,2,3))
+```
+"""
+function finite end
+
+# # Composition
+
+"Mixture of free-variables"
+function mix(vars...)
+  function (ϕ)
+    i = finite(ϕ, 1:length(vars))
+    vars[i](ϕ)
   end
 end
 
