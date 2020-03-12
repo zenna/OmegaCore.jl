@@ -1,5 +1,6 @@
 using Distributions: Distribution
 import Distributions: logpdf
+using Random
 
 (T::Type{<:Distribution})(ω::TAG{<:AbstractΩ}, args...) = T(proj(ω, (1,)), args...)
 
@@ -24,7 +25,6 @@ end
 LazyΩ{T}() where T = LazyΩ(T())
 
 # FIXME: get! should be omega type dependent
-using Random
 rng(x) = Random.GLOBAL_RNG
 (T::Type{<:Distribution})(ωπ::Proj{<:LazyΩ}, args...) = get!(ωπ.ω.data, ωπ.id, rand(rng(ωπ), T(args...)))
 
@@ -53,7 +53,7 @@ defΩ(args...) = LazyΩ{Dict{ID, Any}}
 
 # WHat's wrong with this
 # # - Should I use different types for param for distribution.
-=
+# =
 # Another way is to merge the ids as we did before
 
 

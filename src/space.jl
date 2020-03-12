@@ -14,7 +14,7 @@ const ID = NTuple{N, Int} where N
 # A projection of a sample space to some index id is simply.
 # Proj is a symbolic representation of this projection
 
-"id'th element of ω, with reference to parent"
+"`id`'th element of `ω`"
 struct Proj{OM}
   ω::OM
   id::ID

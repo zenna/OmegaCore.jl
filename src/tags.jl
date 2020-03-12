@@ -19,7 +19,7 @@ tag(val, tag) = Tagged(val, tag)
 
 const TAG{T, NT} = Union{T, Tagged{T, NT}}
 
-"Copy tags from `t1` to `t2`"
+"`Copy` tags from `t1` to `t2`"
 copytag(t1, t2) = Tagged(t2, t1.tag)
 copytag(t1, t2::Tagged) = error("t2 has tags, implement this")
 
