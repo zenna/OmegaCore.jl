@@ -6,16 +6,12 @@
 "Abstract Sample Space"
 abstract type AbstractΩ end
 
-# # ID
-const ID = NTuple{N, Int} where N
-
-
 # # Projection 
 # A projection of a sample space to some index id is simply.
 # Proj is a symbolic representation of this projection
 
 "`id`'th element of `ω`"
-struct Proj{OM}
+struct Proj{OM, ID}
   ω::OM
   id::ID
 end
@@ -27,4 +23,4 @@ end
 @inline unproj(π::Proj) = π.ω
 
 # Projection of a tagged value does the projection and retags
-proj(tω::Tagged{<:AbstractΩ}, id) = copytag(tω, proj(tω.val, id))
+proj(tω::Tagged{<:AbstractΩ}, id) = tag(proj(tω.val, id), tω.tag)

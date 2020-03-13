@@ -22,8 +22,10 @@ function handle_logpdf(T::Type{<:Distribution}, ret, tωπ::Tagged{Proj{OM}}, ar
 end
 
 # Handle tags
-function (T::Type{<:Distribution})(tωπ::Tagged{Proj{OM}}, args...) where {OM}
-  ret = T(tωπ.val, args...)
+function (T::Type{<:Distribution})(tωπ::Tagged{<:Proj{OM}}, args...) where {OM}
+  # Project to the scope id (this is what supports conditional independence)
+  ωπ = hastag(tωπ, Val{:scope}) ? proj(tωπ.val.ω, tωπ.tag.scope) : tωπ.val
+  ret = T(ωπ, args...)
   if hastag(tωπ, Val{:logpdf})
     handle_logpdf(T, ret, tωπ, args...)
   end

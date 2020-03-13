@@ -28,3 +28,11 @@ function test_polynomial()
   end
 end
 
+function tets_appendscope(ω1 = sample(defΩ()))
+  # @test !MiniOmega.hastag(ω1, Val{:scope})
+  # @test !MiniOmega.hastag(ω1, :scope)
+  ω2 = MiniOmega.appendscope(ω1, (1,))
+  # @test MiniOmega.hastag(ω2, Val{:scope})
+  ω3 = MiniOmega.rmscope(ω2)
+  # @test !MiniOmega.hastag(ω3, Val{:scope})
+end
