@@ -1,4 +1,4 @@
-using MiniOmega
+using OmegaCore
 using Test
 
 "From Example From Causality, Page 212"

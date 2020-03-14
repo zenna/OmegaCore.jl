@@ -1,4 +1,4 @@
-module MiniOmega
+module OmegaCore
 
 
 export sample, ID
@@ -11,7 +11,7 @@ include("rng.jl")               # Random number generation
 
 include("id.jl")                # IDs
 include("space.jl")             # Sample/Paramter Spaces
-include("var.jl")               # Variables
+include("sample.jl")            # Variables
 include("ciid.jl")              # Conditional Independence
 
 include("primparam.jl")         # Primitive Parameters
@@ -21,6 +21,11 @@ include("dist.jl")              # Primitive Distributions
 include("interventions.jl")     # Causal interventions
 
 # include("pointwise.jl")       # Syntactic sugar
+
+include("condition.jl")         # Condition these variables
+
+
+include("rejection.jl")         # Inference
 
 # Left to implement:
 # conditioning 

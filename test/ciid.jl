@@ -1,4 +1,4 @@
-using MiniOmega
+using OmegaCore
 using Test
 using Distributions
 

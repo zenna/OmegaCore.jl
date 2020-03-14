@@ -1,5 +1,5 @@
 using Test
-using MiniOmega
+using OmegaCore
 using Distributions
 
 function testintervention()
