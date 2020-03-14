@@ -22,5 +22,18 @@ include("interventions.jl")     # Causal interventions
 
 # include("pointwise.jl")       # Syntactic sugar
 
+# Left to implement:
+# conditioning 
+# argmax
+# Get gradients working zygote
+# rand
+# automatic id
+# workint intervene
+# memoization
+# Type stability
+# Replica exchange
+# Metropolis hastings
+# HMC
+# interact with soft predicates
 
 end
