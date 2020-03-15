@@ -20,7 +20,7 @@ include("dist.jl")              # Primitive Distributions
 # include("phi.jl")
 include("interventions.jl")     # Causal interventions
 
-# include("pointwise.jl")       # Syntactic sugar
+include("pointwise.jl")       # Syntactic sugar
 
 include("condition.jl")         # Condition these variables
 

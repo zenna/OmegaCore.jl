@@ -1,3 +1,5 @@
+export RejectionSample
+
 "Rejection Sampling"
 struct RejectionSample end
 
@@ -7,7 +9,7 @@ function sample(rng, ΩT::Type{OT}, f, n, alg::Type{RejectionSample}) where OT
   i = 1
   while accepted < n
     ω = sample(rng, ΩT)
-    issat = pred(Omega.Space.tagrng(ω, rng))
+    issat = f(Omega.Space.tagrng(ω, rng))
     if issat
       push!(ωsamples, ω)
       accepted += 1
