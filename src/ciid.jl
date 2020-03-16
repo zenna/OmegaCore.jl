@@ -4,9 +4,20 @@ export ~, ciid
 # It is useful to create independent and conditionally independent random variables
 # This has meaning for both random and free variables
 
-"""Conditionally independent copy of `f`
+# In order to
 
-if `g = ciid(f, id)` then `g` will be:
+struct CIID{ID, F}
+  id::ID
+  f::F
+end
+
+@inline (x::CIID)(ω) = x.f(appendscope(ω, x.id))
+
+"""
+Conditionally independent copy of `f`
+
+if `g = ciid(f, id)` then `g` will be identically distributed with `f`
+but conditionally independent given parents.
 """
 @inline ciid(f, id) = ω -> f(appendscope(ω, id))
 @inline ciid(f, id::Integer) = ciid(f, TupleID(id))

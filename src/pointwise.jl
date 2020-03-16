@@ -1,19 +1,19 @@
 export pw, ==ₚ, l, dl
-
+ 
 """
 Pointwise application.
 
 Pointwise function application gives meaning to expressions such as `x + y`  when `x` and `y` are functions.
 That is `x + y` is the function `ω -> x(ω) + y(ω)`.
 
-Pointwise works when `x` is a function but `y` is a constant, and so on.
+An argument can be either __lifted__ or __not lifted__.
+For example in `x = Normal(0, 1); y = pw(+, x, 3)`, `x` will be lifted but `3` will not be in the sense that
+`y` will resolve to `ω -> x(ω) + 3` and not `ω -> x(ω) + 3(ω)`.
 
-Principle:
-if x(ω) is defined or y(ω) is defined and f(x, y) is not defined then
-do pointwise application.
+`pw` uses some reasonable defaults for what to lift and what not to lift, but to have more explicit control use `l` and `dl` to
+lift and dont lift respectively.
 
-Is it safe to check whether a method exists?
-
+Example:
 ```
 using Distributions
 x(ω) = Uniform(ω, 0, 1)
@@ -21,7 +21,7 @@ y = pw(+, x, 4)
 
 f(ω) = Bool(Bernoulli(ω, 0.5)) ? sqrt : sin
 sample(pw(map, f, [0, 1, 2]))
-sample(pw(map, sqrt, [0, 1, 2]))
+sample(pw(map, sqrt, [0, 1, 2])) # Will error!
 sample(pw(map, dl(sqrt), [0, 1, 2]))
 sample(pw(l(f), 3))
 ```
@@ -42,33 +42,35 @@ end
 "`dl(x)` constructs object that indicates that `x` should be not applied pointwise.  See `pw`"
 dl(x) = DontLiftBox(x)
 
-# Trait functions
+# Traits
 struct Lift end
 struct DontLift end
 
+# Trait functions
 traitlift(::Type{T}) where T  = DontLift()
 traitlift(::Type{<:Function}) = Lift()
 traitlift(::Type{<:DataType}) = DontLift()
 traitlift(::Type{<:LiftBox}) = Lift()
 traitlift(::Type{<:DontLiftBox}) = DontLift()
 
-@inline constapply(f::T, ω) where T = constapply(traitlift(T), f, ω)
-@inline constapply(::DontLift, f, ω) = f
-@inline constapply(::DontLift, f::ABox, ω) = f.val
-@inline constapply(::Lift, f, ω) = f(ω)
-@inline constapply(::Lift, f::ABox, ω) = (f.val)(ω)
-@inline constapply(::Lift, f::ABox, ω::ABox) = (f.val)(ω.val)
-@inline constapply(::Lift, f, ω::ABox) = f(ω.val)
-@inline pw(f, x) = ω -> f(constapply(x, ω))
+@inline liftapply(f::T, ω) where T = liftapply(traitlift(T), f, ω)
+@inline liftapply(::DontLift, f, ω) = f
+@inline liftapply(::DontLift, f::ABox, ω) = f.val
+@inline liftapply(::Lift, f, ω) = f(ω)
+@inline liftapply(::Lift, f::ABox, ω) = (f.val)(ω)
+@inline liftapply(::Lift, f::ABox, ω::ABox) = (f.val)(ω.val)
+@inline liftapply(::Lift, f, ω::ABox) = f(ω.val)
+@inline pw(f, x) = ω -> f(liftapply(x, ω))
 
-@inline pw(f, x1, x2) = ω -> f(constapply(x1, ω), constapply(x2, ω))
-@inline pw(f, x1, x2, x3) = ω -> f(constapply(x1, ω), constapply(x2, ω), constapply(x1, ω), constapply(x3, ω))
-@inline pw(f, x1, args...) = ω -> f(constapply(x1, ω), (constapply(x, ω) for x in args)...)
+@inline pw(f, x1, x2) = ω -> f(liftapply(x1, ω), liftapply(x2, ω))
+@inline pw(f, x1, x2, x3) = ω -> f(liftapply(x1, ω), liftapply(x2, ω), liftapply(x1, ω), liftapply(x3, ω))
+@inline pw(f, x1, args...) = ω -> f(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
 
-@inline pw(f::LiftBox, x1, x2) = ω -> (constapply(f, ω))(constapply(x1, ω), constapply(x2, ω))
-@inline pw(f::LiftBox, x1, x2, x3) = ω -> (constapply(f, ω))(constapply(x1, ω), constapply(x2, ω), constapply(x1, ω), constapply(x3, ω))
-@inline pw(f::LiftBox, x1, args...) = ω -> (constapply(f, ω))(constapply(x1, ω), (constapply(x, ω) for x in args)...)
+@inline pw(f::LiftBox, x1, x2) = ω -> (liftapply(f, ω))(liftapply(x1, ω), liftapply(x2, ω))
+@inline pw(f::LiftBox, x1, x2, x3) = ω -> (liftapply(f, ω))(liftapply(x1, ω), liftapply(x2, ω), liftapply(x1, ω), liftapply(x3, ω))
+@inline pw(f::LiftBox, x1, args...) = ω -> (liftapply(f, ω))(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
 
+@inline pw(f) = args -> pw(f, args...)
 
 export ==ₚ, >=ₚ, <=ₚ
 @inline x ==ₚ y = pw(==, x, y)

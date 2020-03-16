@@ -1,34 +1,52 @@
 # # Causal interventions
 using Cassette
-export had
+export |ᵈ
+Cassette.@context OmegaCtx
 
-# Intervention Context
-Cassette.@context HadCtx
+# What's the logic of interventions 
+# How to avoid nested contexts
+
 "The assertion that `x` should be replaced to value `v`"
 struct Intervention{X, V}
   x::X
   v::V
 end
 
-"`x` had `i` been the case"
-function had(x, i::Intervention)
-  let ctx = HadCtx(metadata = i)
-    ω -> Cassette.overdub(ctx, x, ω)
-  end
+Intervention(x::Pair) = Intervention(x.first, x.second)
+
+"Intervened Variable: `x` had intervention `i` been the case"
+struct Intervened{X, I}
+  x::X
+  i::I
 end
 
-function Cassette.overdub(ctx::HadCtx{Intervention{X, V}}, x::X, ω::AbstractΩ) where {X, V}
-  if x == ctx.metadata.x
-    @show :true
-    ctx.metadata.v
+# if there's already a context append to it
+@inline (x::Intervened)(ω) = Cassette.overdub(OmegaCtx(metadata = (intervention = x.i,)), x.x, ω)
+
+test(ctx::OmegaCtx{NamedTuple{K, V}}) where {K, V} = K
+
+function Cassette.overdub(ctx::OmegaCtx{NamedTuple{K, V}}, x, ω::MaybeTagged{<:AbstractΩ}) where {K, V}
+  # @show K
+  # if :intervention in K
+  #   :(
+      handleintervention(ctx, ctx.metadata.intervention, x, ω)
+      # )
+  # else
+  #   :(Cassette.recurse(ctx, x, ω))
+  # end
+end
+
+@inline function handleintervention(ctx, i::Intervention{X, V}, x::X, ω) where {X, V}
+  if i.x == x
+    i.v
   else
-    @show :false
-    Cassette.recurse(ctx, x, ω)
+    Casstte.recurse(ctx, x, ω)
   end
 end
 
-# Sugar
+@inline handleintervention(ctx, ::Intervention, x, ω) = Cassette.recurse(ctx, x, ω)
 
-"Examples Syntax for `x | had(3 => x)`"
-had(xtov::Pair) = Intervention(xtov.first, xtov.second)
-Base.:|(x, i::Intervention) = had(x, i)
+# # Syntactic Sugar
+
+|ᵈ(x, intervention::Intervention) = Intervened(x, Intervention)
+|ᵈ(x, intervention) = Intervened(x, Intervention(intervention))

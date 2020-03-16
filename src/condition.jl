@@ -13,3 +13,13 @@ end
 "Thrown when conditions are violated"
 struct ConditionException <: Exception end
 (c::Conditional)(ω) = c.y(ω) ? c.x(ω) : throw(ConditionException())
+
+# function (c::Condition{X, Y} where {Y <: PointWise{typeof(==), }})
+#   # tricky because we want the log trace too
+# end
+
+function apply(f, x::AbstractΩ)
+
+end
+# Implement x(\omega) when x is conditioned
+# Imolement logpdf when `x` is conditioned

@@ -1,7 +1,7 @@
 module OmegaCore
 
 
-export sample, ID
+export sample
 
 include("util.jl")              # Utilities
 include("namedtuple.jl")        # Named tuple utilities
