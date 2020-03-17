@@ -7,7 +7,7 @@ function testintervention()
   x = 1 ~ ω -> Normal(ω, 0, 1)
   
   # Normally distributed random variable with id 2 and x as mean
-  y = 2 ~ (ω -> Normal(ω, x(ω), 1)) <| (x,)
+  y = 2 ~ ω -> Normal(ω, ~(x)(ω), 1))
   x_ = 0.1
   y_ = 0.3
 

@@ -4,8 +4,6 @@ using Distributions: Distribution
 import Distributions: logpdf
 using Random
 
-(T::Type{<:Distribution})(ω::MaybeTagged{<:AbstractΩ}, args...) = T(proj(ω, (1,)), args...)
-
 # # Simple Omega
 # Simplest, immutable Oemgas
 

@@ -18,12 +18,13 @@ function mergetag end
 @inline rmtag(t, tag) = Tagged(t.val, rmkey(t.tag, tag))
 @inline updatetag(t, tag, val) = Tagged(t.val, update(t.tag, tag, val))
 
-# # Tag Traits
-hastag(::Type{Tagged{T, NamedTuple{K, V}}}, tag) where {T, K, V} = tag in K
+hastag(::Type{Tagged{T, NamedTuple{K, V}}}, tag::Symbol) where {T, K, V} = tag in K
+hastag(::T, tag::Symbol) where {T <: Tagged } = hastag(T, tag)
 @generated function hastag(t::T, tag::Type{Val{TAG}}) where {T <: Tagged, TAG}
   hastag(T, TAG)
 end
 
+# Tag Traits
 "Trait type to denote Tagged type with tag"
 struct HasTag{T} end
 

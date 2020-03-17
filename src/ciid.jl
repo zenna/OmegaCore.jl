@@ -4,14 +4,13 @@ export ~, ciid
 # It is useful to create independent and conditionally independent random variables
 # This has meaning for both random and free variables
 
-# In order to
 
-struct CIID{ID, F}
+struct Variable{ID, F}
   id::ID
   f::F
 end
 
-@inline (x::CIID)(ω) = x.f(appendscope(ω, x.id))
+@inline (x::Variable)(ω) = x.f(appendscope(ω, x.id))
 
 """
 Conditionally independent copy of `f`
