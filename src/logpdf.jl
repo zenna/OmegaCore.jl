@@ -1,3 +1,5 @@
+import Distributions: logpdf
+
 # # Log pdf
 # The Log pdf of a trace is important for conditioning and inference
 
@@ -9,7 +11,7 @@ function logpdf(rv, ω)
   tω.tag.logpdf.val
 end
 
-function handle_logpdf(T::Type{<:Distribution}, ret, tωπ::Tagged{Proj{OM}}, args...) where {OM}
+function handle_logpdf(T::Type{<:Distribution}, ret, ω, args...)
   # Preconditions: \omega is tagged with lopdf and seen
   if tωπ.val.id ∉ tωπ.tag.seen
     tωπ.tag.logpdf.val += logpdf(T(args...), ret)

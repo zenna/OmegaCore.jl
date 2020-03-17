@@ -2,15 +2,13 @@
 # .. Why do we need a projection when we have a scope?
 # .. And the scope is 
 
-abstract type Variable end
-
 
 # (T::Type{<:Distribution})(ω::MaybeTagged{<:AbstractΩ}, args...) = T(proj(ω, (1,)), args...)
 
 
 # Variable = Union{}
 
-# function (V::Variable)(tπ::Tagged{<:Proj{OM}}) where OM
+# function (V::Variable)(tπ::AbstractΩ)
 #   if hastag(tπ, :intervene)
 #     handle_intervene(tπ.val.tag.intervene,)
 #   end

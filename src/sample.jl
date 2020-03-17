@@ -1,5 +1,5 @@
-using Random: AbstractRNG, GLOBAL_RNG
 export sample
+using Random: AbstractRNG, GLOBAL_RNG
 
 # # Variable
 # A random variable is a function from a sample space.

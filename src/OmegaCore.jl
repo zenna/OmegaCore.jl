@@ -20,7 +20,7 @@ include("dispatch.jl")          # Primitive Distributions
 # include("phi.jl")
 
 
-include("interventions.jl")     # Causal interventions
+include("intervene.jl")     # Causal interventions
 include("cassette.jl")
 include("causal.jl")
 

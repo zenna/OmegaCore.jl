@@ -1,6 +1,9 @@
 # # ID
 const TupleID = NTuple{N, Int} where N
 
+tupleid(i::Integer) = (i,)
+tupleid(i::NTuple{I, <: Integer}) where I = i
+
 # # Interface to ids
 
 "`base(::Type{T}, i)` singleton (`i`,) of collection type `T` "

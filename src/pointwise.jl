@@ -80,5 +80,5 @@ export ==ₚ, >=ₚ, <=ₚ
 # Collections
 @inline randcollection(xs) = ω -> map(x -> liftapply(x, ω), xs)
 struct LiftConst end
-const ₚ - LiftConst
+const ₚ = LiftConst()
 Base.:*(xs, ::LiftConst) = randcollection(xs)
