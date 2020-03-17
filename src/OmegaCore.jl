@@ -16,34 +16,36 @@ include("ciid.jl")              # Conditional Independence
 include("primparam.jl")         # Primitive Parameters
 include("omega.jl")             # Sample Space / Distributions
 
-include("dispatch.jl")          # Primitive Distributions
-# include("phi.jl")
-
-
-include("intervene.jl")     # Causal interventions
+include("intervene.jl")         # Causal interventions
 include("cassette.jl")
 include("causal.jl")
 
+include("condition.jl")         # Conditioning variables
 
-include("pointwise.jl")       # Syntactic sugar
+include("rejection.jl")         # Rejection sampling Inference
 
-include("condition.jl")         # Condition these variables
+include("dispatch.jl")          # Primitive Distributions
 
+include("pointwise.jl")         # Syntactic sugar
 
-include("rejection.jl")         # Inference
 
 # Left to implement:
-# conditioning 
-# argmax
-# Get gradients working zygote
-# rand
-# automatic id
-# workint intervene
-# memoization
-# Type stability
-# Replica exchange
-# Metropolis hastings
-# HMC
+# automatic id                 
+# Static ids                   
+# Memoization                  
+# argmax                       
+# memoization                  
+# Get gradients working zygote 
+# rand                         
+# Replica exchange             
+# HMC                          
+# Spec automatic testing       
+# Metropolis hastings          
 # interact with soft predicates
+# Type stability               
+# working intervene            
+# conditioning                 
+
+
 
 end
