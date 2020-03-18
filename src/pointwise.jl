@@ -50,6 +50,7 @@ struct DontLift end
 traitlift(::Type{T}) where T  = DontLift()
 traitlift(::Type{<:Function}) = Lift()
 traitlift(::Type{<:Variable}) = Lift()
+traitlift(::Type{<:Scoped}) = Lift()
 traitlift(::Type{<:DataType}) = DontLift()
 traitlift(::Type{<:LiftBox}) = Lift()
 traitlift(::Type{<:DontLiftBox}) = DontLift()

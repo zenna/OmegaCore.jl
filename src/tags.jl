@@ -2,7 +2,7 @@
 # Tags attach meta-data which modulates function application.
 
 "Meta data to attach to ω::Ω"
-const Tags{K, V} = NamedTuple{K, V}
+const Tags = NamedTuple
 
 function mergetag end 
 

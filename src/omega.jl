@@ -1,4 +1,4 @@
-export defΩ
+export defΩ, SimpleΩ, LazyΩ
 
 using Distributions: Distribution
 using Random
@@ -15,6 +15,8 @@ struct SimpleΩ{TAGS, T} <: AbstractΩ
   tags::TAGS
 end
 
+SimpleΩ(data) = SimpleΩ(data, Tags())
+
 (T::Type{<:Distribution})(π::SimpleΩ, args...) = ω.data[scope(ω)]
 tag(ω::SimpleΩ, tags) = SimpleΩ(ω.data, mergef(mergetag, ω.tags, tags))
 rmtag(ω::SimpleΩ, tag) = SimpleΩ(ω.data, rmkey(ω.tags, tag))
@@ -30,7 +32,8 @@ struct LazyΩ{TAGS, T} <: AbstractΩ
   tags::TAGS
 end
 
-LazyΩ{T}() where T = LazyΩ(T(), NamedTuple())
+LazyΩ{T}() where T = LazyΩ(T(), Tags())
+
 tag(ω::LazyΩ, tags) = LazyΩ(ω.data, mergef(mergetag, ω.tags, tags))
 rmtag(ω::LazyΩ, tag) = LazyΩ(ω.data, rmkey(ω.tags, tag))
 updatetag(ω::LazyΩ, tag, val) = LazyΩ(ω.data, update(ω.tags, tag, val))
@@ -43,7 +46,7 @@ traithastag(t::Type{LazyΩ{TAGS, T}}, tag) where {TAGS, T} = traithastag(TAGS, t
 
 (d::Distribution)(ω::LazyΩ) = get!(ω.data, scope(ω), rand(rng(ω), d))::eltype(d)
 
-sample(rng::AbstractRNG, ::Type{Ω}) where {Ω <: LazyΩ} = tagrng(Ω(), rng)
+randsample(rng::AbstractRNG, ::Type{Ω}) where {Ω <: LazyΩ} = tagrng(Ω(), rng)
 
 # # Where is init 
 "Default sample space"

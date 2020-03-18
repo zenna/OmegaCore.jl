@@ -1,4 +1,4 @@
-export sample
+export randsample
 using Random: AbstractRNG, GLOBAL_RNG
 
 # # Variable
@@ -7,6 +7,6 @@ using Random: AbstractRNG, GLOBAL_RNG
 
 # # Sampling
 
-sample(rng::AbstractRNG, f) = f(sample(rng, defΩ(f)))
-sample(f) = sample(GLOBAL_RNG, f)
+randsample(rng::AbstractRNG, f) = f(randsample(rng, defΩ(f)))
+randsample(f) = randsample(GLOBAL_RNG, f)
 

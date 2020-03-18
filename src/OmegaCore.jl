@@ -12,6 +12,7 @@ include("id.jl")                # IDs
 include("space.jl")             # Sample/Paramter Spaces
 include("sample.jl")            # Variables
 include("ciid.jl")              # Conditional Independence
+include("var.jl")               # Variable
 
 include("primparam.jl")         # Primitive Parameters
 include("distributions.jl")         # Primitive Parameters

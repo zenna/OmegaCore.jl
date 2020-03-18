@@ -11,7 +11,7 @@ struct Scoped{ID, F}
   f::F
 end
 
-@inline (x::Scoped)(ω) = @show x.f(appendscope(ω, x.id))
+@inline (x::Scoped)(ω) = x.f(appendscope(ω, x.id))
 
 """
 Conditionally independent copy of `f`

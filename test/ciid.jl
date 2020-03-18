@@ -7,7 +7,7 @@ function samplemodel()
   x = 1 ~ Normal(0, 1)
   y = 2 ~ Normal(0, 1)
   z(ω) = (x(ω), y(ω), x(ω))
-  sample(z)
+  randsample(z)
 end
 
 function test_ciid()
@@ -22,7 +22,7 @@ function test_shared_parent()
   x1 = 2 ~ x
   x2 = 3 ~ x
   z = ω -> (x1(ω), x2(ω))
-  samples = [sample(z) for i = 1:10]
+  samples = [randsample(z) for i = 1:10]
   t1 = [(x1_ != x2_) for (x1_, x2_) in samples]
   t2 = [(abs(x1_ - x2_) <= 2) for (x1_, x2_) in samples]
   @test all(t1)
