@@ -1,0 +1,16 @@
+
+
+struct MyDist
+  μ::Float64
+  σ::Float64
+end
+
+OmegaCore.logpdf(d::MyDist, ret, μ, σ) = exp(μ, σ)
+
+function f(ω)
+  x = Normal(0, 1)(ω)
+  y = Normal(0, 1)(ω)
+  z = sqrt(x + y) / 2.0
+end
+
+OmegaCore.logpdf(::typeof(f), x) = sqrt(x)

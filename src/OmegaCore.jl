@@ -14,6 +14,7 @@ include("sample.jl")            # Variables
 include("ciid.jl")              # Conditional Independence
 
 include("primparam.jl")         # Primitive Parameters
+include("distributions.jl")         # Primitive Parameters
 include("omega.jl")             # Sample Space / Distributions
 
 include("intervene.jl")         # Causal interventions

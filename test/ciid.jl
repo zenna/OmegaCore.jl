@@ -4,8 +4,8 @@ using Test
 using Distributions
 
 function samplemodel()
-  x = 1 ~ ω -> Normal(ω, 0, 1)
-  y = 2 ~ ω -> Normal(ω, 0, 1)
+  x = 1 ~ Normal(0, 1)
+  y = 2 ~ Normal(0, 1)
   z(ω) = (x(ω), y(ω), x(ω))
   sample(z)
 end
@@ -17,8 +17,8 @@ function test_ciid()
 end
 
 function test_shared_parent()
-  parent = 1 ~ ω -> Bool(Bernoulli(ω, 0.5)) ? -100 : 100
-  x(ω) = (~parent)(ω) + Uniform(ω, 0, 1)
+  parent = 1 ~ ω -> Bool(Bernoulli(0.5)(ω)) ? -100 : 100
+  x(ω) = (~parent)(ω) + Uniform(0, 1)(ω)
   x1 = 2 ~ x
   x2 = 3 ~ x
   z = ω -> (x1(ω), x2(ω))

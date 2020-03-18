@@ -2,7 +2,7 @@
   if i.x == x
     i.v
   else
-    x(ω)
+    x.f(ω)
   end
 end
 

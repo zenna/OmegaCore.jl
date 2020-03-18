@@ -5,12 +5,13 @@ export ~, ciid
 # This has meaning for both random and free variables
 
 
-struct Variable{ID, F}
+"Variable that introduces scope"
+struct Scoped{ID, F}
   id::ID
   f::F
 end
 
-@inline (x::Variable)(ω) = @show x.f(appendscope(ω, x.id))
+@inline (x::Scoped)(ω) = @show x.f(appendscope(ω, x.id))
 
 """
 Conditionally independent copy of `f`
@@ -18,7 +19,7 @@ Conditionally independent copy of `f`
 if `g = ciid(f, id)` then `g` will be identically distributed with `f`
 but conditionally independent given parents.
 """
-@inline ciid(f, id) = Variable(id, f)
+@inline ciid(f, id) = Scoped(id, f)
 @inline ciid(f, id::Integer) = ciid(f, tupleid(id))
 
 "Alias for `ciid(f, i)`"
@@ -29,7 +30,7 @@ but conditionally independent given parents.
 
 "append `id` to the scope"
 appendscope(ω::T, id) where T = appendscope(ω, id, traithastag(T, Val{:scope}))
-appendscope(ω, id, ::HasTag{:scope}) = updatetag(ω, append(id, ω.tags.scope))
+appendscope(ω, id, ::HasTag{:scope}) = updatetag(ω, Val{:scope}, append(id, ω.tags.scope))
 appendscope(ω, id, _) = tag(ω, (scope = id,))
 
 rmscope(ω::T) where T = rmscope(ω, traithastag(T, Val{:scope}))

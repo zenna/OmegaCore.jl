@@ -19,4 +19,4 @@ function append end
 function increment end
 
 # # Tuple id type
-@inline append(a::Tuple, b) = (a..., b)
+@inline append(a::Tuple, b::Tuple) = (a..., b...)
