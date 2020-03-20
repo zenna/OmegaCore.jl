@@ -6,7 +6,7 @@ export ~, ciid
 
 
 "Variable that introduces scope"
-struct Scoped{ID, F}
+struct Scoped{ID, F} <: Var
   id::ID
   f::F
 end
@@ -32,6 +32,7 @@ but conditionally independent given parents.
 appendscope(ω::T, id) where T = appendscope(ω, id, traithastag(T, Val{:scope}))
 appendscope(ω, id, ::HasTag{:scope}) = updatetag(ω, Val{:scope}, append(id, ω.tags.scope))
 appendscope(ω, id, _) = tag(ω, (scope = id,))
+
 
 rmscope(ω::T) where T = rmscope(ω, traithastag(T, Val{:scope}))
 rmscope(ω, ::HasTag{:scope}) = rmtag(ω, Val{:scope})

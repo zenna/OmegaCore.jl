@@ -26,6 +26,16 @@ function test_intervention()
   @inferred randsample(yⁱ)
 end
 
+function test_intervene_diff_parents()
+  x = 1 ~ Normal(0, 1)
+  y = 2 ~ Normal(x, 1)
+  x2 = 3 ~ x
+  yⁱ = y |ᵈ (x => 100.0)
+  yⁱ2 = y |ᵈ (x2 => 100.0)
+  yⁱ_, yⁱ2_ = randsample((yⁱ, yⁱ2)ₚ)
+  @test yⁱ_ != yⁱ2_
+end
+
 function test_intervention_logpdf()
   # Log density of model wrt ω
   l = logpdf(m, ω)
