@@ -26,6 +26,8 @@ include("condition.jl")         # Conditioning variables
 
 include("rejection.jl")         # Rejection sampling Inference
 
+include("logpdf.jl")     # Log density
+
 include("dispatch.jl")          # Primitive Distributions
 
 include("pointwise.jl")         # Syntactic sugar

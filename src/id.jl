@@ -4,6 +4,9 @@ const TupleID = NTuple{N, Int} where N
 tupleid(i::Integer) = (i,)
 tupleid(i::NTuple{I, <: Integer}) where I = i
 
+"default ID type"
+defID(args...) = TupleID
+
 # # Interface to ids
 
 "`base(::Type{T}, i)` singleton (`i`,) of collection type `T` "

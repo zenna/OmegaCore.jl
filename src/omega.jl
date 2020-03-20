@@ -1,7 +1,7 @@
 export defΩ, SimpleΩ, LazyΩ
 
 using Distributions: Distribution
-using Random
+using Random: AbstractRNG
 
 traithastag(t::AbstractΩ, tag) = traithastag(t.tags, tag)
 
@@ -44,7 +44,7 @@ traithastag(t::Type{LazyΩ{TAGS, T}}, tag) where {TAGS, T} = traithastag(TAGS, t
 # (T::Type{<:Distribution})(ω::LazyΩ, args...) =
 #   get!(ω.data, scope(ω), rand(rng(ω), T(args...)))::eltype(T)
 
-(d::Distribution)(ω::LazyΩ) = get!(ω.data, scope(ω), rand(rng(ω), d))::eltype(d)
+recurse(d::Distribution, ω::LazyΩ) = get!(ω.data, scope(ω), rand(rng(ω), d))::eltype(d)
 
 randsample(rng::AbstractRNG, ::Type{Ω}) where {Ω <: LazyΩ} = tagrng(Ω(), rng)
 

@@ -14,14 +14,15 @@ struct NotHasLogPdf end
 
 traithaslogpdf(::Type{<:Distribution}) = HasLogPdf()
 traithaslogpdf(_) = NotHasLogPdf()
-handle_logpdf(T, ret, ω, args...) = handle_logpdf(traithaslogpdf(T, ret, ω, args...))
+handle_logpdf(ret, f, ω::T) where T = handle_logpdf(traithaslogpdf(T), ret, f, ω)
 
-function handle_logpdf(::HasLogPdf, T, ret, ω)
+function handle_logpdf(::HasLogPdf, ret, f, ω)
   # Preconditions: \omega is tagged with lopdf and seen
   if scope(ω) ∉ ω.tags.seen
-    ω.tags.logpdf.val += logpdf(T, ret)
+    ω.tags.logpdf.val += logpdf(f, ret)
     push!(ω.tags.seen, scope(ω))
   end
   ret
 end
 
+handle_logpdf(::NotHasLogPdf, ret, f, ω) = ret

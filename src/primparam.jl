@@ -1,8 +1,3 @@
-"""
-
-"""
-module Var
-
 export unit, bounded, choice, finite
 export isprimparam, PrimParam
 
@@ -55,5 +50,3 @@ function finite end
 isprimparam(::Type{T}) where T = false
 # isprimparam(t::Type{T}) where {T <: Union{choice, unit, finite, bounded}} = true
 PrimParam = Union{typeof(choice), typeof(unit), typeof(finite), typeof(bounded)}
-
-end

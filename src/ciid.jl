@@ -19,8 +19,8 @@ Conditionally independent copy of `f`
 if `g = ciid(f, id)` then `g` will be identically distributed with `f`
 but conditionally independent given parents.
 """
-@inline ciid(f, id) = Scoped(id, f)
-@inline ciid(f, id::Integer) = ciid(f, tupleid(id))
+@inline ciid(f, id) = Variable(Scoped(id, f))
+@inline ciid(f, id::Integer) = ciid(f, tupleid(id)) #FIXME, remove
 
 "Alias for `ciid(f, i)`"
 @inline Base.:~(id, f) = ciid(f, id)
