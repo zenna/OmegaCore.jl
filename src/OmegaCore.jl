@@ -15,21 +15,23 @@ include("ciid.jl")              # Conditional Independence
 include("var.jl")               # Variable
 
 include("primparam.jl")         # Primitive Parameters
-include("distributions.jl")         # Primitive Parameters
+include("distributions.jl")     # Primitive Parameters
+include("constant.jl")          # Constant distribution
 include("omega.jl")             # Sample Space / Distributions
 
 include("intervene.jl")         # Causal interventions
 include("cassette.jl")
-include("causal.jl")
+include("intervenepass.jl")
 
 include("condition.jl")         # Conditioning variables
 
 include("rejection.jl")         # Rejection sampling Inference
 
-include("logpdf.jl")     # Log density
+include("logpdf.jl")            # Log density
 
-include("dispatch.jl")          # Primitive Distributions
+include("dispatch.jl")          # Dispatch based on tags
 
+# FIXME: Move pointwise to a separate package
 include("pointwise.jl")         # Syntactic sugar
 
 

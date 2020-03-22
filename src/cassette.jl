@@ -1,3 +1,5 @@
+# if there's already a context append to it
+# @inline (x::Intervened)(ω) = Cassette.overdub(OmegaCtx(metadata = (intervention = x.i,)), x.x, ω)
 
 # function Cassette.overdub(ctx::OmegaCtx{NamedTuple{K, V}}, x, ω::MaybeTagged{<:AbstractΩ}) where {K, V}
 #   # @show K

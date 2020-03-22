@@ -4,6 +4,7 @@ using Distributions: Distribution
 using Random: AbstractRNG
 
 traithastag(t::AbstractΩ, tag) = traithastag(t.tags, tag)
+hastag(ω::AbstractΩ, tag) = hastag(ω.tags, tag)
 
 # FIXME: DRY
 
@@ -14,7 +15,7 @@ struct SimpleΩ{TAGS, T} <: AbstractΩ
   data::T
   tags::TAGS
 end
-
+``
 SimpleΩ(data) = SimpleΩ(data, Tags())
 
 (T::Type{<:Distribution})(π::SimpleΩ, args...) = ω.data[scope(ω)]
@@ -44,7 +45,7 @@ traithastag(t::Type{LazyΩ{TAGS, T}}, tag) where {TAGS, T} = traithastag(TAGS, t
 # (T::Type{<:Distribution})(ω::LazyΩ, args...) =
 #   get!(ω.data, scope(ω), rand(rng(ω), T(args...)))::eltype(T)
 
-recurse(d::Distribution, ω::LazyΩ) = get!(ω.data, scope(ω), rand(rng(ω), d))::eltype(d)
+recurse(d::Distribution, ω::LazyΩ) = get!(ω.data, scope(ω), rand(rng(ω), @show d))::eltype(d)
 
 randsample(rng::AbstractRNG, ::Type{Ω}) where {Ω <: LazyΩ} = tagrng(Ω(), rng)
 

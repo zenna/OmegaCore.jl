@@ -21,9 +21,19 @@ end
 
 function test_intervention()
   x, y, m = test_model()
-  yⁱ = y |ᵈ (x => 100.0)
+  yⁱ = y |ᵈ (x => 3 ~ Constant(100.0))
   @test 100.0 <= randsample(yⁱ) <= 101.0
-  @inferred randsample(yⁱ)
+  # @inferred randsample(yⁱ)
+end
+
+function test_intervene_diff_parents()
+  x = 1 ~ Normal(0, 1)
+  y = 2 ~ Normal(x, 1)
+  x2 = 3 ~ x
+  yⁱ = y |ᵈ (x => 100.0)
+  yⁱ2 = y |ᵈ (x2 => 100.0)
+  yⁱ_, yⁱ2_ = randsample((yⁱ, yⁱ2)ₚ)
+  @test yⁱ_ != yⁱ2_
 end
 
 function test_intervention_logpdf()

@@ -12,6 +12,7 @@ end
 struct HasLogPdf end
 struct NotHasLogPdf end
 
+# FIXME: check for tags  oo
 traithaslogpdf(::Type{<:Distribution}) = HasLogPdf()
 traithaslogpdf(_) = NotHasLogPdf()
 handle_logpdf(ret, f, ω::T) where T = handle_logpdf(traithaslogpdf(T), ret, f, ω)

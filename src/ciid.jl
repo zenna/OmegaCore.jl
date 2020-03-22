@@ -19,7 +19,7 @@ Conditionally independent copy of `f`
 if `g = ciid(f, id)` then `g` will be identically distributed with `f`
 but conditionally independent given parents.
 """
-@inline ciid(f, id) = Variable(Scoped(id, f))
+@inline ciid(f, id) = Variable(Scoped(id, f))   
 @inline ciid(f, id::Integer) = ciid(f, tupleid(id)) #FIXME, remove
 
 "Alias for `ciid(f, i)`"
@@ -32,6 +32,7 @@ but conditionally independent given parents.
 appendscope(ω::T, id) where T = appendscope(ω, id, traithastag(T, Val{:scope}))
 appendscope(ω, id, ::HasTag{:scope}) = updatetag(ω, Val{:scope}, append(id, ω.tags.scope))
 appendscope(ω, id, _) = tag(ω, (scope = id,))
+
 
 rmscope(ω::T) where T = rmscope(ω, traithastag(T, Val{:scope}))
 rmscope(ω, ::HasTag{:scope}) = rmtag(ω, Val{:scope})

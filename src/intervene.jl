@@ -15,9 +15,6 @@ struct Intervened{X, I}
   i::I
 end
 
-# if there's already a context append to it
-@inline (x::Intervened)(ω) = Cassette.overdub(OmegaCtx(metadata = (intervention = x.i,)), x.x, ω)
-
 "intervened"
 intervene(x, intervention::Intervention) = Intervened(x, Intervention)
 intervene(x, intervention) = Intervened(x, Intervention(intervention))

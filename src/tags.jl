@@ -20,7 +20,6 @@ struct NotHasTag{T} end
 Trait function -- `traithastag(t, Val{:sometag})` returns `HasTag{:sometag}`
 if `t` has that tag or `NotHasTag{:sometag}` otherwise
 """
-traithastag(t::Tags, ::Type{Val{S}}) where S = hastag(t, S) ? HasTag{S}() : NotHasTag{S}()
 traithastag(t::Type{T}, ::Type{Val{S}}) where {T <: Tags, S} = hastag(T, S) ? HasTag{S}() : NotHasTag{S}()
-
+traithastag(t::T, s::Type{Val{S}}) where {T <: Tags, S} = traithastag(T, s)
 
