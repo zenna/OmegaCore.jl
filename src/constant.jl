@@ -15,7 +15,7 @@ traitcontinuous(::Type{<:Real}) = Distributions.Continuous
 traitcontinuous(::Type{<:Integer}) = Distributions.Discrete
 traitcontinuous(::Type{<:T}) where T <: AbstractArray = traitcontinuous(eltype(T)) 
 traitcontinuous(::Type{<:T}) where T <: Tuple = traitcontinuous(eltype(T))
-traitcontinuous(::Type{T}) = DiscreteContinuous
+traitcontinuous(::Type{T}) where T = DiscreteContinuous
 
 # traitcontinuous(::Type{<:Integer}) = Distributions.Discrete
 

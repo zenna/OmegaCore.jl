@@ -1,5 +1,10 @@
 module OmegaCore
 
+using Spec
+
+include("spec.jl")
+using .Spec
+
 include("util.jl")              # Utilities
 include("namedtuple.jl")        # Named tuple utilities
 
@@ -16,7 +21,7 @@ include("var.jl")               # Variable
 
 include("primparam.jl")         # Primitive Parameters
 include("distributions.jl")     # Primitive Parameters
-include("constant.jl")          # Constant distribution
+include("constant.jl")          # Constant distribution 
 include("omega.jl")             # Sample Space / Distributions
 
 include("intervene.jl")         # Causal interventions
