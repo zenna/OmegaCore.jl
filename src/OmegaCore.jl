@@ -2,9 +2,6 @@ module OmegaCore
 
 using Spec
 
-include("spec.jl")
-using .Spec
-
 include("util.jl")              # Utilities
 include("namedtuple.jl")        # Named tuple utilities
 

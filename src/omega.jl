@@ -21,13 +21,17 @@ SimpleΩ(data) = SimpleΩ(data, Tags())
 (T::Type{<:Distribution})(π::SimpleΩ, args...) = ω.data[scope(ω)]
 tag(ω::SimpleΩ, tags) = SimpleΩ(ω.data, mergef(mergetag, ω.tags, tags))
 rmtag(ω::SimpleΩ, tag) = SimpleΩ(ω.data, rmkey(ω.tags, tag))
-updatetag(ω::SimpleΩ, tag, val) = LazyΩ(ω.data, update(ω.tags, tag, val))
-traithastag(t::SimpleΩ{TAGS}, tag) where {TAGS} = traithastag(TAGS, tag)
+updatetag(ω::SimpleΩ, tag, val) = SimpleΩ(ω.data, update(ω.tags, tag, val))
+traithastag(t::Type{SimpleΩ{TAGS, T}}, tag) where {TAGS, T} = traithastag(TAGS, tag)
+
+recurse(d::Distribution, ω::SimpleΩ) = getindex(ω.data, scope(ω))::eltype(d)
+
 
 # # Lazy Omega
 # Lazily constructs randω values.
 
 "Sample space object"
+
 struct LazyΩ{TAGS, T} <: AbstractΩ
   data::T
   tags::TAGS
@@ -45,7 +49,7 @@ traithastag(t::Type{LazyΩ{TAGS, T}}, tag) where {TAGS, T} = traithastag(TAGS, t
 # (T::Type{<:Distribution})(ω::LazyΩ, args...) =
 #   get!(ω.data, scope(ω), rand(rng(ω), T(args...)))::eltype(T)
 
-recurse(d::Distribution, ω::LazyΩ) = get!(ω.data, scope(ω), rand(rng(ω), @show d))::eltype(d)
+recurse(d::Distribution, ω::LazyΩ) = get!(ω.data, scope(@show(ω)), rand(rng(ω), @show d))::eltype(d)
 
 randsample(rng::AbstractRNG, ::Type{Ω}) where {Ω <: LazyΩ} = tagrng(Ω(), rng)
 

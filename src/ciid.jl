@@ -29,7 +29,7 @@ but conditionally independent given parents.
 @inline Base.:~(f) = ω -> f(rmscope(ω))
 
 "append `id` to the scope"
-appendscope(ω::T, id) where T = appendscope(ω, id, traithastag(T, Val{:scope}))
+appendscope(ω::T, id) where {T <: AbstractΩ} = appendscope(ω, id, traithastag(@show(T), Val{:scope}))
 appendscope(ω, id, ::HasTag{:scope}) = updatetag(ω, Val{:scope}, append(id, ω.tags.scope))
 appendscope(ω, id, _) = tag(ω, (scope = id,))
 
