@@ -10,7 +10,7 @@ function test_logpdf()
   ω = SimpleΩ(Dict((2,) => x_, (1,) => μ_))
 
   p = logpdf((μ, x)ₚ, ω)
-  @inferred logpdf_ = logpdf(Normal(0, 1), μ_) + logpdf(Normal(μ_, 1), x_)
+  @inferred logpdf(Normal(0, 1), μ_) + logpdf(Normal(μ_, 1), x_)
   @test p == logpdf_
 end
 
