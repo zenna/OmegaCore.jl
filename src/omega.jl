@@ -55,4 +55,4 @@ randsample(rng::AbstractRNG, ::Type{Ω}) where {Ω <: LazyΩ} = tagrng(Ω(), rng
 
 # # Where is init 
 "Default sample space"
-defΩ(args...) = LazyΩ{Dict{TupleID, Any}}
+defΩ(args...) = LazyΩ{Dict{defID(), Any}}

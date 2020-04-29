@@ -10,7 +10,12 @@ function test_logpdf()
   ω = SimpleΩ(Dict((2,) => x_, (1,) => μ_))
 
   p = logpdf((μ, x)ₚ, ω)
-  @test p == logpdf(Normal(0, 1), μ_) + logpdf(Normal(μ_, 1), x_)
+  @inferred logpdf_ = logpdf(Normal(0, 1), μ_) + logpdf(Normal(μ_, 1), x_)
+  @test p == logpdf_
+end
+
+@testset "Logpdf" begin
+  test_logpdf()
 end
 
 # struct MyDist

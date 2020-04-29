@@ -1,7 +1,7 @@
 import Distributions: logpdf, Distribution
 
 "Logdensity of `f` on trace `ω`"
-function logpdf(f, ω, ID::Type{T} = TupleID) where T
+function logpdf(f, ω, ID::Type{T} = defID()) where T
   tω = tag(ω, (logpdf = Box(0.0), seen = Set{ID}()))
   f(tω)  
   tω.tags.logpdf.val
