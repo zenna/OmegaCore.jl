@@ -1,4 +1,4 @@
-module MH
+module OmegaMH
 using ..OmegaCore
 
 end

@@ -8,7 +8,7 @@ function (f::Var)(ω::AbstractΩ)
   # @show f_
   # @show ω_
   prehook(f_, ω_)
-  @show ret = recurse(f_, ω_)
+  ret = recurse(f_, ω_)
   posthook(ret, f_, ω_)
 end
 

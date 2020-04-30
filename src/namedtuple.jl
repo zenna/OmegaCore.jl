@@ -1,7 +1,10 @@
 """
-```
+Remove a `key` from named tuple `nt` has been removed
+
+```jldoctest
 x = (a = 3, b = 4, c =12)
-rmkey(tag, Val{:x})
+rmkey(tag, Val{:c})
+(a = 3, b = 4)
 ```
 """
 @generated function rmkey(nt::NamedTuple{K, V}, key::Type{Val{T}}) where {K, V, T}
@@ -13,10 +16,11 @@ end
 
 
 """
-Update a named tuple, statically
+Updated a named tuple
 
 ```
 update((x = 3, y = 2, z = 1), Val{:x}, 7)
+(x = 7, y = 2, z = 1)
 ```
 
 """
@@ -30,7 +34,7 @@ update((x = 3, y = 2, z = 1), Val{:x}, 7)
     end
   end
   Expr(:tuple, args...)
-end 
+end
 
 """
 Merge `nt1` with `nt2`.

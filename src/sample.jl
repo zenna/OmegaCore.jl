@@ -1,12 +1,36 @@
 export randsample
 using Random: AbstractRNG, GLOBAL_RNG
 
-# # Variable
-# A random variable is a function from a sample space.
-# In julia terms it is any function where `f(ω::T) where {T <: AbstractΩ}` is defined`
+"Default sampling algorithm"
+defrandalg(args...) = FailUnsat
 
-# # Sampling
+"`n` samples from `ω::ΩT` such that `yₓ(ω)` is true where `yₓ` are conditions of `x`"
+omegasample(rng, ΩT, x, n; kwargs) =
+  randsample(rng, ΩT, conditions(x), n; kwargs...) 
 
-randsample(rng::AbstractRNG, f) = f(randsample(rng, defΩ(f)))
-randsample(f) = randsample(GLOBAL_RNG, f)
+"`n` samples from `ω::ΩT` such that `y(ω)` is true"
+condomegasample(rng, ΩT, y, n; alg = defrandalg(rng, x, n), kwargs...) = 
+  map
 
+"""
+`n` random samples from `x` such that `yₓ(ω)` is true where `yₓ` are conditions of `x
+using `alg` algorithm
+
+```
+using Distributions
+x = Normal(0, 1)
+randsample(x |ᶜ x >ₛ 2.0, 3; alg = RejectionSample)
+'''
+"""
+randsample(rng::AbstractRNG, x, n; alg = defrandalg(x), ΩT = defΩ(), kwargs...) =
+  randsample(rng, ΩT, x, n, alg; kwargs...)
+
+# Convenience methods
+
+"`randsample` using GLOBAL_RNG"
+randsample(x, n::Integer; kwargs...) =
+  randsample(Random.GLOBAL_RNG, x, n; kwargs...)
+
+# There are two different notions of ΩT
+# The first is the return type of the omegas
+# Second is Omegas used

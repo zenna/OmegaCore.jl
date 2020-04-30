@@ -21,5 +21,8 @@ struct ConditionException <: Exception end
 function apply(f, x::AbstractΩ)
 
 end
+
+"Conditions on `xy`"
+conditions(xy::Conditional) = xy.y
 # Implement x(\omega) when x is conditioned
 # Imolement logpdf when `x` is conditioned

@@ -28,6 +28,8 @@ include("intervenepass.jl")
 include("condition.jl")         # Conditioning variables
 
 include("rejection.jl")         # Rejection sampling Inference
+using .OmegaRejectionSample
+export RejectionSample
 
 include("logpdf.jl")            # Log density
 
@@ -38,6 +40,12 @@ include("pointwise.jl")         # Syntactic sugar
 
 
 # Left to implement:
+
+# - Spec all functions that can be specced
+# - Get all specs to run
+# - Make tags order invariant
+# - 
+
 # automatic id                 
 # Static ids                   
 # Memoization                  
@@ -49,10 +57,10 @@ include("pointwise.jl")         # Syntactic sugar
 # HMC                          
 # Spec automatic testing       
 # Metropolis hastings          
-# interact with soft predicates
+# Interact with soft predicates
 # Type stability               
-# working intervene            
-# conditioning                 
+# Working intervene            
+# Conditioning                 
 
 
 

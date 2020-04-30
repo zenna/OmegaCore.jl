@@ -1,11 +1,16 @@
 using OmegaCore, Distributions
 using Test
+import Random
 
 function test_pos_measure()
-  x(ω) = Normal(ω, 0, 1)
+  rng = Random.MersenneTwister(0)
+  x = 1 ~ Normal(0, 1)
   y(ω) = x(ω) > 0
   x_cond = x |ᶜ y
-  sample(x_cond, RejectionSample)
+  samples = randsample(rng, x_cond, 100000; alg = RejectionSample)
+  samplemean = mean(samples)
+  exactmean = mean(truncated(Normal(0, 1), 0, Inf))
+  @test samplemean ≈ exactmean atol = 0.01
 end
 
 function test_out_of_order_condition()

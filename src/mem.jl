@@ -27,6 +27,9 @@ end
 """
 Memoize a variable.
 
+`mem(x)` returns a 'memoized' version of `x` such that the result of calls to
+`x(ω)` are cached.
+
 ```julia
 using LinearAlgebra, BenchmarkTools
 x = normal(0, 1, (1000, 1000))
