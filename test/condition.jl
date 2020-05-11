@@ -2,6 +2,7 @@ using OmegaCore, Distributions
 using Test
 import Random
 
+"Test conditioning on predicate of positive measure"
 function test_pos_measure()
   rng = Random.MersenneTwister(0)
   x = 1 ~ Normal(0, 1)
@@ -11,6 +12,20 @@ function test_pos_measure()
   samplemean = mean(samples)
   exactmean = mean(truncated(Normal(0, 1), 0, Inf))
   @test samplemean ≈ exactmean atol = 0.01
+end
+
+"Test whether the logpdf is correct"
+function test_density_cond()
+  rng = Random.MersenneTwister(0)
+  μ = 1 ~ Normal(0, 1)
+  x = Normal(μ, 1.0)
+
+  μ_ = -0.4321
+  x_ = 0.1234
+  μₓ = μ |ᶜ (x ==ₚ x_)
+  ω = SimpleΩ(Dict((1,) => μ_))
+  logpdf_ = logpdf(Normal(0, 1), μ_) + logpdf(Normal(μ_, 1), x_)
+  @test logpdf(μₓ, ω) == logpdf_
 end
 
 function test_out_of_order_condition()
@@ -24,7 +39,7 @@ function test_out_of_order_condition()
     x
   end
 
-  f_ = f | (x ==ₚ 3.0)
+  f_ = f |ᶜ (x ==ₚ 3.0)
   g_ = ω -> (x(ω), f_(ω))
 end
 
@@ -33,9 +48,15 @@ function test_parent()
   x = 2 ~ Normal(μ, 1)
   x_ = 0.123
   μ_ = 0.1
-  μ | x = x_
+  μ |ᶜ x == x_
   ω = defΩ()((1,) -> μ_)
   @test logpdf(μ_, ω) = logpdf(Normal(0, 1), μ_) + logpdf(Normal(μ_, 1), x_)
+end
+
+@testset "Conditions" begin
+  test_pos_measure()
+  test_out_of_order_condition()
+  test_parent()
 end
 
 # We can use an intervention in this case

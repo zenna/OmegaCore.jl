@@ -1,5 +1,4 @@
 using OmegaCore
-using OmegaCore: sample
 using Test
 using Distributions
 

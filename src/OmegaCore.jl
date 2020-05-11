@@ -48,13 +48,12 @@ include("pointwise.jl")         # Syntactic sugar
 
 # automatic id                 
 # Static ids                   
-# Memoization                  
 # argmax                       
 # memoization                  
-# Get gradients working zygote 
-# rand                         
-# Replica exchange             
+# rand
+# Add parallel Replica exchange             
 # HMC                          
+# Get gradients working zygote
 # Spec automatic testing       
 # Metropolis hastings          
 # Interact with soft predicates

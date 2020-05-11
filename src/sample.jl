@@ -1,5 +1,5 @@
 export randsample
-using Random: AbstractRNG, GLOBAL_RNG
+import Random
 
 "Default sampling algorithm"
 defrandalg(args...) = FailUnsat
