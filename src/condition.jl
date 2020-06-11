@@ -1,5 +1,10 @@
-export |ᶜ, cond
+module Condition
+
+using ..Space
+export |ᶜ, cond, conditions
+
 # # Conditioning
+# Conditioning a variable restricts the output to be consistent with some proposition.
 
 "`x` given `y` is true"
 struct Conditional{X, Y}
@@ -26,3 +31,11 @@ end
 conditions(xy::Conditional) = xy.y
 # Implement x(\omega) when x is conditioned
 # Imolement logpdf when `x` is conditioned
+
+
+function conditions(x)
+  # Return a random variable that are the conditions `x` is conditioned on
+  
+end
+
+end

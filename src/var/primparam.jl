@@ -1,10 +1,8 @@
 export unit, bounded, choice, finite
 export isprimparam, PrimParam
 
-
 # # Primitives
-
-
+# These are primitive parameters.
 
 """
 Choice over Boolean valued variable.

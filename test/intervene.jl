@@ -21,7 +21,7 @@ end
 
 function test_intervention()
   x, y, m = test_model()
-  yⁱ = y |ᵈ (x => 3 ~ Constant(100.0))
+  yⁱ = y |ᵈ (x => (3 ~ Constant(100.0)))
   @test 100.0 <= randsample(yⁱ) <= 101.0
   # @inferred randsample(yⁱ)
 end
@@ -60,3 +60,9 @@ function test_intervention_logpdf()
   @test lⁱ == logpdf(Normal(0, 1), x_) + logpdf(Normal(v_, 1), y_)
   @test lⁱ < l
 end
+
+@testset "intervene" begin
+  test_intervention()
+  test_intervene_diff_parents()
+  test_intervention_logpdf()
+end 

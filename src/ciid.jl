@@ -1,3 +1,9 @@
+module CIID
+
+using ..Space
+using ..Tagging
+using ..IDS
+
 export ~, ciid
 
 # # Conditional Independence
@@ -42,3 +48,4 @@ rmscope(ω, _) = ω
 
 "Current scope"
 scope(ω) = ω.tags.scope
+end

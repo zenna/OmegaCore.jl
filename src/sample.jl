@@ -1,8 +1,12 @@
-export randsample
+module Sample
+
+using ..Space
 import Random
 
+export defrandalg, condomegasample, randsample
+
 "Default sampling algorithm"
-defrandalg(args...) = FailUnsat
+function defrandalg end
 
 "`n` samples from `ω::ΩT` such that `yₓ(ω)` is true where `yₓ` are conditions of `x`"
 omegasample(rng, ΩT, x, n; kwargs) =
@@ -22,7 +26,7 @@ x = Normal(0, 1)
 randsample(x |ᶜ x >ₛ 2.0, 3; alg = RejectionSample)
 '''
 """
-randsample(rng::AbstractRNG, x, n; alg = defrandalg(x), ΩT = defΩ(), kwargs...) =
+randsample(rng::Random.AbstractRNG, x, n; alg = defrandalg(x), ΩT = defΩ(), kwargs...) =
   randsample(rng, ΩT, x, n, alg; kwargs...)
 
 # Convenience methods
@@ -31,6 +35,11 @@ randsample(rng::AbstractRNG, x, n; alg = defrandalg(x), ΩT = defΩ(), kwargs...
 randsample(x, n::Integer; kwargs...) =
   randsample(Random.GLOBAL_RNG, x, n; kwargs...)
 
+randsample(x; kwargs...) = 
+  randsample(x, 1, kwargs...)
+
 # There are two different notions of ΩT
 # The first is the return type of the omegas
 # Second is Omegas used
+
+end

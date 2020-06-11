@@ -1,5 +1,14 @@
+module Tagging
+
+export mergetag, hastag, HasTag, NotHasTag, traithastag
+
 # # Tags
-# Tags attach meta-data which modulates function application.
+# Many functionalities of Omega are achieved through contextual-execution
+# That means we evaluate a function `f(ω)` under some context.
+# See Cassette.jl for more information on contextual execution
+# Omega uses a poor-mans Cassette, which is more constrained but faster
+# Tags are values which are attached to (tagged to) the execution context
+# when we evaluate (random) variables.
 
 "Meta data to attach to ω::Ω"
 const Tags = NamedTuple
@@ -23,3 +32,4 @@ if `t` has that tag or `NotHasTag{:sometag}` otherwise
 traithastag(t::Type{T}, ::Type{Val{S}}) where {T <: Tags, S} = hastag(T, S) ? HasTag{S}() : NotHasTag{S}()
 traithastag(t::T, s::Type{Val{S}}) where {T <: Tags, S} = traithastag(T, s)
 
+end

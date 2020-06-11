@@ -1,6 +1,14 @@
+module Fail
+
+export FailUnsat
+import ..OmegaCore
+
 "Fails on condition"
 struct FailUnsatAlg end
 const FailUnsat = FailUnsatAlg()
+
+# Set default randalg to fail
+OmegaCore.defrandalg(args...) = FailUnsat
 
 """
 `n` samples of` ω ∈ ΩT` from from model.  Throws error if such that `pred`
@@ -30,4 +38,6 @@ function Base.rand(rng::AbstractRNG,
   pred = Omega.indomain(x)
   ωsamples = rand(rng, ΩT, pred, n, alg)
   map(ω -> apl(x, ω), ωsamples)
+end
+
 end

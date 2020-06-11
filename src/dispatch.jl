@@ -1,9 +1,18 @@
+module Dispatch
+
 using Distributions: Distribution
+using ..Space, ..Var
+# # Dispatch
+# In the contextual execution of a variable, every intermediate variable application
+# of the form `f(ω)` is __intercepted__.  This allows us to do all kinds of things
+# such as do causal interventions, track loglikelihood information, etc
+# Our implementation models Cassette.jl
+
 
 "Variable"
-const Var = Union{Variable, Distribution}
+const Vari = Union{Variable, Distribution}
 
-function (f::Var)(ω::AbstractΩ)
+function (f::Vari)(ω::AbstractΩ)
   f_, ω_ = pass(f, ω)
   # @show f_
   # @show ω_
@@ -25,8 +34,10 @@ overdub(f, ω) = handle_memoizehandle_intervene(f, ω)
 # How to handle multipe contexts?
 
 
-# this is a bitt confusing.
+# this is a bit confusing.
 # I am not sure all the behaviours specific to different tags are of the same type.
 # logpdf - just updates the context
 # memoize - replaces f(x) with some value
 # intervene - replaces f with some f'
+
+end

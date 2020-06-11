@@ -2,14 +2,17 @@ module OmegaRejectionSample
 import Base.Threads
 
 import ..OmegaCore
+using ..Util, ..Sample, ..Condition
 const OC = OmegaCore
-import ..OmegaCore: randsample
+# import ..OmegaCore: randsample
 
-export RejectionSample, randsample
+export RejectionSample
 
 "Rejection Sampling  Algorithm"
 struct RejectionSampleAlg end
 const RejectionSample = RejectionSampleAlg()
+
+OmegaCore.defrandalg(args...) = RejectionSample
 
 function condomegasample1(rng,
                      ΩT::Type{OT},

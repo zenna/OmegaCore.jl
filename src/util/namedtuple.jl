@@ -1,3 +1,5 @@
+export rmkey, update, mergef
+
 """
 Remove a `key` from named tuple `nt` has been removed
 
@@ -13,10 +15,11 @@ rmkey(tag, Val{:c})
   # FIXME: This can be made more efficient, using TAGS  
   Expr(:tuple, args...)
 end
-
+@post keys(res) == setdiff(keys(nt), key)
+@post all([res[k] == nt[k] for k in setdiff(keys(nt), key)])
 
 """
-Updated a named tuple
+Update a named tuple
 
 ```
 update((x = 3, y = 2, z = 1), Val{:x}, 7)
@@ -35,6 +38,10 @@ update((x = 3, y = 2, z = 1), Val{:x}, 7)
   end
   Expr(:tuple, args...)
 end
+@post keys(res) == keys(nt)
+@post all([res[k] == nt[k] for k in setdiff(keys(nt), key)])
+@post res[key] == val
+
 
 """
 Merge `nt1` with `nt2`.
@@ -54,3 +61,7 @@ mergef(f, nt1, nt2)
     @assert false "Unimplemented"
   end
 end
+@post keys(res) == keys(nt1) ∪ keys(nt2)
+@post all((res[k] == nt1[k] for k in keys if k in nt1 && k ∉ nt2))
+@post all((res[k] == nt2[k] for k in keys if k in nt2 && k ∉ nt1))
+@post all((res[k] == f(nt1[k], nt2[k]) for k in keys if k in nt1 && k ∉ nt2))

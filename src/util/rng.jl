@@ -1,9 +1,4 @@
-"Mutable wrapper for a value"
-mutable struct Box{T}
-  val::T
-end
-
-import Future
+export duplicaterng
 
 # Relevant threads
 # https://discourse.julialang.org/t/parallel-mersenne-twister/27567

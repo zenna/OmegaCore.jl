@@ -1,43 +1,54 @@
 module OmegaCore
 
+using Reexport
 using Spec
 
-include("util.jl")              # Utilities
-include("namedtuple.jl")        # Named tuple utilities
+include("util/util.jl")         # General utilities
+using .Util
 
-include("ctx.jl")               # Context
+include("tagging/tags.jl")      # Tags
+using .Tagging
 
-include("tags.jl")              # Tags
 include("rng.jl")               # Random number generation
 
 include("id.jl")                # IDs
-include("space.jl")             # Sample/Paramter Spaces
-include("sample.jl")            # Variables
+@reexport using .IDS
+
+include("space/space.jl")       # Probability / Paramter Spaces
+using .Space
+
+include("var/var.jl")           # Random / Parameteric Variables
+@reexport using .Var
+
 include("ciid.jl")              # Conditional Independence
-include("var.jl")               # Variable
+@reexport using .CIID
 
-include("primparam.jl")         # Primitive Parameters
-include("distributions.jl")     # Primitive Parameters
-include("constant.jl")          # Constant distribution 
-include("omega.jl")             # Sample Space / Distributions
+include("interventions/interventions.jl")         # Causal interventions
+@reexport using .Interventions
 
-include("intervene.jl")         # Causal interventions
 include("cassette.jl")
-include("intervenepass.jl")
 
 include("condition.jl")         # Conditioning variables
+@reexport using .Condition
+
+include("sample.jl")            # Sample
+@reexport using .Sample
+
+# Basic Inference methods
+# include("fail.jl")              # Fails when conditions are not satisfied
+# @reexport using .Fail
 
 include("rejection.jl")         # Rejection sampling Inference
-using .OmegaRejectionSample
-export RejectionSample
+@reexport using .OmegaRejectionSample
 
 include("logpdf.jl")            # Log density
+# include("sat.jl")               # Satisfy
 
 include("dispatch.jl")          # Dispatch based on tags
 
-# FIXME: Move pointwise to a separate package
-include("pointwise.jl")         # Syntactic sugar
-
+# # FIXME: Move to a separate package
+# include("syntax/syntax.jl")         # Syntactic sugar
+# @reexport using .OmegaSyntax
 
 # Left to implement:
 

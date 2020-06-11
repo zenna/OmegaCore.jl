@@ -1,3 +1,4 @@
+using ..Tagging
 # @inline hasintervene(ω) = hastag(ω, Val{:intervene})
 @inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,))
 

@@ -1,3 +1,6 @@
+import Cassette
+Cassette.@context OmegaCtx
+
 # if there's already a context append to it
 # @inline (x::Intervened)(ω) = Cassette.overdub(OmegaCtx(metadata = (intervention = x.i,)), x.x, ω)
 
