@@ -1,6 +1,6 @@
 module Tagging
 
-export mergetag, hastag, HasTag, NotHasTag, traithastag
+export mergetag, hastag, HasTag, NotHasTag, traithastag, Tags
 
 # # Tags
 # Many functionalities of Omega are achieved through contextual-execution
@@ -24,6 +24,9 @@ struct HasTag{T} end
 
 "Trait type to denote Tagged type with absence of tag"
 struct NotHasTag{T} end
+
+"`tag(x, tags)` tag value `x` with tags `tags`"
+function tag end
 
 """
 Trait function -- `traithastag(t, Val{:sometag})` returns `HasTag{:sometag}`

@@ -2,22 +2,14 @@ using Distributions
 export LazyΩ
 using ..IDS, ..Util, ..Tagging
 
-
-# # Lazy Omega
-# Lazily constructs randω values as they are needed
-
-"Sample space object"
-
+"Lazily constructs randp, values as they are needed"
 struct LazyΩ{TAGS, T} <: AbstractΩ
   data::T
   tags::TAGS
 end
 
 LazyΩ{T}() where T = LazyΩ(T(), Tags())
-
-tag(ω::LazyΩ, tags) = LazyΩ(ω.data, mergef(mergetag, ω.tags, tags))
-rmtag(ω::LazyΩ, tag) = LazyΩ(ω.data, rmkey(ω.tags, tag))
-updatetag(ω::LazyΩ, tag, val) = LazyΩ(ω.data, update(ω.tags, tag, val))
+replacetags(ω::LazyΩ, tags) = LazyΩ(ω.data, tags)
 traithastag(t::Type{LazyΩ{TAGS, T}}, tag) where {TAGS, T} = traithastag(TAGS, tag)
 
 # FIXME: get! should be ωega type dependent

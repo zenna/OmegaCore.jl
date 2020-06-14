@@ -1,15 +1,13 @@
 module CIID
 
-using ..Space
-using ..Tagging
-using ..IDS
+using Spec
+using ..Space, ..Tagging, ..IDS, ..Var
 
-export ~, ciid
+export ~, ciid, scope
 
 # # Conditional Independence
 # It is useful to create independent and conditionally independent random variables
 # This has meaning for both random and free variables
-
 
 "Variable that introduces scope"
 struct Scoped{ID, F}
@@ -48,4 +46,6 @@ rmscope(ω, _) = ω
 
 "Current scope"
 scope(ω) = ω.tags.scope
+@pre scope(ω) = hastag(ω, :scope) "Tag should have socpe"
+
 end

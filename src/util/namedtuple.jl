@@ -15,7 +15,7 @@ rmkey(tag, Val{:c})
   # FIXME: This can be made more efficient, using TAGS  
   Expr(:tuple, args...)
 end
-@post keys(res) == setdiff(keys(nt), key)
+@post keys(@ret) == setdiff(keys(nt), key)
 @post all([res[k] == nt[k] for k in setdiff(keys(nt), key)])
 
 """
