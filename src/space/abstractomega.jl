@@ -9,6 +9,7 @@ export AbstractΩ, defΩ
 "Abstract Sample Space"
 abstract type AbstractΩ end
 
+# # Tags
 """
 `tag(ω::AbstractΩ, tags)``
 

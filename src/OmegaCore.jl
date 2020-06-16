@@ -6,16 +6,17 @@ using Spec
 include("util/util.jl")         # General utilities
 using .Util
 
-include("tagging/tags.jl")      # Tags
+include("tagging/tagging.jl")      # Tags
 using .Tagging
 
 include("rng.jl")               # Random number generation
+using ..RNG
 
 include("id.jl")                # IDs
 @reexport using .IDS
 
 include("space/space.jl")       # Probability / Paramter Spaces
-using .Space
+@reexport using .Space
 
 include("var/var.jl")           # Random / Parameteric Variables
 @reexport using .Var
@@ -45,6 +46,8 @@ include("logpdf.jl")            # Log density
 # include("sat.jl")               # Satisfy
 
 include("dispatch.jl")          # Dispatch based on tags
+
+include("trackerror.jl")
 
 # # FIXME: Move to a separate package
 # include("syntax/syntax.jl")         # Syntactic sugar

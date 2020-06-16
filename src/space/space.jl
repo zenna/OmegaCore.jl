@@ -1,6 +1,7 @@
 module Space
 
 import ..Tagging: hastag, traithastag, tag
+
 # # Concrete
 # These are concrete data structures that implement the AbstractΩ structure,
 # associating ids with values. 

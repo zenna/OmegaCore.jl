@@ -1,6 +1,6 @@
 using Distributions
 export LazyΩ
-using ..IDS, ..Util, ..Tagging
+using ..IDS, ..Util, ..Tagging, ..RNG
 
 "Lazily constructs randp, values as they are needed"
 struct LazyΩ{TAGS, T} <: AbstractΩ
@@ -9,6 +9,10 @@ struct LazyΩ{TAGS, T} <: AbstractΩ
 end
 
 LazyΩ{T}() where T = LazyΩ(T(), Tags())
+
+"Construct `LazyΩ` from `rng` -- `ω.data` will be generated from `rng`"
+LazyΩ{T}(rng::AbstractRNG) where T = tagrng(LazyΩ{T}(), rng)
+
 replacetags(ω::LazyΩ, tags) = LazyΩ(ω.data, tags)
 traithastag(t::Type{LazyΩ{TAGS, T}}, tag) where {TAGS, T} = traithastag(TAGS, tag)
 
@@ -18,8 +22,6 @@ traithastag(t::Type{LazyΩ{TAGS, T}}, tag) where {TAGS, T} = traithastag(TAGS, t
 
 recurse(d::Distribution, ω::LazyΩ) =
   get!(ω.data, scope(ω), rand(rng(ω), d))::eltype(d)
-
-initΩ(rng::AbstractRNG, ::Type{Ω}) where {Ω <: LazyΩ} = tagrng(Ω(), rng)
 
 # # Where is init 
 defΩ(args...) = LazyΩ{Dict{defID(), Any}}

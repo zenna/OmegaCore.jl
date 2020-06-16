@@ -1,3 +1,4 @@
+import Random
 export duplicaterng
 
 # Relevant threads
@@ -32,3 +33,6 @@ function duplicaterng(rng::T, n) where T
   end
   rngs
 end
+
+duplicaterng(::Random._GLOBAL_RNG, n) =
+  duplicaterng(Random.default_rng(), n)

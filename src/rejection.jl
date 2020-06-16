@@ -20,7 +20,7 @@ function condomegasample1(rng,
                      n,
                      alg::RejectionSampleAlg) where OT
   @label restart
-  ω = OC.initΩ(rng, ΩT)
+  ω = ΩT(rng)
   !y(ω) && @goto restart
   ω
 end
@@ -49,7 +49,7 @@ function OC.randsample(rng,
                        alg::RejectionSampleAlg) where {OT}
   # introduce conditions
   # y = OC.mem(OC.indomain(x))
-  y = OC.conditions(x)
+  y = condvar(x)
   ωsamples = OC.condomegasample(rng, ΩT, y, n, alg)
   # map(OC.mem(x), ωsamples)
   map(x, ωsamples)

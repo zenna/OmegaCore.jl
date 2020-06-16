@@ -1,5 +1,12 @@
 using OmegaCore
 using Test
+using Spec
+
+# rmkeymthd = methods(rmkey).ms[1]
+# rmkeymthd_preconds = preconds(rmkeymthd)
+# naive_gen = rng -> rand(rng, NamedTuple)
+# naive_gen |ᶜ rmkeymthd_preconds
+# spectest(rmkey, rng -> rand(rng, NamedTuple)
 
 @testset begin
   x = (a = 3, b = 4, c = 12)
