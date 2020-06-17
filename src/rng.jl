@@ -2,7 +2,8 @@ module RNG
 
 import ..Tagging: hastag, tag
 using Random: AbstractRNG
-export tagrng
+
+export tagrng, rng
 
 rng(t) = t.tags.rng
 hasrng(ω) = hastag(ω, Val{:rng})

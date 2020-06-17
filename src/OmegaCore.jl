@@ -6,6 +6,9 @@ using Spec
 include("util/util.jl")         # General utilities
 using .Util
 
+include("traits.jl")
+@reexport using .Traits
+
 include("tagging/tagging.jl")      # Tags
 using .Tagging
 
@@ -35,6 +38,9 @@ include("condition.jl")         # Conditioning variables
 include("sample.jl")            # Sample
 @reexport using .Sample
 
+include("trackerror.jl")
+using .TrackError
+
 # Basic Inference methods
 # include("fail.jl")              # Fails when conditions are not satisfied
 # @reexport using .Fail
@@ -47,7 +53,6 @@ include("logpdf.jl")            # Log density
 
 include("dispatch.jl")          # Dispatch based on tags
 
-include("trackerror.jl")
 
 # # FIXME: Move to a separate package
 # include("syntax/syntax.jl")         # Syntactic sugar

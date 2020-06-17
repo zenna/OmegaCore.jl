@@ -1,3 +1,4 @@
+import ..Space
 export Variable
 
 # # Variable
@@ -10,4 +11,4 @@ export Variable
 struct Variable{F}
   f::F
 end
-recurse(f::Variable, ω) = f.f(ω)
+Space.recurse(f::Variable, ω) = f.f(ω)

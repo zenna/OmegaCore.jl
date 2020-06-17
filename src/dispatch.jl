@@ -1,38 +1,39 @@
 module Dispatch
 
-using Distributions: Distribution
-using ..Space, ..Var
+using ..Space, ..Var, ..Traits
 # # Dispatch
 # In the contextual execution of a variable, every intermediate variable application
 # of the form `f(ω)` is __intercepted__.  This allows us to do all kinds of things
 # such as do causal interventions, track loglikelihood information, etc
 # Our implementation models Cassette.jl
 
+(f::Vari)(ω::Ω) where {Ω <: AbstractΩ} = f(traits(Ω), ω)
 
-"Variable"
-const Vari = Union{Variable, Distribution}
-
-function (f::Vari)(ω::AbstractΩ)
-  f_, ω_ = pass(f, ω)
-  # @show f_
-  # @show ω_
-  prehook(f_, ω_)
-  ret = recurse(f_, ω_)
-  posthook(ret, f_, ω_)
+function (f::Vari)(::Type{TRAITS}, ω::AbstractΩ) where TRAITS
+  # FIXME: CAUSATION CAN prehook/recurse change TRAITS?
+  prehook(TRAITS, f, ω)
+  ret = recurse(f, ω)
+  posthook(TRAITS, ret, f, ω)
+  ret
 end
 
-prehook(f, ω) = nothing
-posthook(ret, f, ω) = handle_logpdf(ret, f, ω)
+# prehook(f, ω::Ω) where Ω = prehook(traits(Ω), f, ω)
+prehook(traits, f, ω) = nothing
 
-pass(f, ω) = passintervene(f, ω)
+# posthook(ret, f, ω::Ω) where Ω = posthook(traits(Ω), ret, f, ω)
+posthook(traits, ret, f, ω) = nothing
 
-overdub(f, ω) = handle_memoizehandle_intervene(f, ω)
+
+# posthook(ret, f, ω) = handle_logpdf(ret, f, ω)
+
+# pass(f, ω) = passintervene(f, ω)
+
+# overdub(f, ω) = handle_memoizehandle_intervene(f, ω)
 
 # How do we go into a function? recurse
 # How does excecute work
 # When we have a posthook, what if we have more than one?
 # How to handle multipe contexts?
-
 
 # this is a bit confusing.
 # I am not sure all the behaviours specific to different tags are of the same type.

@@ -16,6 +16,8 @@ LazyΩ{T}(rng::AbstractRNG) where T = tagrng(LazyΩ{T}(), rng)
 replacetags(ω::LazyΩ, tags) = LazyΩ(ω.data, tags)
 traithastag(t::Type{LazyΩ{TAGS, T}}, tag) where {TAGS, T} = traithastag(TAGS, tag)
 
+traits(::Type{LazyΩ{TAGS, T}}) where {TAGS, T} = traits(@show TAGS)
+
 # FIXME: get! should be ωega type dependent
 # (T::Type{<:Distribution})(ω::LazyΩ, args...) =
 #   get!(ω.data, scope(ω), rand(rng(ω), T(args...)))::eltype(T)

@@ -1,6 +1,6 @@
 module Condition
 
-using ..Space
+using ..Space, ..Tagging
 export |ᶜ, cond, conditions, cond!
 
 # # Conditioning
@@ -19,6 +19,8 @@ end
 struct ConditionException <: Exception end
 
 @inline condf(ω, x, y) = Bool(y(ω)) ? x(ω) : throw(ConditionException())
+
+@inline condf(ω::Ω, x, y) where Ω = condf(traits(Ω), ω, x, y)
 
 # If error are violated then throw error
 @inline (c::Conditional)(ω) = condf(ω, c.x, c.y)

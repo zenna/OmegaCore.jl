@@ -1,6 +1,6 @@
 module TrackError
 
-using ..Util, ..Tagging, ..Condition
+using ..Util, ..Tagging, ..Condition, ..Traits
 import ..Condition
 export applytrackerr, condvar
 
@@ -42,7 +42,7 @@ function Condition.condf(ω, x, y)
   x(ω)
 end
 
-condf(::HasTag{:err}. ω, x, y) = ok!
+condf(::trait(Err), ω, x, y) = @assert false
 
 function Condition.cond(ω, bool)
   dotrack(ω) && conjoinerror!(ω.tags.err, bool)
