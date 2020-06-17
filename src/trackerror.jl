@@ -33,7 +33,7 @@ condvar(x, ω, initerr = true) = applytrackerr(x, ω, initerr).err
 condvar(x) = ω -> condvar(x, ω)
 
 "Update `err` by conjoining cu`rrent error with `b`"
-conjoinerror!(err, b::Box) = err.val &= b
+conjoinerror!(err::Box, b) = err.val &= b
 
 dotrack(ω) = !haskey(ω.tags, :donttrack) && haskey(ω.tags, :err)
 

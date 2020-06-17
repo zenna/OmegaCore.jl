@@ -1,7 +1,7 @@
 module Condition
 
 using ..Space, ..Tagging, ..Traits
-export |ᶜ, cond, conditions, cond!
+export |ᶜ, cnd, conditions, cond!, condf
 
 # # Conditioning
 # Conditioning a variable restricts the output to be consistent with some proposition.
@@ -12,8 +12,8 @@ struct Conditional{X, Y}
   y::Y
 end
 
-@inline x |ᶜ y = cond(x, y)
-@inline cond(x, y) = Conditional(x, y)
+@inline x |ᶜ y = cnd(x, y)
+@inline cnd(x, y) = Conditional(x, y)
 
 "Conditions variable was conditioned on are not satisfied"
 struct ConditionException <: Exception end
@@ -54,9 +54,5 @@ samples = rand(x, 100; alg = SSMH)
 """
 cond!(ω::Ω, bool) where Ω = cond!(traits(Ω), ω, bool)
 @inline cond!(traits, ω, bool) = nothing
-
-# should thsi be cond!, it does have side effects, but it doesn't really modify its arguments
-# it's not hte same thing as cond for sure
-# It's more like an assertion
 
 end
