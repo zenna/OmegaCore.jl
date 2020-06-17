@@ -2,6 +2,11 @@ using OmegaCore
 using Test
 using Distributions
 
+function testsimple()
+  x = 1 ~ Normal(0, 1)
+  @test isinferred(randsample, x)
+end
+
 function samplemodel()
   x = 1 ~ Normal(0, 1)
   y = 2 ~ Normal(0, 1)
@@ -10,7 +15,8 @@ function samplemodel()
 end
 
 function test_ciid()
-  z_ = @inferred samplemodel()
+  @test isinferred(samplemodel)
+  z_ = samplemodel()
   @test z_[1] != z_[2]
   @test z_[1] == z_[3]
 end

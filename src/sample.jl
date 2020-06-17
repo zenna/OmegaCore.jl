@@ -36,7 +36,7 @@ randsample(x, n::Integer; kwargs...) =
   randsample(Random.GLOBAL_RNG, x, n; kwargs...)
 
 randsample(x; kwargs...) = 
-  randsample(x, 1, kwargs...)
+  first(randsample(x, 1, kwargs...))
 
 # There are two different notions of ΩT
 # The first is the return type of the omegas

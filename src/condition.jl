@@ -1,6 +1,6 @@
 module Condition
 
-using ..Space, ..Tagging
+using ..Space, ..Tagging, ..Traits
 export |ᶜ, cond, conditions, cond!
 
 # # Conditioning
@@ -18,7 +18,7 @@ end
 "Conditions variable was conditioned on are not satisfied"
 struct ConditionException <: Exception end
 
-@inline condf(ω, x, y) = Bool(y(ω)) ? x(ω) : throw(ConditionException())
+@inline condf(traits, ω, x, y) = Bool(y(ω)) ? x(ω) : throw(ConditionException())
 
 @inline condf(ω::Ω, x, y) where Ω = condf(traits(Ω), ω, x, y)
 
@@ -41,8 +41,8 @@ function x_(ω)
   xs = Float64[]
   while bernoulli(ω, 0.8, Bool)
     x += uniform(ω, -5.0, 5.0)
-    cond(ω, x <=ₛ 1.0)
-    cond(ω, x >=ₛ -1.0)
+    cond!(ω, x <=ₛ 1.0)
+    cond!(ω, x >=ₛ -1.0)
     push!(xs, x)
   end
   xs
@@ -52,7 +52,8 @@ x = ciid(x_)
 samples = rand(x, 100; alg = SSMH)
 ```
 """
-cond!(ω, bool) = nothing
+cond!(ω::Ω, bool) where Ω = cond!(traits(Ω), ω, bool)
+@inline cond!(traits, ω, bool) = nothing
 
 # should thsi be cond!, it does have side effects, but it doesn't really modify its arguments
 # it's not hte same thing as cond for sure

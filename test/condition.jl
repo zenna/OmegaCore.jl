@@ -49,7 +49,7 @@ function test_parent()
   x_ = 0.123
   μ_ = 0.1
   μ |ᶜ x == x_
-  ω = defΩ()((1,) -> μ_)
+  ω = defΩ()((1,) => μ_)
   @test logpdf(μ_, ω) = logpdf(Normal(0, 1), μ_) + logpdf(Normal(μ_, 1), x_)
 end
 

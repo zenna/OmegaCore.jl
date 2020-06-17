@@ -18,10 +18,10 @@ tag(ω::AbstractΩ, tags) =
   replacetags(ω, mergef(mergetag, ω.tags, tags))
 
 rmtag(ω::AbstractΩ, tag) =
-  replacetag(ω, rmkey(ω.tags, tag))
+  replacetags(ω, rmkey(ω.tags, tag))
 
 updatetag(ω::AbstractΩ, tag, val) =
-  replacetag(ω, update(ω.tags, tag, val))
+  replacetags(ω, update(ω.tags, tag, val))
 
 traithastag(t::AbstractΩ, tag) = traithastag(t.tags, tag)
 hastag(ω::AbstractΩ, tag) = hastag(ω.tags, tag)

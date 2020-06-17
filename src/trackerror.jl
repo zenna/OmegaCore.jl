@@ -37,14 +37,12 @@ conjoinerror!(err, b::Box) = err.val &= b
 
 dotrack(ω) = !haskey(ω.tags, :donttrack) && haskey(ω.tags, :err)
 
-function Condition.condf(ω, x, y)
+function Condition.condf(::trait(Err), ω, x, y)
   dotrack(ω) && conjoinerror!(ω.tags.err, y(ω))
   x(ω)
 end
 
-condf(::trait(Err), ω, x, y) = @assert false
-
-function Condition.cond(ω, bool)
+function Condition.cond!(::trait(Err), ω, bool)
   dotrack(ω) && conjoinerror!(ω.tags.err, bool)
   bool
 end
