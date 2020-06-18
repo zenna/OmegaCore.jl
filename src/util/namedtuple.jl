@@ -58,6 +58,7 @@ mergef(f, nt1, nt2)
   if isempty(K1 ∩ K2)
     :(merge(nt1, nt2))
   else
+    Core.println(K1, " naa ", K2)
     @assert false "Unimplemented"
   end
 end

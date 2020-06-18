@@ -9,11 +9,11 @@ using ..Space, ..Var, ..Traits
 
 (f::Vari)(ω::Ω) where {Ω <: AbstractΩ} = f(traits(Ω), ω)
 
-function (f::Vari)(::Type{TRAITS}, ω::AbstractΩ) where TRAITS
+function (f::Vari)(traits, ω::AbstractΩ)
   # FIXME: CAUSATION CAN prehook/recurse change TRAITS?
-  prehook(TRAITS, f, ω)
+  prehook(traits, f, ω)
   ret = recurse(f, ω)
-  posthook(TRAITS, ret, f, ω)
+  posthook(traits, ret, f, ω)
   ret
 end
 
