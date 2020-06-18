@@ -15,7 +15,7 @@ using .Tagging
 include("rng.jl")               # Random number generation
 using ..RNG
 
-include("id.jl")                # IDs
+include("ids/ids.jl")                # IDs
 @reexport using .IDS
 
 include("space/space.jl")       # Probability / Paramter Spaces

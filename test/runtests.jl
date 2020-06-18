@@ -8,9 +8,13 @@ function isinferred(f, args...; allow = Union{})
 end
 
 @testset "alltests" begin
+  include("typeinfer.jl")
   include("ciid.jl")
-  include("logpdf.jl")
   include("condition.jl")
+  include("distributions.jl")
   include("intervene.jl")
+  include("logpdf.jl")
+  include("namedtuple.jl")
   include("tagging.jl")
+  include("var.jl")
 end

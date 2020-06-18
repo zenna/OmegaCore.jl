@@ -28,6 +28,18 @@ function symtotrait(x::Symbol)
     error("Unknown trait: $x")
   end
 end
-Traits.traits(::Tags{K, V}) where {K, V} = Union{map(symtotrait, K)...}
-Traits.traits(::Type{Tags{K, V}}) where {K, V} = Union{map(symtotrait, K)...}
+# Traits.traits(::Tags{K, V}) where {K, V} = Union{map(symtotrait, K)...}
+# Traits.traits(::Type{Tags{K, V}}) where {K, V} = Union{map(symtotrait, K)...}
 
+
+@generated function Traits.traits(k::Tags{K, V}) where {K, V}
+  traits_ = map(symtotrait, K)
+  Expr(:curly, :Union, traits_...)
+end
+
+@generated function Traits.traits(k::Type{Tags{K, V}}) where {K, V}
+  # Core.println(K)
+  traits_ = map(symtotrait, K)
+  # Core.println(traits_)
+  Expr(:curly, :Union, traits_...)
+end

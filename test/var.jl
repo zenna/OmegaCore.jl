@@ -1,4 +1,5 @@
 using OmegaCore
+using Test
 
 function test_somwething()
   n = ~ finite(1:10)
@@ -26,13 +27,4 @@ function test_polynomial()
       y
     end
   end
-end
-
-function tets_appendscope(ω1 = sample(defΩ()))
-  # @test !OmegaCore.hastag(ω1, Val{:scope})
-  # @test !OmegaCore.hastag(ω1, :scope)
-  ω2 = OmegaCore.appendscope(ω1, (1,))
-  # @test OmegaCore.hastag(ω2, Val{:scope})
-  ω3 = OmegaCore.rmscope(ω2)
-  # @test !OmegaCore.hastag(ω3, Val{:scope})
 end

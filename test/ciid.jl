@@ -2,11 +2,6 @@ using OmegaCore
 using Test
 using Distributions
 
-function testsimple()
-  x = 1 ~ Normal(0, 1)
-  @test isinferred(randsample, x)
-end
-
 function samplemodel()
   x = 1 ~ Normal(0, 1)
   y = 2 ~ Normal(0, 1)

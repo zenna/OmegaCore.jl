@@ -1,6 +1,6 @@
 module IDS
 
-export append, tupleid, base, combine, append, increment, defID
+export append, tupleid, base, combine, append, increment, defID, singletonid
 
 # # IDs
 # IDs are used primarily in Omega to give identities to random variables
@@ -16,13 +16,10 @@ function append end
 "`Increment(id::ID)` the id"
 function increment end
 
-# # Tuple id type
-const TupleID = NTuple{N, Int} where N
-tupleid(i::Integer) = (i,)
-tupleid(i::NTuple{I, <: Integer}) where I = i
-@inline append(a::Tuple, b::Tuple) = (a..., b...)
+include("tupleid.jl")
+include("vectorid.jl")
 
 "default ID type"
-defID(args...) = TupleID
+defID(args...) = VectorID
 
 end

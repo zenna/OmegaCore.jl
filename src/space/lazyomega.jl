@@ -23,7 +23,7 @@ traits(::Type{LazyΩ{TAGS, T}}) where {TAGS, T} = traits(TAGS)
 #   get!(ω.data, scope(ω), rand(rng(ω), T(args...)))::eltype(T)
 
 recurse(d::Distribution, ω::LazyΩ) =
-  get!(ω.data, scope(ω), rand(rng(ω), d))::eltype(d)
+  get!(() -> rand(rng(ω), d), ω.data, scope(ω))::eltype(d)
 
 # # Where is init 
 defΩ(args...) = LazyΩ{Dict{defID(), Any}}

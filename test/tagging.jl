@@ -18,8 +18,8 @@ end
   f(_) = 2
   @test f(traits(w)) == 2
   @test f(traits(w2)) == 1
-  @test @inferred f(traits(w))
-  @test @inferred f(traits(w2))
+  @inferred f(traits(w))
+  @inferred f(traits(w2))
 end
 
 @testset "tagging2" begin

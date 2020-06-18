@@ -16,7 +16,7 @@ struct Intervened{X, I}
 end
 
 "intervened"
-intervene(x, intervention::Intervention) = Intervened(x, Intervention)
+intervene(x, intervention::Intervention) = Intervened(x, intervention)
 intervene(x, intervention) = Intervened(x, Intervention(intervention))
 
 @inline x |ᵈ i = intervene(x, i)
