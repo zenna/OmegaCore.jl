@@ -4,13 +4,13 @@ import Zygote
 import ..OmegaGrad
 export ZygoteGrad
 
-struct ZygoteGradAlg <: GradAlg end
+struct ZygoteGradAlg <: OmegaGrad.GradAlg end
 const ZygoteGrad = ZygoteGradAlg()
 
 # Zygote.@nograd Omega.Space.increment
 # Zygote.@nograd Base.append!
 
-function gradmap(rv, ω::Ω)
+function gradmap(rv, ω)
   l = apl(rv, ω)
   params = Params(values(ω)) # We can avoid doing this every time.
   g = gradient(params) do
@@ -31,10 +31,10 @@ end
 
 grad(rv, ω, ::ZygoteGradAlg) = grad(rv, ω, values(ω), ZygoteGrad)
 
-function OmegaGrad.gradarray(rv, ω, ::ZygoteGradAlg)
-  vs = values(ω)
-  grads_ = grad(rv, ω, vs, ZygoteGrad)
-  map(v -> grads_[v], vs)
-end
+# function OmegaGrad.gradarray(rv, ω, ::ZygoteGradAlg)
+#   vs = values(ω)
+#   grads_ = grad(rv, ω, vs, ZygoteGrad)
+#   map(v -> grads_[v], vs)
+# end
 
 end

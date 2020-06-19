@@ -20,6 +20,6 @@ function grad end
 function value end
 
 include("zygote.jl")
-@reexport using OmegaZygote
+@reexport using .OmegaZygote
 
 end # module
