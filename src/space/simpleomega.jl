@@ -5,7 +5,7 @@ using Distributions: Distribution
 using Random: AbstractRNG
 
 "Simplest, immutable Omega"
-struct SimpleΩ{TAGS, T} <: AbstractΩ
+struct SimpleΩ{TAGS <: Tags, T} <: AbstractΩ
   data::T
   tags::TAGS
 end
