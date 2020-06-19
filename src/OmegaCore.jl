@@ -52,8 +52,8 @@ include("rejection.jl")         # Rejection sampling Inference
 @reexport using .OmegaRejectionSample
 
 include("logpdf.jl")            # Log density
-# include("sat.jl")               # Satisfy
-
+include("solution.jl")               # Satisfy
+@reexport using .Solution
 
 # # FIXME: Move to a separate package
 # include("syntax/syntax.jl")         # Syntactic sugar

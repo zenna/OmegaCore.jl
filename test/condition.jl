@@ -2,6 +2,15 @@ using OmegaCore, Distributions
 using Test
 import Random
 
+function test_cond!()
+  function f(ω)
+    x = (1 ~ Normal(0, 1))(ω)
+    cond!(ω, x > 0)
+    x
+  end
+  @test all(randsample(f, 100) .>= 0.0)
+end
+
 "Test conditioning on predicate of positive measure"
 function test_pos_measure()
   rng = Random.MersenneTwister(0)
