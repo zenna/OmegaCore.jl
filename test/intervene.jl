@@ -31,6 +31,11 @@ function test_intervention()
   # @inferred randsample(yⁱ)
 end
 
+# Ultimatey this is asking for
+# Normal(100, 1)(ω)
+# and 
+# Normal(1, )(ω)
+
 function test_intervene_diff_parents()
   x = 1 ~ Normal(0, 1)
   function yy(ω)
@@ -45,8 +50,8 @@ function test_intervene_diff_parents()
   yi = y |ᵈ (x => ω -> 100.0)
   yi2 = y |ᵈ (x2 => ω -> 100.0)
   function test(ω)
-    @show y2 = yi2(ω)
     @show y1 = yi(ω)
+    @show y2 = yi2(ω)
     y1, y2
   end
 

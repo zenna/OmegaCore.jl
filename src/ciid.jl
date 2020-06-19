@@ -3,7 +3,7 @@ module CIID
 using Spec
 using ..Space, ..Tagging, ..IDS, ..Var, ..Traits
 
-export ~, ciid, share
+export ~, ciid, share, Scoped
 
 # # Conditional Independence
 # It is useful to create independent and conditionally independent random variables
@@ -71,6 +71,6 @@ randsample((f1, f2, f3))
 @inline share(f) = ω -> f(rmscope(ω))
 
 ""
-@inline Base.:~(f) = share(f)
+# @inline Base.:~(f) = share(f)
 
 end

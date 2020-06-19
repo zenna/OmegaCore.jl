@@ -1,3 +1,5 @@
+module Pointwise
+using OmegaCore
 export pw, ==ₚ, l, dl, ₚ
  
 """
@@ -84,3 +86,5 @@ export ==ₚ, >=ₚ, <=ₚ
 struct LiftConst end
 const ₚ = LiftConst()
 Base.:*(xs, ::LiftConst) = randcollection(xs)
+
+end
