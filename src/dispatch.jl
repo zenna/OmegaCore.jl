@@ -8,7 +8,8 @@ export ctxapply
 # such as do causal interventions, track loglikelihood information, etc
 # Our implementation models Cassette.jl
 
-(f::Vari)(ω::Ω) where {Ω <: AbstractΩ} = ctxapply(traits(Ω), f, ω)
+(f::Vari)(ω::Ω) where {Ω <: AbstractΩ} = f(traits(Ω), ω)
+(f::Vari)(traits, ω::Ω) where {Ω <: AbstractΩ} = ctxapply(traits, f, ω)
 
 @inline function ctxapply(traits, f, ω::AbstractΩ)
   # FIXME: CAUSATION CAN prehook/recurse change TRAITS?

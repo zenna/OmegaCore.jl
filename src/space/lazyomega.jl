@@ -8,8 +8,11 @@ struct LazyΩ{TAGS <: Tags, T} <: AbstractΩ
   tags::TAGS
 end
 
-LazyΩ{TAGS, T}() where {TAGS, T} = LazyΩ(T(), Tags())
-LazyΩ{TAGS}() where {TAGS} = 3 #LazyΩ(T(), Tags())
+# LazyΩ{TAGS, T}() where {TAGS, T} = LazyΩ(T(), Tags())
+# LazyΩ{TAGS}() where {TAGS} = 3 #LazyΩ(T(), Tags())
+const EmptyTags = Tags{(),Tuple{}}
+
+LazyΩ{EmptyTags, T}() where T = LazyΩ(T(), Tags())
 
 "Construct `LazyΩ` from `rng` -- `ω.data` will be generated from `rng`"
 LazyΩ{T}(rng::AbstractRNG) where T = tagrng(LazyΩ{T}(), rng)
@@ -27,4 +30,4 @@ recurse(d::Distribution, ω::LazyΩ) =
   get!(() -> rand(rng(ω), d), ω.data, scope(ω))::eltype(d)
 
 # # Where is init 
-defΩ(args...) = LazyΩ{TAGS, Dict{defID(), Any}} where {TAGS}
+defΩ(args...) = LazyΩ{EmptyTags, Dict{defID(), Any}}

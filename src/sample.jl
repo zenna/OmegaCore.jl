@@ -1,7 +1,8 @@
 module Sample
 
-using ..Space
+using ..Space, ..Util
 import Random
+
 
 export defrandalg, condomegasample, randsample
 
@@ -37,7 +38,10 @@ randsample(x, n::Integer; kwargs...) =
 
 randsample(x; kwargs...) = 
   first(randsample(x, 1, kwargs...))
-
+ 
+randsample(rng::Random.AbstractRNG, xs::Tuple, args...; kwargs...) = 
+  randsample(rng, ω -> mapf(ω, xs), args...; kwargs...)
+  
 # There are two different notions of ΩT
 # The first is the return type of the omegas
 # Second is Omegas used

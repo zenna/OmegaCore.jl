@@ -7,7 +7,9 @@ using ..Tagging, ..Traits, ..Var, ..Space, ..Dispatch
   # If the variable ` x` to be applied to ω is the variable to be replaced
   # then replace it, and apply its replacement to ω instead.
   # Othewise proceed as normally
-  if i.x == x
+  @show i.x
+  @show x
+  if @show i.x == x
     i.v(ω)
   else
     ctxapply(traits, x, ω)
@@ -15,7 +17,7 @@ using ..Tagging, ..Traits, ..Var, ..Space, ..Dispatch
 end
 
 # We only consider intervention if the intervention types match
-@inline passintervene(i::Intervention, x, ω) = (x, ω)
+@inline passintervene(traits, i::Intervention, x, ω) = ctxapply(traits, x, ω)
 
-(f::Vari)(::trait(Intervene), ω::AbstractΩ) = 
-  passintervene(traits, ω.tags.intervene, f, ω)
+(f::Vari)(traits::trait(Intervene), ω::AbstractΩ) = 
+  passintervene(  traits, ω.tags.intervene, f, ω)

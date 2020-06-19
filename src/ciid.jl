@@ -17,6 +17,8 @@ end
 
 @inline (x::Scoped)(ω) = x.f(appendscope(ω, x.id))
 
+Base.show(io::IO, x::Scoped) = print(io, x.id,"@",x.f)
+
 """
 Conditionally independent copy of `f`
 

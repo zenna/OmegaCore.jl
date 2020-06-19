@@ -1,3 +1,6 @@
+module AutoID
+using IRTools
+
 using OmegaCore
 
 a = ~ Normal(0, 1)

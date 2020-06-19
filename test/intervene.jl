@@ -7,7 +7,11 @@ function test_model()
   x = 1 ~ Normal(0, 1)
   
   # Normally distributed random variable with id 2 and x as mean
-  yy(ω) =  2 ~ Uniform(x, x(ω) + 1)
+  function yy(ω)
+    x_ = x(ω)
+    u = Uniform(x_, x_ + 1)
+    u(ω)
+  end
   y = 2 ~ yy
   x_ = 0.1
   y_ = 0.3
@@ -16,7 +20,7 @@ function test_model()
   ω = SimpleΩ(Dict((1,) => x_, (2,) => y_))
 
   # model -- tuple-valued random variable ω -> (x(ω), y(ω)), becase we want joint pdf
-  m = (x, y)ₚ
+  m(ω) = (x(ω), y(ω))
   (x, y, m)
 end
 
@@ -29,12 +33,25 @@ end
 
 function test_intervene_diff_parents()
   x = 1 ~ Normal(0, 1)
-  y = 2 ~ Normal(x, 1)
+  function yy(ω)
+    @show scope(ω)
+    @show x_ = x(ω)
+    @show ω
+    @show Normal(x_, 1)(ω)
+  end
+  y = 2 ~ yy
   x2 = 3 ~ x
-  yⁱ = y |ᵈ (x => 100.0)
-  yⁱ2 = y |ᵈ (x2 => 100.0)
-  yⁱ_, yⁱ2_ = randsample((yⁱ, yⁱ2)ₚ)
-  @test yⁱ_ != yⁱ2_
+  yi = y |ᵈ (x => ω -> 100.0)
+  yi = y |ᵈ (x => ω -> 100.0)
+  yi2 = y |ᵈ (x2 => ω -> 100.0)
+  function test(ω)
+    @show y2 = yi2(ω)
+    @show y1 = yi(ω)
+    y1, y2
+  end
+
+  yi_, yi2_ = randsample(ω -> (yi(ω), yi2(ω)))
+  @test yi_ != yⁱ2_
 end
 
 function test_intervention_logpdf()
@@ -65,5 +82,5 @@ end
 @testset "intervene" begin
   test_intervention()
   test_intervene_diff_parents()
-  test_intervention_logpdf()
+  # test_intervention_logpdf()
 end 

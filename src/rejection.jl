@@ -45,7 +45,7 @@ function OC.condomegasample(rng,
     @inbounds ωsamples[i] = condomegasample1(rng, ΩT, y, alg)
   end
 
-  @show ωsamples
+  ωsamples
 end
 
 function OC.randsample(rng,
