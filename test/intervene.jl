@@ -7,7 +7,8 @@ function test_model()
   x = 1 ~ Normal(0, 1)
   
   # Normally distributed random variable with id 2 and x as mean
-  y = 2 ~ Uniform(x, pw(+, x, 1))
+  yy(ω) =  2 ~ Uniform(x, x(ω) + 1)
+  y = 2 ~ yy
   x_ = 0.1
   y_ = 0.3
 

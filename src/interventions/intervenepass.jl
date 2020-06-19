@@ -1,30 +1,21 @@
-using ..Tagging, ..Traits, ..Var, ..Space
+using ..Tagging, ..Traits, ..Var, ..Space, ..Dispatch
 # @inline hasintervene(ω) = hastag(ω, Val{:intervene})
 @inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,))
-
 @inline (x::Intervened)(ω) = x.x(tagintervene(ω, x.i))
 
-@inline function passintervene(i::Intervention{X, V}, x::X, ω) where {X, V}
+@inline function passintervene(traits, i::Intervention{X, V}, x::X, ω) where {X, V}
+  # If the variable ` x` to be applied to ω is the variable to be replaced
+  # then replace it, and apply its replacement to ω instead.
+  # Othewise proceed as normally
   if i.x == x
-    (i.v, ω)
+    i.v(ω)
   else
-    (x, ω)
+    ctxapply(traits, x, ω)
   end
 end
 
+# We only consider intervention if the intervention types match
 @inline passintervene(i::Intervention, x, ω) = (x, ω)
 
-# passintervene(f, ω) = passintervene(traithastag(ω.tags, Val{:intervene}), f, ω)
-# passintervene(::HasTag{:intervene}, f, ω) = passintervene(ω.tags.intervene, f, ω)
-# passintervene(::NotHasTag{:intervene}, f, ω) = (f, ω)
-
-@inline function (f::Vari)(::trait(Intervene), i::Intervention{X, V}, x::X, ω) where {X, V}
-  if i.x == x
-    (i.v, ω)
-  else
-    (x, ω)
-  end
-end
-
 (f::Vari)(::trait(Intervene), ω::AbstractΩ) = 
-  passintervene(ω.tags.intervene, f, ω)
+  passintervene(traits, ω.tags.intervene, f, ω)

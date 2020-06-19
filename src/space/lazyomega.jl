@@ -9,6 +9,7 @@ struct LazyΩ{TAGS <: Tags, T} <: AbstractΩ
 end
 
 LazyΩ{TAGS, T}() where {TAGS, T} = LazyΩ(T(), Tags())
+LazyΩ{TAGS}() where {TAGS} = 3 #LazyΩ(T(), Tags())
 
 "Construct `LazyΩ` from `rng` -- `ω.data` will be generated from `rng`"
 LazyΩ{T}(rng::AbstractRNG) where T = tagrng(LazyΩ{T}(), rng)

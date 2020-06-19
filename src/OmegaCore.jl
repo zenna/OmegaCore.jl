@@ -27,6 +27,9 @@ include("var/var.jl")           # Random / Parameteric Variables
 include("ciid.jl")              # Conditional Independence
 @reexport using .CIID
 
+include("dispatch.jl")          # Dispatch based on tags
+using .Dispatch
+
 include("interventions/interventions.jl")         # Causal interventions
 @reexport using .Interventions
 
@@ -50,8 +53,6 @@ include("rejection.jl")         # Rejection sampling Inference
 
 include("logpdf.jl")            # Log density
 # include("sat.jl")               # Satisfy
-
-include("dispatch.jl")          # Dispatch based on tags
 
 
 # # FIXME: Move to a separate package

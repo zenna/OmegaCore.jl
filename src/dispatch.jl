@@ -1,15 +1,16 @@
 module Dispatch
 
 using ..Space, ..Var, ..Traits
+export ctxapply
 # # Dispatch
 # In the contextual execution of a variable, every intermediate variable application
 # of the form `f(ω)` is __intercepted__.  This allows us to do all kinds of things
 # such as do causal interventions, track loglikelihood information, etc
 # Our implementation models Cassette.jl
 
-(f::Vari)(ω::Ω) where {Ω <: AbstractΩ} = f(traits(Ω), ω)
+(f::Vari)(ω::Ω) where {Ω <: AbstractΩ} = ctxapply(traits(Ω), f, ω)
 
-function (f::Vari)(traits, ω::AbstractΩ)
+@inline function ctxapply(traits, f, ω::AbstractΩ)
   # FIXME: CAUSATION CAN prehook/recurse change TRAITS?
   prehook(traits, f, ω)
   ret = recurse(f, ω)
