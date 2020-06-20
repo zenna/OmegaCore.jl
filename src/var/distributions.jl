@@ -13,20 +13,25 @@ end
 
 ## 
 
+
 using Distributions: Normal
+# const Ordinary = Member{<:Normal}
 
-const StdNormal = Normal(0, 1)
 
-"Like a Normal Distribution but more normal"
-struct Ordinary{MU, SIG}
-  μ::MU
-  σ::SIG
-end
 
-(o::Ordinary)(ω) = (StdNormal(ω) + o.μ) * o.σ
 
-"If output of `o` is `val` what must its noise parameter must have been?`"
-invert(::Ordinary, val) = (val / o.σ) - o.μ
+# const StdNormal = Normal(0, 1)
+
+# "Like a Normal Distribution but more normal"
+# struct Ordinary{MU, SIG}
+#   μ::MU
+#   σ::SIG
+# end
+
+# (o::Ordinary)(ω) = (StdNormal(ω) + o.μ) * o.σ
+
+# "If output of `o` is `val` what must its noise parameter must have been?`"
+# invert(::Ordinary, val) = (val / o.σ) - o.μ
 
 ## When we're executing o(ω), if the variable is conditioned then we can
 ## update ω with the appropriate value for the standard normal

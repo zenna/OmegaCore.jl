@@ -8,8 +8,9 @@ include("variable.jl")               # Variable
 include("primparam.jl")         # Primitive Parameters
 include("distributions.jl")     # Primitive Distributions
 include("constant.jl")          # Constant distribution 
+include("member.jl")
 
 "Interceptable Variable"
-const Vari = Union{Variable, Distribution}
+const Vari = Union{Variable}
 
 end

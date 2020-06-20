@@ -26,8 +26,14 @@ traits(::Type{LazyΩ{TAGS, T}}) where {TAGS, T} = traits(TAGS)
 # (T::Type{<:Distribution})(ω::LazyΩ, args...) =
 #   get!(ω.data, scope(ω), rand(rng(ω), T(args...)))::eltype(T)
 
-recurse(d::Distribution, ω::LazyΩ) =
-  get!(() -> rand(rng(ω), d), ω.data, scope(ω))::eltype(d)
+# recurse(d::Distribution, ω::LazyΩ) =
+#   get!(() -> rand(rng(ω), d), ω.data, scope(ω))::eltype(d)
 
+# recurse(d::Member{<:Distribution}, ω::LazyΩ) = 
+#   get!(() -> rand(rng(ω), d), ω.data, d.id)::eltype(d)
+
+resolve(dist, id, ω) = 
+  get!(() -> rand(rng(ω), dist), ω.data, id)::eltype(dist)
+  
 # # Where is init 
 defΩ(args...) = LazyΩ{EmptyTags, Dict{defID(), Any}}

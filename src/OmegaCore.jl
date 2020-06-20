@@ -24,8 +24,8 @@ include("space/space.jl")       # Probability / Paramter Spaces
 include("var/var.jl")           # Random / Parameteric Variables
 @reexport using .Var
 
-include("ciid.jl")              # Conditional Independence
-@reexport using .CIID
+# include("ciid.jl")              # Conditional Independence
+# @reexport using .CIID
 
 include("dispatch.jl")          # Dispatch based on tags
 using .Dispatch

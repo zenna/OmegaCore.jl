@@ -9,7 +9,7 @@ import ..Traits: traits
 
 # Sample / Parameter Space
 include("abstractomega.jl")     # Abstract sample/Paramter Spaces
-include("scope.jl")
+# include("scope.jl")
 include("simpleomega.jl")       # Sample Space / Distributions
 include("lazyomega.jl")         # Sample Space / Distributions
 

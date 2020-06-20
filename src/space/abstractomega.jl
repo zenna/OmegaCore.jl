@@ -1,4 +1,4 @@
-export AbstractΩ, defΩ, recurse
+export AbstractΩ, defΩ, recurse, resolve
 
 # # Sample Space
 # A sample space represents a set of possible values.
@@ -37,3 +37,5 @@ function defΩ end
 `recurse(f, ω)`
 Recursively apply contextual execution to internals of `f`"""
 function recurse end
+
+function resolve end

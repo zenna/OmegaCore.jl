@@ -38,25 +38,15 @@ end
 
 function test_intervene_diff_parents()
   x = 1 ~ Normal(0, 1)
-  function yy(ω)
-    @show scope(ω)
-    @show x_ = x(ω)
-    @show ω
-    @show Normal(x_, 1)(ω)
+  function y(ω)
+    x_ = x(ω)
+    (2 ~ Normal(x_, 1))(ω)
   end
-  y = 2 ~ yy
-  x2 = 3 ~ x
-  yi = y |ᵈ (x => ω -> 100.0)
+  x2 = 3 ~ Normal(0, 1)
   yi = y |ᵈ (x => ω -> 100.0)
   yi2 = y |ᵈ (x2 => ω -> 100.0)
-  function test(ω)
-    @show y1 = yi(ω)
-    @show y2 = yi2(ω)
-    y1, y2
-  end
-
-  yi_, yi2_ = randsample(ω -> (yi(ω), yi2(ω)))
-  @test yi_ != yⁱ2_
+  yi_, yi2_ = randsample((yi, yi2))
+  @test yi_ != yi2_
 end
 
 function test_intervention_logpdf()
