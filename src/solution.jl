@@ -16,12 +16,14 @@ function solution end
 const ConstTypes = Union{Real, Array{<:Real}}
 const EqualityCondition{A, B} = BinaryPointwise{typeof(==), A, B} where {A, B <: ConstTypes}
 
+"""
 ```
 μ = 1 ~ Normal(0, 1)
 y = 2 ~ Normal(μ, 1)
 μc = μ |ᶜ (y ==ₚ 5.0)
 solution(μc)
 ```
+"""
 function solution(rng::AbstractRNG,
                   f::Conditional{X, Y},
                   Ω = defΩ()) where {X, Y <: EqualityCondition}

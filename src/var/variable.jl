@@ -13,4 +13,4 @@ struct Variable{F}
 end
 Space.recurse(f::Variable, ω) = f.f(ω)
 
-Base.show(io::IO, f::Variable) = Base.print(io, "var:", f.f)
+Base.show(io::IO, f::Variable) = Base.print(io, "ᵛ", f.f)

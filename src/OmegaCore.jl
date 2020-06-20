@@ -55,31 +55,7 @@ include("logpdf.jl")            # Log density
 include("solution.jl")               # Satisfy
 @reexport using .Solution
 
-# # FIXME: Move to a separate package
-# include("syntax/syntax.jl")         # Syntactic sugar
-# @reexport using .OmegaSyntax
-
-# Left to implement:
-
-# - Spec all functions that can be specced
-# - Get all specs to run
-# - Make tags order invariant
-# - 
-
-# automatic id                 
-# Static ids                   
-# argmax                       
-# memoization                  
-# rand
-# Add parallel Replica exchange             
-# HMC                          
-# Get gradients working zygote
-# Spec automatic testing       
-# Metropolis hastings          
-# Interact with soft predicates
-# Type stability               
-# Working intervene            
-# Conditioning                 
+      
 
 
 
