@@ -1,5 +1,6 @@
 using Distributions
 export LazyΩ
+using Random
 using ..IDS, ..Util, ..Tagging, ..RNG
 
 "Lazily constructs randp, values as they are needed"
@@ -8,10 +9,8 @@ struct LazyΩ{TAGS <: Tags, T} <: AbstractΩ
   tags::TAGS
 end
 
-# LazyΩ{TAGS, T}() where {TAGS, T} = LazyΩ(T(), Tags())
-# LazyΩ{TAGS}() where {TAGS} = 3 #LazyΩ(T(), Tags())
-const EmptyTags = Tags{(),Tuple{}}
 
+const EmptyTags = Tags{(),Tuple{}}
 LazyΩ{EmptyTags, T}() where T = LazyΩ(T(), Tags())
 
 "Construct `LazyΩ` from `rng` -- `ω.data` will be generated from `rng`"
@@ -32,8 +31,20 @@ traits(::Type{LazyΩ{TAGS, T}}) where {TAGS, T} = traits(TAGS)
 # recurse(d::Member{<:Distribution}, ω::LazyΩ) = 
 #   get!(() -> rand(rng(ω), d), ω.data, d.id)::eltype(d)
 
-resolve(dist, id, ω) = 
-  get!(() -> rand(rng(ω), dist), ω.data, id)::eltype(dist)
-  
+Base.setindex!(ω::LazyΩ, value, id) = 
+  ω.data[id] = value
+
+function resolve(dist, id, ω)
+  d, val = get!(() -> (dist, rand(rng(ω), dist)), ω.data, id)
+  val::eltype(dist)  
+end
+
+function Distributions.logpdf(ω::LazyΩ)
+  reduce(ω.data; init = 0.0) do logpdf_, (id, (dist, val))
+    logpdf_ + logpdf(dist, val)
+  end
+end
+
 # # Where is init 
 defΩ(args...) = LazyΩ{EmptyTags, Dict{defID(), Any}}
+defω(args...) = tagrng(defΩ()(), Random.GLOBAL_RNG)

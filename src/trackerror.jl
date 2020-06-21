@@ -2,7 +2,7 @@ module TrackError
 
 using ..Util, ..Tagging, ..Condition, ..Traits
 import ..Condition
-export applytrackerr, condvar
+export applytrackerr, condvar, tagerror
 
 # Issue is that type of err value depends on
 # gradient method used

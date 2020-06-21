@@ -2,48 +2,51 @@ using OmegaCore
 using Test
 using Random
 using OmegaCore.Tagging
+using OmegaCore.Traits
+using OmegaCore.RNG
+using OmegaCore.TrackError
 
-@testset "tagging" begin
-  w = defΩ()()
-  w = OmegaCore.RNG.tagrng(w, Random.MersenneTwister())
-  w = OmegaCore.TrackError.tagerror(w, false)
-  t_ = traits(w)
-  @test t_ == Union{OmegaCore.Tagging.Err, OmegaCore.Tagging.Rng}
+tagmersenne(ω) = tagrng(ω, Random.MersenneTwister())
+
+@testset "tagging1" begin
+  ω = defΩ()()
+  ω = tagmersenne(ω)
+  ω = tagerror(ω, false)
+  t_ = traits(ω)
+  @test t_ == Trait{Union{Err, Rng}}()
 end
 
 @testset "tagging2" begin
-  w = defΩ()()
-  w2 = OmegaCore.CIID.appendscope(w, 2)
-  f(x::trait(OmegaCore.Tagging.Scope)) = 1
+  ω = defΩ()()
+  ω2 = tagmersenne(ω)
+  f(x::trait(Rng)) = 1
   f(_) = 2
-  @test f(traits(w)) == 2
-  @test f(traits(w2)) == 1
-  @inferred f(traits(w))
-  @inferred f(traits(w2))
+  @test f(traits(ω)) == 2
+  @test f(traits(ω2)) == 1
+  @test isinferred(f, traits(ω))
+  @test isinferred(f, traits(ω2))
 end
 
-@testset "tagging2" begin
-  w = defΩ()()
-  w2 = OmegaCore.CIID.appendscope(w, 2)
-  f(x::trait(OmegaCore.Tagging.Scope, OmegaCore.Tagging.Rng)) = 1
-  f(x::trait(OmegaCore.Tagging.Scope, OmegaCore.Tagging.Mem)) = 2
-  @test_throws MethodError f(w2)
+@testset "tagging3" begin
+  ω = defω()
+  f(x::trait(Cond, Rng)) = 1
+  f(x::trait(Cond, Mem)) = 2
+  @test_throws MethodError f(ω)
 end
 
-@testset "tagging2" begin
-  w = defΩ()()
-  w2 = OmegaCore.CIID.appendscope(w, 2)
-  f(x::trait(OmegaCore.Tagging.Scope, OmegaCore.Tagging.Rng)) = 1
-  f(x::trait(OmegaCore.Tagging.Scope, OmegaCore.Tagging.Mem)) = 2
-  @test_throws MethodError f(traits(w2))
+@testset "tagging4" begin
+  ω = defΩ()()
+  ω2 = tagmersenne(ω)
+  f(x::trait(Cond, Rng)) = 1
+  f(x::trait(Cond, Mem)) = 2
+  @test_throws MethodError f(traits(ω2))
 end
 
-@testset "tagging" begin
-  w = defΩ()()
-  w = OmegaCore.RNG.tagrng(w, Random.MersenneTwister())
-  w = OmegaCore.TrackError.tagerror(w, false)
-  w = OmegaCore.CIID.appendscope(w, 2)
-  g(x::trait(OmegaCore.Tagging.Rng)) = 1
-  g(x::trait(OmegaCore.Tagging.Scope)) = 2
-  @test_throws MethodError g(traits(w))
+@testset "tagging5" begin
+  ω = defΩ()()
+  ω = tagmersenne(ω)
+  ω = tagerror(ω, false)
+  g(x::trait(Rng)) = 1
+  g(x::trait(Err)) = 2
+  @test_throws MethodError g(traits(ω))
 end

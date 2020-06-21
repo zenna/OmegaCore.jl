@@ -1,7 +1,7 @@
 module Condition
 
 using ..Space, ..Tagging, ..Traits
-export |ᶜ, cnd, conditions, cond!, condf, BinaryPointwise, Conditional
+export |ᶜ, cnd, conditions, cond!, condf, BinaryPointwise, Conditional, ConditionException
 export ==ₚ
 
 # # Conditioning
@@ -28,23 +28,6 @@ struct ConditionException <: Exception end
 
 "Conditions on `xy`"
 conditions(xy::Conditional) = xy.y
-
-# # Equality Condition
-# Many (but not all) inference problems are of the form `X = x` where `X` is a
-# a random variable abd `x` is a concrete constant.  Problems in this form often
-# permit more tractable inference.  To exploit this we use a new type EqualityCondition
-# so that we can identify theses cases just from their types
-
-
-"ω -> f(a(ω), b(ω))"
-struct BinaryPointwise{F, A, B}
-  f::F
-  a::A
-  b::B
-end
-
-Base.show(io::IO, bp::BinaryPointwise) = print(io, bp.a, " $(bp.f) ", bp.b)
-x ==ₚ y = BinaryPointwise(==, x, y)
 
 # Implement x(\omega) when x is conditioned
 # Imolement logpdf when `x` is conditioned

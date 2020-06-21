@@ -10,7 +10,7 @@ using ..Tagging, ..Traits, ..Var, ..Space, ..Dispatch
   @show i.x
   @show x
   if @show i.x == x
-    i.v(ω)
+    @show(i.v(ω))
   else
     ctxapply(traits, x, ω)
   end

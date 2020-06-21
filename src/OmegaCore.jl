@@ -44,6 +44,12 @@ include("sample.jl")            # Sample
 include("trackerror.jl")
 using .TrackError
 
+# include("logpdf.jl")            # Log density
+# @reexport using LogPdf
+
+include("solution.jl")               # Satisfy
+@reexport using .Solution
+
 # Basic Inference methods
 # include("fail.jl")              # Fails when conditions are not satisfied
 # @reexport using .Fail
@@ -51,9 +57,10 @@ using .TrackError
 include("rejection.jl")         # Rejection sampling Inference
 @reexport using .OmegaRejectionSample
 
-include("logpdf.jl")            # Log density
-include("solution.jl")               # Satisfy
-@reexport using .Solution
+include("OmegaMH/OmegaMH.jl")   # Metrpolos Hastings
+@reexport using .OmegaMH
+
+
 
       
 

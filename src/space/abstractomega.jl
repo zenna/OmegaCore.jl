@@ -1,4 +1,4 @@
-export AbstractΩ, defΩ, recurse, resolve
+export AbstractΩ, defΩ, defω, recurse, resolve
 
 # # Sample Space
 # A sample space represents a set of possible values.
@@ -31,6 +31,8 @@ traits(ω::AbstractΩ) = traits(ω.tags) # FIXME: Do this at the type level
 # # Defaults
 "Default sample space"
 function defΩ end
+
+function defω end
 
 # FIXME MOve this somewhere (shouldnt really be in AbstractΩ)
 """
