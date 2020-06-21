@@ -3,13 +3,12 @@ module Var
 export Vari
 using Random: AbstractRNG
 
-# Random / Parametric Variables
-include("variable.jl")               # Variable
+include("variable.jl")          # Random / Parametric Variables
 include("primparam.jl")         # Primitive Parameters
 include("distributions.jl")     # Primitive Distributions
 include("constant.jl")          # Constant distribution 
-include("member.jl")
-include("pointwise.jl")
+include("member.jl")            # Families
+include("pointwise.jl")         # Point wise variable application
 
 "Interceptable Variable"
 const Vari = Union{Variable}

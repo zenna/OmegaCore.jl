@@ -1,37 +1,55 @@
-export Ordinary, invert
-using Distributions: Distribution
+using Distributions: Normal, Uniform, quantile, cdf, Distribution
+import Distributions
+using Random
+using ..Space
 
-struct Model{D, PARAMS}
-  x::D
-  params::PARAMS
-end
+export invert, primdist, distapply
 
-# Todo, specialise this to 1,2,3,4,5 arguments
-(m::Model)(ω) = m.x((liftapply(p, ω) for p in m.params)...)(ω)  
-(x::Type{<:Distribution})(params...) = Model(x, params)
-
-
-## 
-
-
-using Distributions: Normal
-# const Ordinary = Member{<:Normal}
-
-
-
-
-# const StdNormal = Normal(0, 1)
-
-# "Like a Normal Distribution but more normal"
-# struct Ordinary{MU, SIG}
-#   μ::MU
-#   σ::SIG
+# # # Model
+# struct Model{D, PARAMS}
+#   x::D
+#   params::PARAMS
 # end
 
-# (o::Ordinary)(ω) = (StdNormal(ω) + o.μ) * o.σ
+# # Todo, specialise this to 1,2,3,4,5 arguments
+# (m::Model)(ω) = m.x((liftapply(p, ω) for p in m.params)...)(ω)  
+# (x::Type{<:Distribution})(params...) = Model(x, params)
 
-# "If output of `o` is `val` what must its noise parameter must have been?`"
-# invert(::Ordinary, val) = (val / o.σ) - o.μ
+"Parameterless Distribution"
+abstract type PrimitiveDist end
+struct StdNormal <: PrimitiveDist end # FIXME: Should be parametezed by type
+Base.eltype(::Type{StdNormal}) = Float64
+Distributions.logpdf(::StdNormal, x) =
+  Distributions.logpdf(Normal(0, 1), x)
+Base.rand(rng::AbstractRNG, ::StdNormal) = rand(rng, Normal(0, 1))
 
-## When we're executing o(ω), if the variable is conditioned then we can
-## update ω with the appropriate value for the standard normal
+struct StdUniform <: PrimitiveDist end
+Base.eltype(::Type{StdUniform}) = Float64
+Base.rand(rng::AbstractRNG, ::StdUniform) = rand(rng, Uniform(0, 1))
+
+"`distapply(traits, d, id, ω)` apply `idth` member of distribution family d to ω"
+function distapply end
+
+(d::Distribution)(id, ω::AbstractΩ) =
+  distapply(traits(ω), d, id, ω) #FIXME rename "distapply"
+
+@inline distapply(traits, d::Distribution, id, ω) =
+  f(d, id, ω)
+
+@inline f(d::Normal, id, ω) =
+  @show(resolve(StdNormal(), id, ω)) * d.σ + d.μ
+
+@inline f(d::Distribution, id, ω) =
+  quantile(d, resolve(StdUniform(), id, ω))
+
+"`primdist(d::Distribution)`` Primitive (parameterless) distribution that `d` is defined in terms of"
+function primdist end
+
+primdist(d::Distribution) = StdUniform()
+primdist(d::Normal) = StdNormal()
+
+"If output of `o` is `val` what must its noise parameter must have been?`"
+function invert end
+
+invert(o::Normal, val) = (val / o.σ) - o.μ
+invert(d::Distribution, val) = cdf(d, val)

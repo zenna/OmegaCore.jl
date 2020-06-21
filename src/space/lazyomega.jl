@@ -9,7 +9,6 @@ struct LazyΩ{TAGS <: Tags, T} <: AbstractΩ
   tags::TAGS
 end
 
-
 const EmptyTags = Tags{(),Tuple{}}
 LazyΩ{EmptyTags, T}() where T = LazyΩ(T(), Tags())
 
@@ -46,5 +45,5 @@ function Distributions.logpdf(ω::LazyΩ)
 end
 
 # # Where is init 
-defΩ(args...) = LazyΩ{EmptyTags, Dict{defID(), Any}}
+defΩ(args...) = LazyΩ{EmptyTags, Dict{defID(), Tuple{Any, Any}}}
 defω(args...) = tagrng(defΩ()(), Random.GLOBAL_RNG)

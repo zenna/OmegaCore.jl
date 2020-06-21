@@ -4,10 +4,11 @@ using Random
 using Distributions
 using ..Space, ..RNG, ..Tagging, ..Var, ..Traits
 using ..Condition: Conditional
-export solution
+export solution, distapply
 
 """
 `solution(x)`
+
 Solution (aka model, interpretation) to constraints on random variable.
 
 Returns any `ω` such that `x(ω) != ⊥`
@@ -16,13 +17,12 @@ function solution end
 
 const ConstTypes = Union{Real, Array{<:Real}}
 const EqualityCondition{A, B} = BinaryPointwise{typeof(==), A, B} where {A, B <: ConstTypes}
-
 tagcondition(ω, condition) = tag(ω, (condition = condition,))
 
-# "If output of `o` is `val` what must its noise parameter must have been?`"
-invert(o::Normal, val) = (val / o.σ) - o.μ
-
 """
+
+`solution(rng, f, Ω)`
+
 ```
 μ = 1 ~ Normal(0, 1)
 y = 2 ~ Normal(μ, 1)
@@ -42,30 +42,19 @@ end
 idof(m::Member) = m.id
 idof(v::Variable) = v.f.id
 
-function Var.go(::trait(Cond), d::Normal, id, ω)
-  # id is the id of this normal
-  # if the id of the conditioned variable matches
-  # then replace
-  # well not just the id but the id and the function
+# TODO: Generalize this beyond Normal
+function Var.distapply(::trait(Cond), d::Distribution, id, ω)
+  # FIXME: Is this correct?
   matches = idof(ω.tags.condition.a) == id
-  # @show ω.tags.condition
-  # @show traits(ω)
-
-  # @assert false
-  ## Update ω with appropraite value
   if matches
     inv = invert(d, ω.tags.condition.b)
-    ω[id] = inv
+    ω[id] = (primdist(d), inv)
   end
-    # @assert false
-  # else
-    Var.go(nothing, d, id, ω)
+  Var.distapply(nothing, d, id, ω)
 end
 
 solution(f::Conditional, Ω = defΩ()) =
   solution(Random.GLOBAL_RNG, f, Ω)
-
-
 
 end
 
@@ -76,5 +65,5 @@ end
 # this g(nothing) seems smelly
 # What if we have more than one condition??
 # Can we distinguish from X == X to X == Const at type level?
-# how are we actually goign to do it !
+# how are we actually distapplyign to do it !
 # what more do we need for MH
