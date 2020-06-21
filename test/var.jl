@@ -1,13 +1,13 @@
 using OmegaCore
 using Test
 
-function test_somwething()
+function testvar()
   n = ~ finite(1:10)
-  μ = [~ normal(0, 1) for i = 1:n]
+  μ = [~ Normal(0, 1) for i = 1:n]
   s = sum(μ)
 end
 
-function test_maximum_entropy()
+function testmaxmean()
   x = 1 ~ normal(0, 1)
   y = 2 ~ bounded(-4.0, 1.0)
   z(ω) = x(ω) + y(ω)
@@ -27,4 +27,10 @@ function test_polynomial()
       y
     end
   end
+end
+
+@testset "free-variables" begin
+  testvar()
+  testmaxmean()
+  test_polynomial()
 end

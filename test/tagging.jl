@@ -8,6 +8,8 @@ using OmegaCore.TrackError
 
 tagmersenne(ω) = tagrng(ω, Random.MersenneTwister())
 
+@testset "tagging" begin
+
 @testset "tagging1" begin
   ω = defΩ()()
   ω = tagmersenne(ω)
@@ -49,4 +51,6 @@ end
   g(x::trait(Rng)) = 1
   g(x::trait(Err)) = 2
   @test_throws MethodError g(traits(ω))
+end
+
 end

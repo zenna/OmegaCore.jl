@@ -29,12 +29,6 @@ function test_shared_parent()
   @test all(t2)
 end
 
-function double_scope()
-  x = 1 ~ Normal(0, 1)
-  y = 2 ~ x
-  randsample((x, y)ₚ)
-end
-
 @testset "ciid" begin
   test_ciid()
   test_shared_parent()

@@ -4,16 +4,6 @@ using Distributions
 using Random
 using OmegaCore.Traits
 
-# function testscope()
-#   ω1 = SimpleΩ(Dict([1, 1] => 0.1234, [1,] => 0.1234))
-#   ω2 = OmegaCore.appendscope(ω1, [1,])
-#   ω3 = OmegaCore.appendscope(ω2, [3,])
-#   traits_ = traits(ω2)
-# end
-
-# g(::Type{T}) where {T >: OmegaCore.Scope} = 3
-# g(::Type{T}) where {T} = 3.0
-
 function testtraits()
   ω = SimpleΩ(Dict())
   ω2 = OmegaCore.appendscope(ω, [1,])
@@ -67,32 +57,10 @@ function testsimple4()
   map(x, ω)
 end
 
-function testsimple5()
-  x = [1] ~ Normal(0, 1)
-  ω1 = SimpleΩ(Dict([1, 1] => 0.1234, [1,] => 0.1234))
-  ω2 = OmegaCore.appendscope(ω1, [1,])
-  ωs = [ω2,ω2]
-  x.f
-  # xs1 = map(x.f, ωs)
-  xs2 = map(w -> OmegaCore.recurse(x.f.f, w), ωs)
-end
-
-function testsimple6()
-  x = [1] ~ Normal(0, 1)
-  ω1 = SimpleΩ(Dict([1, 1] => 0.1234, [1,] => 0.1234))
-  ω2 = OmegaCore.appendscope(ω1, [1,])
-  ωs = [ω2,ω2]
-  x.f
-  xs1 = map(x.f, ωs)
-  # xs2 = map(w -> OmegaCore.recurse(x.f, w), ωs)
-end
-
-
 @testset "infer types" begin
   @test isinferred(testsimple1)
   @test isinferred(testsimple2)
   @test isinferred(testsimple3)
   @test isinferred(testsimple3a)
   @test isinferred(testsimple4)
-  @test isinferred(testsimple5)
 end  

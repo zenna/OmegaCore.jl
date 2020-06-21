@@ -1,6 +1,7 @@
 using OmegaCore, Distributions
 using Test
 import Random
+Random.seed!(1)
 
 function test_cond!()
   function f(ω)
@@ -13,11 +14,10 @@ end
 
 "Test conditioning on predicate of positive measure"
 function test_pos_measure()
-  rng = Random.MersenneTwister(0)
   x = 1 ~ Normal(0, 1)
   y(ω) = x(ω) > 0
   x_cond = x |ᶜ y
-  samples = randsample(rng, x_cond, 100000; alg = RejectionSample)
+  samples = randsample(x_cond, 100000; alg = RejectionSample)
   samplemean = mean(samples)
   exactmean = mean(truncated(Normal(0, 1), 0, Inf))
   @test samplemean ≈ exactmean atol = 0.01
@@ -63,13 +63,9 @@ function test_parent()
 end
 
 @testset "Conditions" begin
+  test_cond!()
   test_pos_measure()
+  test_density_cond()
   test_out_of_order_condition()
   test_parent()
 end
-
-# We can use an intervention in this case
-# In order to do the conditioning in eed to b eabel to replace the value
-# as well as intercept the application
-# I'll need some notion of equivalence
-# 
