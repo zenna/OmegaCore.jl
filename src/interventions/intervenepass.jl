@@ -16,8 +16,24 @@ using ..Tagging, ..Traits, ..Var, ..Space, ..Dispatch
   end
 end
 
+function passintervene(traits,
+                       i::MultiIntervention{Tuple{Intervention{X1, V1},
+                                                  Intervention{X2, V2}}},
+                       x::Union{X1, X2},
+                       ω) where {X1, V1, X2, V2}
+  # @show typeof(i.is[1].x)
+  if x == i.is[1].x
+    i.is[1].v(ω)
+  elseif x == i.is[2].x
+    i.is[2].v(ω)
+  else
+    ctxapply(traits, x, ω)
+  end
+end
+
 # We only consider intervention if the intervention types match
-@inline passintervene(traits, i::Intervention, x, ω) = ctxapply(traits, x, ω)
+@inline passintervene(traits, i::AbstractIntervention, x, ω) =
+  ctxapply(traits, x, ω)
 
 (f::Vari)(traits::trait(Intervene), ω::AbstractΩ) = 
-  passintervene(  traits, ω.tags.intervene, f, ω)
+  passintervene(traits, ω.tags.intervene, f, ω)

@@ -4,7 +4,7 @@ using Random
 using Distributions
 using ..Space, ..RNG, ..Tagging, ..Var, ..Traits
 using ..Condition: Conditional
-export solution, distapply
+export solution
 
 """
 `solution(x)`
@@ -42,7 +42,6 @@ end
 idof(m::Member) = m.id
 idof(v::Variable) = v.f.id
 
-# TODO: Generalize this beyond Normal
 function Var.distapply(::trait(Cond), d::Distribution, id, ω)
   # FIXME: Is this correct?
   matches = idof(ω.tags.condition.a) == id

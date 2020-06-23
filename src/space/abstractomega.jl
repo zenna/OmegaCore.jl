@@ -10,9 +10,9 @@ abstract type AbstractΩ end
 
 # # Tags
 """
-`tag(ω::AbstractΩ, tags)``
+`tag(ω::AbstractΩ, tags)`
 
-tag `ω` with tags.
+tag `ω` with `tags`.
 """
 tag(ω::AbstractΩ, tags) =
   replacetags(ω, mergef(mergetag, ω.tags, tags))
@@ -32,6 +32,7 @@ traits(ω::AbstractΩ) = traits(ω.tags) # FIXME: Do this at the type level
 "Default sample space"
 function defΩ end
 
+"Default sample space object"
 function defω end
 
 # FIXME MOve this somewhere (shouldnt really be in AbstractΩ)
@@ -41,3 +42,6 @@ Recursively apply contextual execution to internals of `f`"""
 function recurse end
 
 function resolve end
+
+"`ids(ω)` Collection of ids in `ω`, i.e. domain of ω"
+function ids end

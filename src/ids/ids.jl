@@ -18,6 +18,7 @@ function increment end
 
 include("tupleid.jl")
 include("vectorid.jl")
+include("conversions.jl")
 
 "default ID type"
 defID(args...) = VectorID

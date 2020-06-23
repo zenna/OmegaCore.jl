@@ -4,6 +4,7 @@ using Random
 using ..Space
 
 export invert, primdist, distapply
+export StdNormal, StdUniform
 
 # # # Model
 # struct Model{D, PARAMS}
@@ -37,18 +38,20 @@ function distapply end
   f(d, id, ω)
 
 @inline f(d::Normal, id, ω) =
-  @show(resolve(StdNormal(), id, ω)) * d.σ + d.μ
+  resolve(StdNormal(), id, ω) * d.σ + d.μ
 
 @inline f(d::Distribution, id, ω) =
   quantile(d, resolve(StdUniform(), id, ω))
 
-"`primdist(d::Distribution)`` Primitive (parameterless) distribution that `d` is defined in terms of"
+"""`primdist(d::Distribution)``
+Primitive (parameterless) distribution that `d` is defined in terms of"""
 function primdist end
 
 primdist(d::Distribution) = StdUniform()
 primdist(d::Normal) = StdNormal()
 
-"If output of `o` is `val` what must its noise parameter must have been?`"
+"""`invert(d::Distribution, val)`
+If output of `val` is `val` what must its primitives have been?`"""
 function invert end
 
 invert(o::Normal, val) = (val / o.σ) - o.μ

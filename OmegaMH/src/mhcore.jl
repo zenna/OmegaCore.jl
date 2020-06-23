@@ -1,8 +1,4 @@
-import ..OmegaCore
-using ..Util, ..Sample, ..Condition, ..TrackError, ..RNG
-const OC = OmegaCore
-# import ..OmegaCore: randsample
-
+import OmegaCore
 export MH, mh
 
 "Metropolis Hastings Samplng Algorithm"
@@ -54,12 +50,12 @@ function mh(rng,
   ωsamples
 end
 
-function OC.randsample(rng,
+function OmegaCore.randsample(rng,
                        ΩT::Type{OT},
                        x,
                        n,
                        alg::MHAlg) where {OT}
 end
 
-randsample(rng, ΩT, x, n, ::MHAlg; kwargs...) = 
+OmegaCore.randsample(rng, ΩT, x, n, ::MHAlg; kwargs...) = 
   mh(rng, ΩT, condvar(x), n; kwargs...)

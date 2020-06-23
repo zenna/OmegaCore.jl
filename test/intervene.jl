@@ -5,36 +5,36 @@ using Distributions
 function test_model()
   # Normally distributed random variable with id 1
   x = 1 ~ Normal(0, 1)
-  
-  # Normally distributed random variable with id 2 and x as mean
-  function yy(ω)
-    x_ = x(ω)
-    u = Uniform(x_, x_ + 1)
-    u(ω)
-  end
-  y = 2 ~ yy
-  x_ = 0.1
-  y_ = 0.3
+    
+    # Normally distributed random variable with id 2 and x as mean
+    function y(ω)
+      xt = x(ω)
+      u = Uniform(xt, xt + 1)
+      u((2,), ω)
+    end
+    x_ = 0.1
+    y_ = 0.3
 
-  # An omega object -- like a trace
-  ω = SimpleΩ(Dict((1,) => x_, (2,) => y_))
+    # An omega object -- like a trace
+    ω = SimpleΩ(Dict((1,) => x_, (2,) => y_))
 
-  # model -- tuple-valued random variable ω -> (x(ω), y(ω)), becase we want joint pdf
-  m(ω) = (x(ω), y(ω))
-  (x, y, m)
+    # model -- tuple-valued random variable ω -> (x(ω), y(ω)), becase we want joint pdf
+    m(ω) = (x(ω), y(ω))
+    (x, y, m)
+end
+
+function samplemodel()
+  x,y,z = test_model()
+  ω = defω()
+  y(ω)
 end
 
 function test_intervention()
   x, y, m = test_model()
-  yⁱ = y |ᵈ (x => (3 ~ Constant(100.0)))
+  yⁱ = y |ᵈ (x => (ω -> 100.0))
   @test 100.0 <= randsample(yⁱ) <= 101.0
-  # @inferred randsample(yⁱ)
+  @test isinferred(randsample(yⁱ))
 end
-
-# Ultimatey this is asking for
-# Normal(100, 1)(ω)
-# and 
-# Normal(1, )(ω)
 
 function test_intervene_diff_parents()
   x = 1 ~ Normal(0, 1)
@@ -47,6 +47,15 @@ function test_intervene_diff_parents()
   yi2 = y |ᵈ (x2 => ω -> 100.0)
   yi_, yi2_ = randsample((yi, yi2))
   @test yi_ != yi2_
+end
+
+function test_multiple_interventions()
+  x = 1 ~ Normal(0, 1)
+  y = 2 ~ Uniform(10.0, 20.0)
+  z(ω) = Normal(x(ω), y(ω))((3,), ω)
+  (x, y, z)
+  zi = z |ᵈ (x => (ω -> 100.0), y => (ω -> 0.1))
+  @test 99 <= randsample(zi) <= 101
 end
 
 function test_intervention_logpdf()

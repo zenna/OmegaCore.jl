@@ -57,13 +57,4 @@ include("solution.jl")               # Satisfy
 include("rejection.jl")         # Rejection sampling Inference
 @reexport using .OmegaRejectionSample
 
-include("OmegaMH/OmegaMH.jl")   # Metrpolos Hastings
-@reexport using .OmegaMH
-
-
-
-      
-
-
-
 end
