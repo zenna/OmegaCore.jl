@@ -7,10 +7,8 @@ using ..Tagging, ..Traits, ..Var, ..Space, ..Dispatch
   # If the variable ` x` to be applied to ω is the variable to be replaced
   # then replace it, and apply its replacement to ω instead.
   # Othewise proceed as normally
-  @show i.x
-  @show x
-  if @show i.x == x
-    @show(i.v(ω))
+  if i.x == x
+    i.v(ω)
   else
     ctxapply(traits, x, ω)
   end
