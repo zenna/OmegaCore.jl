@@ -1,9 +1,11 @@
 using OmegaCore
 using Distributions
+using Test
 
-
-μ = 5
-xs = 1 ~ Mv(Normal(5, 10), (100,))
-samples = randsample(xs)
-@test mean(samples) == μ atol 0.2
-@test randsample(xs)
+@testset "multivariate" begin
+  μ = 5
+  xs = 1 ~ Mv(Normal(5, 1), (1000,))
+  samples = randsample(xs)
+  @test mean(samples) ≈ μ atol = 0.3
+  @test isinferred(randsample, xs)
+end

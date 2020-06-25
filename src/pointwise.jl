@@ -1,5 +1,6 @@
 module Pointwise
-using OmegaCore
+
+using ..Var
 export pw, ==ₚ, l, dl, ₚ
  
 """
@@ -9,7 +10,7 @@ Pointwise function application gives meaning to expressions such as `x + y`  whe
 That is `x + y` is the function `ω -> x(ω) + y(ω)`.
 
 An argument can be either __lifted__ or __not lifted__.
-For example in `x = Normal(0, 1); y = pw(+, x, 3)`, `x` will be lifted but `3` will not be in the sense that
+For example in `x = 1 ~  Normal(0, 1); y = pw(+, x, 3)`, `x` will be lifted but `3` will not be in the sense that
 `y` will resolve to `ω -> x(ω) + 3` and not `ω -> x(ω) + 3(ω)`.
 
 `pw` uses some reasonable defaults for what to lift and what not to lift, but to have more explicit control use `l` and `dl` to
@@ -28,7 +29,14 @@ sample(pw(map, dl(sqrt), [0, 1, 2]))
 sample(pw(l(f), 3))
 ```
 """
-function pw end
+pw(f, x, xs...) = PwVar(f, (x, xs...))
+
+struct PwVar{ARGS, D}
+  f::D
+  args::ARGS
+end
+
+Base.show(io::IO, p::PwVar) = print(io, p.f, "ₚ", p.args)
 
 abstract type ABox end
 
@@ -64,27 +72,43 @@ traitlift(::Type{<:DontLiftBox}) = DontLift()
 @inline liftapply(::Lift, f::ABox, ω) = (f.val)(ω)
 @inline liftapply(::Lift, f::ABox, ω::ABox) = (f.val)(ω.val)
 @inline liftapply(::Lift, f, ω::ABox) = f(ω.val)
-@inline pw(f, x) = ω -> f(liftapply(x, ω))
 
-@inline pw(f, x1, x2) = ω -> f(liftapply(x1, ω), liftapply(x2, ω))
-@inline pw(f, x1, x2, x3) = ω -> f(liftapply(x1, ω), liftapply(x2, ω), liftapply(x1, ω), liftapply(x3, ω))
-@inline pw(f, x1, args...) = ω -> f(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
+(p::PwVar{Tuple{T1}})(ω) where {T1} =
+  p.f(liftapply(p.args[1], ω))
+(p::PwVar{Tuple{T1}})(id, ω) where {T1} =
+  p.f(id, liftapply(p.args[1], ω))
 
-@inline pw(f::LiftBox, x1, x2) = ω -> (liftapply(f, ω))(liftapply(x1, ω), liftapply(x2, ω))
-@inline pw(f::LiftBox, x1, x2, x3) = ω -> (liftapply(f, ω))(liftapply(x1, ω), liftapply(x2, ω), liftapply(x1, ω), liftapply(x3, ω))
-@inline pw(f::LiftBox, x1, args...) = ω -> (liftapply(f, ω))(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
+  # (p::PwVar)(ω) = p.f(f -> liftapply(f, ω), p.args)
 
-@inline pw(f) = args -> pw(f, args...)
+
+
+# (liftapply(f, ω))(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
+
+
+
+# @inline pw(f, x) = ω -> f(liftapply(x, ω))
+
+# @inline pw(f, x1, x2) = ω -> f(liftapply(x1, ω), liftapply(x2, ω))
+# @inline pw(f, x1, x2, x3) = ω -> f(liftapply(x1, ω), liftapply(x2, ω), liftapply(x1, ω), liftapply(x3, ω))
+# @inline pw(f, x1, args...) = ω -> f(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
+
+# @inline pw(f::LiftBox, x1, x2) = ω -> (liftapply(f, ω))(liftapply(x1, ω), liftapply(x2, ω))
+# @inline pw(f::LiftBox, x1, x2, x3) = ω -> (liftapply(f, ω))(liftapply(x1, ω), liftapply(x2, ω), liftapply(x1, ω), liftapply(x3, ω))
+# @inline pw(f::LiftBox, x1, args...) = ω -> (liftapply(f, ω))(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
+
+# @inline pw(f) = args -> pw(f, args...)
+
+# # Notation
 
 export ==ₚ, >=ₚ, <=ₚ
 @inline x ==ₚ y = pw(==, x, y)
 @inline x >=ₚ y = pw(>>, x, y)
 @inline x <=ₚ y = pw(<=, x, y)
 
-# Collections
-@inline randcollection(xs) = ω -> map(x -> liftapply(x, ω), xs)
-struct LiftConst end
-const ₚ = LiftConst()
-Base.:*(xs, ::LiftConst) = randcollection(xs)
+# # Collections
+# @inline randcollection(xs) = ω -> 32(x -> liftapply(x, ω), xs)
+# struct LiftConst end
+# const ₚ = LiftConst()
+# Base.:*(xs, ::LiftConst) = randcollection(xs)
 
 end

@@ -1,4 +1,6 @@
 export BinaryPointwise, ==ₚ
+using Distributions: Distribution
+
 # # Equality Condition
 # Many (but not all) inference problems are of the form `X = x` where `X` is a
 # a random variable abd `x` is a concrete constant.  Problems in this form often
@@ -21,3 +23,14 @@ const DontLift = Union{Number}
 
 # @inline (bp::BinaryPointwise)(ω) = bp.f(apl(bp.a, ω), apl(bp.b, ω))
 @inline (bp::BinaryPointwise)(ω) = bp.f(@show(apl(bp.a, ω)), @show(apl(bp.b, ω)))
+
+# struct Pointwise{D, PARAMS}
+#   x::D
+#   params::PARAMS
+# end
+
+# # # Todo, specialise this to 1,2,3,4,5 arguments
+# (m::Pointwise)(ω) = m.x((liftapply(p, ω) for p in m.params)...)(ω)  
+# (x::Type{<:Distribution})(params...) = Pointwise(x, params)
+# Base.show(io::IO, pw::Pointwise) = "$(pw.x)ₚ $(pw.params)"
+
