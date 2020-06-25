@@ -12,8 +12,9 @@ function poissonmodel()
   κ = 3 ~ Gamma(ακ, βκ)
 
   # Model 1
+  N = 10
   Y = ifelse(k ==ₚ 2,
-             Poisson(λ),
-             NegativeBinomial(λ, κ))
+             Mv(Poissonₚ(λ), N),
+             Mv(NegativeBinomialₚ(λ, κ), N))
 
 end

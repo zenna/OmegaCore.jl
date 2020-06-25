@@ -1,36 +1,119 @@
-export BinaryPointwise, ==ₚ
-using Distributions: Distribution
+# module Pointwise
 
-# # Equality Condition
-# Many (but not all) inference problems are of the form `X = x` where `X` is a
-# a random variable abd `x` is a concrete constant.  Problems in this form often
-# permit more tractable inference.  To exploit this we use a new type EqualityCondition
-# so that we can identify theses cases just from their types
+using ..Var
+export pw, ==ₚ, l, dl, ₚ, PwVar
+ 
+"""
+Pointwise application.
 
-"ω -> f(a(ω), b(ω))"
-struct BinaryPointwise{F, A, B}
-  f::F
-  a::A
-  b::B
+Pointwise function application gives meaning to expressions such as `x + y`  when `x` and `y` are functions.
+That is `x + y` is the function `ω -> x(ω) + y(ω)`.
+
+An argument can be either __lifted__ or __not lifted__.
+For example in `x = 1 ~  Normal(0, 1); y = pw(+, x, 3)`, `x` will be lifted but `3` will not be in the sense that
+`y` will resolve to `ω -> x(ω) + 3` and not `ω -> x(ω) + 3(ω)`.
+
+`pw` uses some reasonable defaults for what to lift and what not to lift, but to have more explicit control use `l` and `dl` to
+lift and dont lift respectively.
+
+Example:
+```
+using Distributions
+x(ω) = Uniform(ω, 0, 1)
+y = pw(+, x, 4)
+
+f(ω) = Bool(Bernoulli(ω, 0.5)) ? sqrt : sin
+sample(pw(map, f, [0, 1, 2]))
+sample(pw(map, sqrt, [0, 1, 2])) # Will error!
+sample(pw(map, dl(sqrt), [0, 1, 2]))
+sample(pw(l(f), 3))
+```
+"""
+
+struct PwVar{ARGS, D}
+  f::D
+  args::ARGS
 end
 
-Base.show(io::IO, bp::BinaryPointwise) = print(io, bp.a, " $(bp.f)ₚ ", bp.b)
-x ==ₚ y = BinaryPointwise(==, x, y)
+pw(f) = (args...) -> PwVar(f, args)
+pw(f, arg, args...) = PwVar(f, (arg, args...))
+Base.show(io::IO, p::PwVar) = print(io, p.f, "ₚ", p.args)
 
-const DontLift = Union{Number}
-@inline apl(f, ω) = f(ω)
-@inline apl(f::DontLift, ω) = f
+abstract type ABox end
 
-# @inline (bp::BinaryPointwise)(ω) = bp.f(apl(bp.a, ω), apl(bp.b, ω))
-@inline (bp::BinaryPointwise)(ω) = bp.f(@show(apl(bp.a, ω)), @show(apl(bp.b, ω)))
+struct LiftBox{T} <: ABox
+  val::T
+end
+"`l(x)` constructs object that indicates that `x` should be applied pointwise.  See `pw`"
+l(x) = LiftBox(x)
 
-# struct Pointwise{D, PARAMS}
-#   x::D
-#   params::PARAMS
+struct DontLiftBox{T} <: ABox
+  val::T
+end
+"`dl(x)` constructs object that indicates that `x` should be not applied pointwise.  See `pw`"
+dl(x) = DontLiftBox(x)
+
+# Traits
+struct Lift end
+struct DontLift end
+
+# Trait functions
+traitlift(::Type{T}) where T  = DontLift()
+traitlift(::Type{<:Function}) = Lift()
+traitlift(::Type{<:Variable}) = Lift()
+traitlift(::Type{<:Member}) = Lift()
+traitlift(::Type{<:DataType}) = DontLift()
+traitlift(::Type{<:LiftBox}) = Lift()
+traitlift(::Type{<:DontLiftBox}) = DontLift()
+
+@inline liftapply(f::T, ω) where T = liftapply(traitlift(T), f, ω)
+@inline liftapply(::DontLift, f, ω) = f
+@inline liftapply(::DontLift, f::ABox, ω) = f.val
+@inline liftapply(::Lift, f, ω) = f(ω)
+@inline liftapply(::Lift, f::ABox, ω) = (f.val)(ω)
+@inline liftapply(::Lift, f::ABox, ω::ABox) = (f.val)(ω.val)
+@inline liftapply(::Lift, f, ω::ABox) = f(ω.val)
+
+(p::PwVar{Tuple{T1}})(ω) where {T1} =
+  p.f(liftapply(p.args[1], ω))
+(p::PwVar{Tuple{T1}})(id, ω) where {T1} =
+  p.f(id, liftapply(p.args[1], ω))
+
+(p::PwVar{Tuple{T1, T2}})(ω) where {T1, T2} =
+  p.f(liftapply(p.args[1], ω), liftapply(p.args[2], ω))
+(p::PwVar{Tuple{T1, T2}})(id, ω) where {T1, T2} =
+  p.f(id, liftapply(p.args[1], ω), liftapply(id, p.args[2], ω))
+
+(p::PwVar{<:Tuple})(ω) =
+  p.f((liftapply(arg, ω) for arg in p.args)...)
+(p::PwVar{<:Tuple})(id, ω) =
+  p.f(id, (liftapply(arg, ω) for arg in p.args)...)
+
+# # Notation
+export ==ₚ, >=ₚ, <=ₚ
+@inline x ==ₚ y = pw(==, x, y)
+@inline x >=ₚ y = pw(>=, x, y)
+@inline x <=ₚ y = pw(<=, x, y)
+
+using Distributions
+Normalₚ(args...) = pw(Distributions.Normal, args...)
+Uniformₚ(args...) = pw(Distributions.Uniform, args...)
+Gammaₚ(args...) = pw(Distributions.Gamma, args...)
+DiscreteUniformₚ(args...) = pw(Distributions.DiscreteUniform, args...)
+Poissonₚ(args...) = pw(Distributions.Poisson, args...)
+NegativeBinomialₚ(args...) = pw(Distributions.NegativeBinomial, args...)
+
+export Normalₚ,
+       Uniformₚ,
+       Gammaₚ,
+       DiscreteUniformₚ,
+       Poissonₚ,
+       NegativeBinomialₚ
+
+# # Collections
+# @inline randcollection(xs) = ω -> 32(x -> liftapply(x, ω), xs)
+# struct LiftConst end
+# const ₚ = LiftConst()
+# Base.:*(xs, ::LiftConst) = randcollection(xs)
+
 # end
-
-# # # Todo, specialise this to 1,2,3,4,5 arguments
-# (m::Pointwise)(ω) = m.x((liftapply(p, ω) for p in m.params)...)(ω)  
-# (x::Type{<:Distribution})(params...) = Pointwise(x, params)
-# Base.show(io::IO, pw::Pointwise) = "$(pw.x)ₚ $(pw.params)"
-

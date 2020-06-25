@@ -29,13 +29,14 @@ sample(pw(map, dl(sqrt), [0, 1, 2]))
 sample(pw(l(f), 3))
 ```
 """
-pw(f, x, xs...) = PwVar(f, (x, xs...))
 
 struct PwVar{ARGS, D}
   f::D
   args::ARGS
 end
 
+pw(f) = (args...) -> PwVar(f, args)
+pw(f, arg, args...) = PwVar(f, (arg, args...))
 Base.show(io::IO, p::PwVar) = print(io, p.f, "ₚ", p.args)
 
 abstract type ABox end
@@ -78,32 +79,36 @@ traitlift(::Type{<:DontLiftBox}) = DontLift()
 (p::PwVar{Tuple{T1}})(id, ω) where {T1} =
   p.f(id, liftapply(p.args[1], ω))
 
-  # (p::PwVar)(ω) = p.f(f -> liftapply(f, ω), p.args)
+(p::PwVar{Tuple{T1, T2}})(ω) where {T1, T2} =
+  p.f(liftapply(p.args[1], ω), liftapply(p.args[2], ω))
+(p::PwVar{Tuple{T1, T2}})(id, ω) where {T1, T2} =
+  p.f(id, liftapply(p.args[1], ω), liftapply(id, p.args[2], ω))
 
-
-
-# (liftapply(f, ω))(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
-
-
-
-# @inline pw(f, x) = ω -> f(liftapply(x, ω))
-
-# @inline pw(f, x1, x2) = ω -> f(liftapply(x1, ω), liftapply(x2, ω))
-# @inline pw(f, x1, x2, x3) = ω -> f(liftapply(x1, ω), liftapply(x2, ω), liftapply(x1, ω), liftapply(x3, ω))
-# @inline pw(f, x1, args...) = ω -> f(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
-
-# @inline pw(f::LiftBox, x1, x2) = ω -> (liftapply(f, ω))(liftapply(x1, ω), liftapply(x2, ω))
-# @inline pw(f::LiftBox, x1, x2, x3) = ω -> (liftapply(f, ω))(liftapply(x1, ω), liftapply(x2, ω), liftapply(x1, ω), liftapply(x3, ω))
-# @inline pw(f::LiftBox, x1, args...) = ω -> (liftapply(f, ω))(liftapply(x1, ω), (liftapply(x, ω) for x in args)...)
-
-# @inline pw(f) = args -> pw(f, args...)
+(p::PwVar{<:Tuple})(ω) =
+  p.f((liftapply(arg, ω) for arg in p.args)...)
+(p::PwVar{<:Tuple})(id, ω) =
+  p.f(id, (liftapply(arg, ω) for arg in p.args)...)
 
 # # Notation
-
 export ==ₚ, >=ₚ, <=ₚ
 @inline x ==ₚ y = pw(==, x, y)
-@inline x >=ₚ y = pw(>>, x, y)
+@inline x >=ₚ y = pw(>=, x, y)
 @inline x <=ₚ y = pw(<=, x, y)
+
+using Distributions
+Normalₚ(args...) = pw(Distributions.Normal, args...)
+Uniformₚ(args...) = pw(Distributions.Uniform, args...)
+Gammaₚ(args...) = pw(Distributions.Gamma, args...)
+DiscreteUniformₚ(args...) = pw(Distributions.DiscreteUniform, args...)
+Poissonₚ(args...) = pw(Distributions.Poisson, args...)
+NegativeBinomialₚ(args...) = pw(Distributions.NegativeBinomial, args...)
+
+export Normalₚ,
+       Uniformₚ,
+       Gammaₚ,
+       DiscreteUniformₚ,
+       Poissonₚ,
+       NegativeBinomialₚ
 
 # # Collections
 # @inline randcollection(xs) = ω -> 32(x -> liftapply(x, ω), xs)

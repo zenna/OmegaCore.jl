@@ -57,7 +57,7 @@ include("solution.jl")               # Satisfy
 include("rejection.jl")         # Rejection sampling Inference
 @reexport using .OmegaRejectionSample
 
-include("pointwise.jl")
-@reexport using .Pointwise
+# include("pointwise.jl")
+# @reexport using .Pointwise
 
 end

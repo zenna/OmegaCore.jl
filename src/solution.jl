@@ -7,6 +7,13 @@ using ..Condition: Conditional
 import ..Var
 export solution
 
+# # Equality Condition
+# Many (but not all) inference problems are of the form `X = x` where `X` is a
+# a random variable abd `x` is a concrete constant.  Problems in this form often
+# permit more tractable inference.  To exploit this we use a new type EqualityCondition
+# so that we can identify theses cases just from their types
+
+
 """
 `solution(x)`
 
@@ -17,7 +24,7 @@ Returns any `ω` such that `x(ω) != ⊥`
 function solution end
 
 const ConstTypes = Union{Real, Array{<:Real}}
-const EqualityCondition{A, B} = BinaryPointwise{typeof(==), A, B} where {A, B <: ConstTypes}
+const EqualityCondition{A, B} = PwVar{Tuple{A, B}, typeof(==)} where {A, B <: ConstTypes}
 tagcondition(ω, condition) = tag(ω, (condition = condition,))
 
 """
