@@ -1,4 +1,4 @@
-using ..Tagging, ..Traits, ..Var, ..Space, ..Dispatch
+using ..Tagging, ..Traits, ..Var, ..Space
 # @inline hasintervene(ω) = hastag(ω, Val{:intervene})
 @inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,))
 @inline (x::Intervened)(ω) = x.x(tagintervene(ω, x.i))
