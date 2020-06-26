@@ -20,6 +20,8 @@ struct Mv{T, SHAPE}
   shape::SHAPE
 end  
 
+traitlift(::Type{<:Mv}) = Lift()
+
 # Base.eltype(Mv{T}) where {T} = 
 
 

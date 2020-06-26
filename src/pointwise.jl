@@ -1,7 +1,7 @@
 module Pointwise
 
 using ..Var
-export pw, ==ₚ, l, dl, ₚ
+export pw, ==ₚ, l, dl, traitlift, List, DontLift
  
 """
 Pointwise application.
@@ -65,6 +65,8 @@ traitlift(::Type{<:Member}) = Lift()
 traitlift(::Type{<:DataType}) = DontLift()
 traitlift(::Type{<:LiftBox}) = Lift()
 traitlift(::Type{<:DontLiftBox}) = DontLift()
+traitlift(::Type{<:PwVar}) = Lift()
+
 
 @inline liftapply(f::T, ω) where T = liftapply(traitlift(T), f, ω)
 @inline liftapply(::DontLift, f, ω) = f
@@ -82,7 +84,9 @@ traitlift(::Type{<:DontLiftBox}) = DontLift()
 (p::PwVar{Tuple{T1, T2}})(ω) where {T1, T2} =
   p.f(liftapply(p.args[1], ω), liftapply(p.args[2], ω))
 (p::PwVar{Tuple{T1, T2}})(id, ω) where {T1, T2} =
-  p.f(id, liftapply(p.args[1], ω), liftapply(id, p.args[2], ω))
+  p.f(liftapply(p.args[1], ω), liftapply(p.args[2], ω))(id, ω)
+
+# Normal(x(ω), y(ω))(id, ω)
 
 (p::PwVar{<:Tuple})(ω) =
   p.f((liftapply(arg, ω) for arg in p.args)...)

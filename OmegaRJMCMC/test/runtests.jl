@@ -13,7 +13,7 @@ function poissonmodel()
 
   # Model 1
   N = 10
-  Y = ifelse(k ==ₚ 2,
+  Y = pw(ifelse)(k ==ₚ 2,
              Mv(Poissonₚ(λ), N),
              Mv(NegativeBinomialₚ(λ, κ), N))
 
