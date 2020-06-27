@@ -77,7 +77,7 @@ traitlift(::Type{<:DontLiftBox}) = DontLift()
 (p::PwVar{Tuple{T1}})(ω) where {T1} =
   p.f(liftapply(p.args[1], ω))
 (p::PwVar{Tuple{T1}})(id, ω) where {T1} =
-  p.f(id, liftapply(p.args[1], ω))
+  p.f(liftapply(p.args[1], ω))(id, ω)
 
 (p::PwVar{Tuple{T1, T2}})(ω) where {T1, T2} =
   p.f(liftapply(p.args[1], ω), liftapply(p.args[2], ω))
