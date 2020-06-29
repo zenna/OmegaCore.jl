@@ -15,7 +15,7 @@ using .Tagging
 include("rng.jl")               # Random number generation
 using ..RNG
 
-include("ids/ids.jl")                # IDs
+include("ids/ids.jl")           # IDs
 @reexport using .IDS
 
 include("space/space.jl")       # Probability / Paramter Spaces
@@ -24,7 +24,7 @@ include("space/space.jl")       # Probability / Paramter Spaces
 include("var/var.jl")           # Random / Parameteric Variables
 @reexport using .Var
 
-# include("ciid.jl")              # Conditional Independence
+# include("ciid.jl")            # Conditional Independence
 # @reexport using .CIID
 
 include("interventions/interventions.jl")         # Causal interventions

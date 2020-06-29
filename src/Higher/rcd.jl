@@ -1,4 +1,4 @@
-export rcd, ∥., ∥ₛ
+export rcd, ∥ₛ
 
 """
     `rcd(x, θ)`
@@ -19,13 +19,13 @@ The random conditional distribution (rcd) of a random variable ``X: Ω → τ_1`
 
 
 rcd(x, θ, eq = ==ₚ) =  ω -> cond(x, eq(θ, θ(ω)))
-rcd(x, θs::Tuple, eq = ==ₚ) = rcd(x, randtuple(θs), eq)
+# rcd(x, θs::Tuple, eq = ==ₚ) = rcd(x, randtuple(θs), eq)
 
 "`rcd`, x ∥ θ"
 x ∥ θ = rcd(x, θ)
 
 "`rcd` with soft equality"
-rcdₛ(x, θ) = rcd(x, θ, ==ₛ)
+# rcdₛ(x, θ) = rcd(x, θ, ==ₛ)
 
-"`rcd` with soft equality"
-x ∥ₛ θ = rcd(x, θ, ==ₛ)
+# "`rcd` with soft equality"
+# x ∥ₛ θ = rcd(x, θ, ==ₛ)
