@@ -50,15 +50,6 @@ end
 idof(m::Member) = m.id
 idof(v::Variable) = v.f.id
 
-# function Var.distapply(::trait(Cond), d::Distribution, id, ω)
-#   # FIXME: Is this correct?
-#   matches = idof(ω.tags.condition.a) == id
-#   if matches
-#     inv = invert(d, ω.tags.condition.b)
-#     ω[id] = (primdist(d), inv)
-#   end
-#   Var.distapply(nothing, d, id, ω)
-# end
 
 function Var.prehook(::trait(Cond), d::Distribution, id, ω)
   # FIXME: Is this correct?
@@ -67,7 +58,6 @@ function Var.prehook(::trait(Cond), d::Distribution, id, ω)
     inv = invert(d, ω.tags.condition.b)
     ω[id] = (primdist(d), inv)
   end
-  Var.distapply(nothing, d, id, ω)
 end
 
 solution(f::Conditional, Ω = defΩ()) =

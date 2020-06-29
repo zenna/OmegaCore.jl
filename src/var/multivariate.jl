@@ -3,6 +3,7 @@ using ..Space
 
 # # Multivariate
 export Mv
+
 """
 Multivariate distribution: Random array where each variable is ciid given
 values for parameters.
@@ -13,21 +14,24 @@ values for parameters.
 - `dist` a variable class, i.e. `dist(id, ω)` must b defined, e.g. `Normal(0, 1)`
 - `shape` Dimensions of Multivariate
 
-f(x::Dims) = map(i->1:i, x)
-g(x::Dims) = Iterators.product(f(x)...)
+# Returns
 
-Mv(dist, shape)(id, ω) = map(id_ -> dist(cat(id, id_)), ω), g(shape))
-
+# Example
 ```julia
-x = Mv(Uniform(0, 1), (100,))
-randsample(x)
+x = 1 ~ Normal(0, 1)
+function f(id, ω)
+  x(ω) + Uniform(0, 1)(id, ω)
+end
+xs = 2 ~ Mv(f, (3, 3))
+randsample((x, xs))
 ```
-
 """
 struct Mv{T, SHAPE}
   dist::T
   shape::SHAPE
-end  
+end
+
+Mv(dist, N::Integer) = Mv(dist, (N,))
 
 traitlift(::Type{<:Mv}) = Lift()
 
@@ -41,8 +45,10 @@ func(d::Normal, x) = x * d.σ + d.μ
 @inline Space.recurse(mv::Mv{<:Distribution}, id, ω) =
   map(x -> func(mv.dist, x), resolve(Mv(prim(mv.dist), mv.shape), id, ω))
 
-# @inline Space.recurse(mv::Mv{<:Distribution}, id, ω) =
-  # mv.dist(ω)
+f(x::Dims) = map(i->1:i, x)
+g(x::Dims) = Iterators.product(f(x)...)
+@inline Space.recurse(mv::Mv{<:T}, id, ω) where T =
+  map(id_ -> mv.dist(append(id, id_), ω), g(mv.shape))
 
 Base.rand(rng::AbstractRNG, mv::Mv{<:PrimitiveDist}) = 
   rand(rng, mv.dist, mv.shape)
