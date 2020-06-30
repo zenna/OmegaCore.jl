@@ -15,7 +15,7 @@ using .Tagging
 include("rng.jl")               # Random number generation
 using ..RNG
 
-include("ids/ids.jl")                # IDs
+include("ids/ids.jl")           # IDs
 @reexport using .IDS
 
 include("space/space.jl")       # Probability / Paramter Spaces
@@ -24,14 +24,14 @@ include("space/space.jl")       # Probability / Paramter Spaces
 include("var/var.jl")           # Random / Parameteric Variables
 @reexport using .Var
 
-# include("ciid.jl")              # Conditional Independence
+# include("ciid.jl")            # Conditional Independence
 # @reexport using .CIID
-
-include("dispatch.jl")          # Dispatch based on tags
-using .Dispatch
 
 include("interventions/interventions.jl")         # Causal interventions
 @reexport using .Interventions
+
+include("Higher/higher.jl")            # Higher order inference
+@reexport using .Higher
 
 include("cassette.jl")
 
@@ -56,5 +56,8 @@ include("solution.jl")               # Satisfy
 
 include("rejection.jl")         # Rejection sampling Inference
 @reexport using .OmegaRejectionSample
+
+# include("pointwise.jl")
+# @reexport using .Pointwise
 
 end

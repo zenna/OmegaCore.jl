@@ -1,3 +1,6 @@
+using OmegaCore
+using Distributions
+
 x = 1 ~ Normal(0, 1)
 y = 2 ~ Normal(0, 3)
 

@@ -62,10 +62,26 @@ function test_parent()
   @test logpdf(μ_, ω) = logpdf(Normal(0, 1), μ_) + logpdf(Normal(μ_, 1), x_)
 end
 
+function test_condition()
+  μ = 1 ~ Normal(0, 1)
+  x = 2 ~ Normal(μ, 1)
+  x_ = 0.123
+  μ_ = 0.987
+
+  μc = μ |ᶜ x ==ₚ x_
+  ω = defω()
+  ω[(1,)] = μ_
+  μc(ω)
+  @test x(ω) == x_
+  logpdf_ = logpdf(Normal(0, 1), μ) + logpdf(Normal(μ, 1), x_)
+  # Will ω have a value for (2,)?
+end
+
 @testset "Conditions" begin
   test_cond!()
   test_pos_measure()
   test_density_cond()
   test_out_of_order_condition()
   test_parent()
+  test_condition()
 end

@@ -4,7 +4,15 @@ using Random
 using Distributions
 using ..Space, ..RNG, ..Tagging, ..Var, ..Traits
 using ..Condition: Conditional
+import ..Var
 export solution
+
+# # Equality Condition
+# Many (but not all) inference problems are of the form `X = x` where `X` is a
+# a random variable abd `x` is a concrete constant.  Problems in this form often
+# permit more tractable inference.  To exploit this we use a new type EqualityCondition
+# so that we can identify theses cases just from their types
+
 
 """
 `solution(x)`
@@ -16,7 +24,7 @@ Returns any `ω` such that `x(ω) != ⊥`
 function solution end
 
 const ConstTypes = Union{Real, Array{<:Real}}
-const EqualityCondition{A, B} = BinaryPointwise{typeof(==), A, B} where {A, B <: ConstTypes}
+const EqualityCondition{A, B} = PwVar{Tuple{A, B}, typeof(==)} where {A, B <: ConstTypes}
 tagcondition(ω, condition) = tag(ω, (condition = condition,))
 
 """
@@ -42,14 +50,14 @@ end
 idof(m::Member) = m.id
 idof(v::Variable) = v.f.id
 
-function Var.distapply(::trait(Cond), d::Distribution, id, ω)
+
+function Var.prehook(::trait(Cond), d::Distribution, id, ω)
   # FIXME: Is this correct?
   matches = idof(ω.tags.condition.a) == id
   if matches
     inv = invert(d, ω.tags.condition.b)
     ω[id] = (primdist(d), inv)
   end
-  Var.distapply(nothing, d, id, ω)
 end
 
 solution(f::Conditional, Ω = defΩ()) =

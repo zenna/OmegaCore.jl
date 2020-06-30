@@ -13,7 +13,7 @@ Metropolis Hastings Sampler
 Starting from `ωinit` produce `n` samples using Metropolis Hastings algorithm
 
 # Arguments
-- rng: AbstractRng used to sample proposals in MH loop
+- `rng`: AbstractRng used to sample proposals in MH loop
 - `ΩT`:
 - `n`: number of samples
 - `logdensity`:  Density that mh will sample from.  Function of ω.

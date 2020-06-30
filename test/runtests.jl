@@ -15,6 +15,7 @@ end
   include("core.jl")
   include("intervene.jl")
   include("logpdf.jl")
+  include("multivariate.jl")
   include("namedtuple.jl")
   include("solution.jl")
   include("tagging.jl")
