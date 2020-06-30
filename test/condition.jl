@@ -73,7 +73,8 @@ function test_condition()
   ω[(1,)] = μ_
   μc(ω)
   @test x(ω) == x_
-  logpdf(Normal(0, 1), μ) + logpdf(Normal(μ, 1), x_)
+  logpdf_ = logpdf(Normal(0, 1), μ) + logpdf(Normal(μ, 1), x_)
+  # Will ω have a value for (2,)?
 end
 
 @testset "Conditions" begin
