@@ -57,4 +57,8 @@ samples = rand(x, 100; alg = SSMH)
 cond!(ω::Ω, bool) where Ω = cond!(traits(Ω), ω, bool)
 @inline cond!(traits, ω, bool) = nothing
 
+
+"`selfcond(x, pred)` conditioned on `predₚ(x)`"
+selfcond(x, pred) = cnd(x, ω -> pred(x(ω)))
+
 end

@@ -56,6 +56,7 @@ function test_multiple_interventions()
   (x, y, z)
   zi = z |ᵈ (x => (ω -> 100.0), y => (ω -> 0.1))
   @test 99 <= randsample(zi) <= 101
+  @test isinferred(randsample, zi)
 end
 
 function test_intervention_logpdf()
