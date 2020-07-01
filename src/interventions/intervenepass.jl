@@ -20,7 +20,7 @@ function passintervene(traits,
                        ω) where {X, V, N <: Int}
   # @show typeof(i.is[1].x)
   is = filter(i -> x == i.x, i.is)
-  if length(is) != 0
+  if !isempty(is)
     is[1].v(ω)
   else
     ctxapply(traits, x, ω)
