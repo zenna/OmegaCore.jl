@@ -15,15 +15,13 @@ using ..Tagging, ..Traits, ..Var, ..Space
 end
 
 function passintervene(traits,
-                       i::MultiIntervention{Tuple{Intervention{X1, V1},
-                                                  Intervention{X2, V2}}},
-                       x::Union{X1, X2},
-                       ω) where {X1, V1, X2, V2}
+                       i::MultiIntervention{NTuple{N, Intervention{X, V}}},
+                       x::X,
+                       ω) where {X, V, N <: Int}
   # @show typeof(i.is[1].x)
-  if x == i.is[1].x
-    i.is[1].v(ω)
-  elseif x == i.is[2].x
-    i.is[2].v(ω)
+  is = filter(i -> x == i.x, i.is)
+  if length(is) != 0
+    is[1].v(ω)
   else
     ctxapply(traits, x, ω)
   end
