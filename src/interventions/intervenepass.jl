@@ -23,13 +23,26 @@ function passintervene(traits,
   ω) where {X1, V1, X2, V2}
 """
 function passintervene(traits,
-                       i::MultiIntervention{NTuple{N, Intervention{X, V}}},
-                       x::X,
-                       ω) where {X, V, N}
+                       i::Union{MultiIntervention{Tuple{Intervention{X1, V1},
+                                                        Intervention{X2, V2}}},
+                                MultiIntervention{Tuple{Intervention{X1, V1},
+                                                        Intervention{X2, V2},
+                                                        Intervention{X3, V3}}},
+                                MultiIntervention{Tuple{Intervention{X1, V1},
+                                                        Intervention{X2, V2},
+                                                        Intervention{X3, V3},
+                                                        Intervention{X4, V4}}},
+                                MultiIntervention{Tuple{Intervention{X1, V1},
+                                                        Intervention{X2, V2},
+                                                        Intervention{X3, V3},
+                                                        Intervention{X4, V4},
+                                                        Intervention{X5, V5}}}},
+                       x::Union{X1, X2, X3, X4, X5},
+                       ω) where {X1, X2, X3, X4, X5, V1, V2, V3, V4, V5}
   # @show typeof(i.is[1].x)
   is = filter(i -> x == i.x, [i.is...])
   if !isempty(is)
-    is[1].v(ω)
+    last(is).v(ω)
   else
     ctxapply(traits, x, ω)
   end

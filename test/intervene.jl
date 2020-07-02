@@ -1,6 +1,7 @@
 using Test
 using OmegaCore
 using Distributions
+using OmegaTest
 
 function test_model()
   # Normally distributed random variable with id 1
@@ -33,7 +34,7 @@ function test_intervention()
   x, y, m = test_model()
   yⁱ = y |ᵈ (x => (ω -> 100.0))
   @test 100.0 <= randsample(yⁱ) <= 101.0
-  @test isinferred(randsample(yⁱ))
+  @test isinferred(randsample, yⁱ)
 end
 
 function test_intervene_diff_parents()
@@ -64,7 +65,7 @@ function test_three_interventions()
   c = 3 ~ Uniform(2.0, 3.0)
   z(ω) = Normal(x(ω)*c(ω), y(ω))((3,), ω)
   (x, y, z)
-  zi = z |ᵈ (x => (ω -> 100.0), y => (ω -> 0.1), z => (w -> 1.0))
+  zi = z |ᵈ (x => (ω -> 100.0), y => (ω -> 0.1), c => (w -> 1.0))
   @test 99 <= randsample(zi) <= 101
 end
 
@@ -96,7 +97,7 @@ end
 @testset "intervene" begin
   test_intervention()
   test_intervene_diff_parents()
-  # test_two_interventions()
-  # test_three_interventions()
+  test_two_interventions()
+  test_three_interventions()
   # test_intervention_logpdf()
 end 
