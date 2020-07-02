@@ -49,12 +49,22 @@ function test_intervene_diff_parents()
   @test yi_ != yi2_
 end
 
-function test_multiple_interventions()
+function test_two_interventions()
   x = 1 ~ Normal(0, 1)
   y = 2 ~ Uniform(10.0, 20.0)
   z(ω) = Normal(x(ω), y(ω))((3,), ω)
   (x, y, z)
   zi = z |ᵈ (x => (ω -> 100.0), y => (ω -> 0.1))
+  @test 99 <= randsample(zi) <= 101
+end
+
+function test_three_interventions()
+  x = 1 ~ Normal(0, 1)
+  y = 2 ~ Uniform(10.0, 20.0)
+  c = 3 ~ Uniform(2.0, 3.0)
+  z(ω) = Normal(x(ω)*c(ω), y(ω))((3,), ω)
+  (x, y, z)
+  zi = z |ᵈ (x => (ω -> 100.0), y => (ω -> 0.1), z => (w -> 1.0))
   @test 99 <= randsample(zi) <= 101
 end
 
@@ -86,5 +96,7 @@ end
 @testset "intervene" begin
   test_intervention()
   test_intervene_diff_parents()
+  # test_two_interventions()
+  # test_three_interventions()
   # test_intervention_logpdf()
 end 

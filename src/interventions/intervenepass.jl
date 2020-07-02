@@ -14,12 +14,20 @@ using ..Tagging, ..Traits, ..Var, ..Space
   end
 end
 
+"""
+Original signature:
+function passintervene(traits,
+  i::MultiIntervention{Tuple{Intervention{X1, V1},
+                             Intervention{X2, V2}}},
+  x::Union{X1, X2},
+  ω) where {X1, V1, X2, V2}
+"""
 function passintervene(traits,
                        i::MultiIntervention{NTuple{N, Intervention{X, V}}},
                        x::X,
-                       ω) where {X, V, N <: Int}
+                       ω) where {X, V, N}
   # @show typeof(i.is[1].x)
-  is = filter(i -> x == i.x, i.is)
+  is = filter(i -> x == i.x, [i.is...])
   if !isempty(is)
     is[1].v(ω)
   else
