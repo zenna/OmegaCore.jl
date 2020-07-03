@@ -98,6 +98,7 @@ export ==ₚ, >=ₚ, <=ₚ
 @inline x <=ₚ y = pw(<=, x, y)
 
 using Distributions
+#FIXme generalize this
 Normalₚ(args...) = pw(Distributions.Normal, args...)
 Uniformₚ(args...) = pw(Distributions.Uniform, args...)
 Gammaₚ(args...) = pw(Distributions.Gamma, args...)
