@@ -1,5 +1,5 @@
 # # Causal interventions
-using ..Var, ..Util
+using ..Var
 export |ᵈ, intervene
 
 
