@@ -29,15 +29,6 @@ function test_merge_3()
   @test randsample(yi3) == 210
 end
 
-function test_merge_3()
-  xx = 1 ~ Normal(0, 1)
-  y(ω) = xx(ω) + 10
-  yi = intervene(y, xx => (ω -> 200.0)) 
-  yi2 = intervene(yi, xx => (ω -> 300.0))
-  yi3 = intervene(yi, xx => (ω -> 400.0))
-  @test randsample(yi3) == 210
-end
-
 function test_merge_4()
   xx = 1 ~ Normal(0, 1)
   y(ω) = xx(ω) + 10
