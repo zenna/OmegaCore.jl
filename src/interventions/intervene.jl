@@ -23,10 +23,40 @@ struct Intervened{X, I}
   i::I
 end
 
-"mergeinterventions"
+"Merge Interventions"
 mergeinterventions(i1::Intervention, i2::Intervention) = MultiIntervention((i1, i2))
 mergeinterventions(i1::Intervention, i2::MultiIntervention) = MultiIntervention((i1, i2.is...))
 mergeinterventions(i1::MultiIntervention, i2::Intervention) = MultiIntervention((i1.is..., i2))
+
+"Merge Intervention Tags"
+function mergetags(nt1::NamedTuple{K1, V1}, nt2::NamedTuple{K2, V2}) where {K1, K2, V1, V2}
+  if K1 ∩ K2 == [:intervene]    
+    ks = []
+    values = [] 
+    for (k,v) in zip(keys(nt1), nt1)
+      if k != :intervene
+        push!(ks, k)
+        push!(values, v)
+      end
+    end
+
+    for (k,v) in zip(keys(nt2), nt2)
+      if k != :intervene
+        push!(ks, k)
+        push!(values, v)
+      end
+    end
+    
+    push!(ks, :intervene)
+    push!(values, mergeinterventions(nt2[:intervene], nt1[:intervene]))
+
+    NamedTuple{(ks...,)}(values)
+  else
+    Core.println(K1, " naa ", K2)
+    @assert false "Unimplemented"
+  end
+
+end
 
 "intervened"
 intervene(x, intervention::Intervention) = Intervened(x, intervention)

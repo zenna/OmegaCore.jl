@@ -1,6 +1,6 @@
 using ..Tagging, ..Traits, ..Var, ..Space
 # @inline hasintervene(ω) = hastag(ω, Val{:intervene})
-@inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,), mergeinterventions)
+@inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,), mergetags)
 @inline (x::Intervened)(ω) = x.x(tagintervene(ω, x.i))
 
 @inline function passintervene(traits, i::Intervention{X, V}, x::X, ω) where {X, V}

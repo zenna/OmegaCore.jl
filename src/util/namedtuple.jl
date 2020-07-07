@@ -58,34 +58,7 @@ mergef(f, nt1, nt2)
   if isempty(K1 ∩ K2)
     :(merge(nt1, nt2))
   else
-    if K1 ∩ K2 == [:intervene]
-      quote
-        ks = []
-        values = [] 
-        for (k,v) in zip(keys(nt1), nt1)
-          if k != :intervene
-            push!(ks, k)
-            push!(values, v)
-          end
-        end
-
-        for (k,v) in zip(keys(nt2), nt2)
-          if k != :intervene
-            push!(ks, k)
-            push!(values, v)
-          end
-        end
-        
-        push!(ks, :intervene)
-        push!(values, f(nt2[:intervene], nt1[:intervene]))
-
-        NamedTuple{(ks...,)}(values)
-      end
-      # @assert false "Unimplemented"
-    else
-      Core.println(K1, " naa ", K2)
-      @assert false "Unimplemented"
-    end
+    :(f(nt1, nt2))
   end
 end
 
