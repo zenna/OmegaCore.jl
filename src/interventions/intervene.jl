@@ -38,7 +38,6 @@ function mergetags(nt1::NamedTuple{K1, V1}, nt2::NamedTuple{K2, V2}) where {K1, 
     Core.println(K1, " naa ", K2)
     @assert false "Unimplemented"
   end
-
 end
 
 "intervened"
