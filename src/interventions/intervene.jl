@@ -1,5 +1,5 @@
 # # Causal interventions
-using ..Var
+using ..Var, ..Util
 export |ᵈ, intervene
 
 
@@ -11,12 +11,8 @@ struct Intervention{X, V} <: AbstractIntervention
   v::V
 end
 
-# Intervention(x::Pair{Variable, <:Number}) = Intervention(x.first, ω -> x.second)
-# Intervention(x::Pair) = Intervention(x.first, typeof(x.second) <: Number ? ω -> x.second : x.second)
-
-Intervention(x::Pair) = Intervention((x...,))
-Intervention(x::Tuple{Variable, <:Number}) = Intervention(x[1], ω -> x[2])
-Intervention(x::Tuple) = Intervention(x[1], x[2])
+Intervention(x::Pair{X, <:Number}) where X = Intervention(x.first, ω -> x.second)
+Intervention(x::Pair) = Intervention(x.first, x.second)
 
 "Multiple variables intervened"
 struct MultiIntervention{XS} <: AbstractIntervention
@@ -37,26 +33,7 @@ mergeinterventions(i1::MultiIntervention, i2::Intervention) = MultiIntervention(
 "Merge Intervention Tags"
 function mergetags(nt1::NamedTuple{K1, V1}, nt2::NamedTuple{K2, V2}) where {K1, K2, V1, V2}
   if K1 ∩ K2 == [:intervene]    
-    ks = []
-    values = [] 
-    for (k,v) in zip(keys(nt1), nt1)
-      if k != :intervene
-        push!(ks, k)
-        push!(values, v)
-      end
-    end
-
-    for (k,v) in zip(keys(nt2), nt2)
-      if k != :intervene
-        push!(ks, k)
-        push!(values, v)
-      end
-    end
-    
-    push!(ks, :intervene)
-    push!(values, mergeinterventions(nt2[:intervene], nt1[:intervene]))
-
-    NamedTuple{(ks...,)}(values)
+    merge(merge(nt1, nt2), (intervene = mergeinterventions(nt2[:intervene], nt1[:intervene]),))
   else
     Core.println(K1, " naa ", K2)
     @assert false "Unimplemented"

@@ -3,7 +3,7 @@ using OmegaCore
 using Distributions
 using OmegaTest
 
-function minimal_example()
+function test_chained_interventions_1()
   xx = 1 ~ Normal(0, 1)
   y(ω) = xx(ω) + 10
   yi = intervene(y, xx => (ω -> 200.0)) 
@@ -11,7 +11,25 @@ function minimal_example()
   @test randsample(yi2) == 210
 end
 
-function minimal_example_2()
+function test_chained_interventions_2()
+  xx = 1 ~ Normal(0, 1)
+  y(ω) = xx(ω) + 10
+  xr = 2 ~ Normal(30, 1)
+  yi = intervene(y, xx => xr) 
+  yi2 = intervene(yi, xr => (ω -> 300.0))
+  @test randsample(yi2) == 310
+end
+
+function test_chained_interventions_3()
+  xx = 1 ~ Normal(0, 1)
+  y(ω) = xx(ω) + 10
+  yi = intervene(y, xx => (ω -> 200.0)) 
+  yi2 = intervene(yi, xx => (ω -> 300.0))
+  yi3 = intervene(yi, xx => (ω -> 400.0))
+  @test randsample(yi3) == 210
+end
+
+function test_chained_interventions_4()
   xx = 1 ~ Normal(0, 1)
   y(ω) = xx(ω) + 10
   xr = 2 ~ Normal(30, 1)
@@ -117,6 +135,6 @@ end
   #test_two_interventions()
   #test_three_interventions()
   # test_intervention_logpdf()
-  minimal_example()
-  minimal_example_2()
+  test_chained_interventions_1()
+  test_chained_interventions_2()
 end 
