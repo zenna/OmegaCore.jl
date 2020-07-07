@@ -1,4 +1,5 @@
 # # Causal interventions
+using ..Var
 export |ᵈ, intervene
 
 
@@ -10,7 +11,12 @@ struct Intervention{X, V} <: AbstractIntervention
   v::V
 end
 
-Intervention(x::Pair) = Intervention(x.first, x.second)
+# Intervention(x::Pair{Variable, <:Number}) = Intervention(x.first, ω -> x.second)
+# Intervention(x::Pair) = Intervention(x.first, typeof(x.second) <: Number ? ω -> x.second : x.second)
+
+Intervention(x::Pair) = Intervention((x...,))
+Intervention(x::Tuple{Variable, <:Number}) = Intervention(x[1], ω -> x[2])
+Intervention(x::Tuple) = Intervention(x[1], x[2])
 
 "Multiple variables intervened"
 struct MultiIntervention{XS} <: AbstractIntervention
