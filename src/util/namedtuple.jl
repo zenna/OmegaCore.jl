@@ -58,13 +58,8 @@ mergef(f, nt1, nt2)
   if isempty(K1 ∩ K2)
     :(merge(nt1, nt2))
   else
-    if K1 ∩ K2 == [:intervene]      
+    if K1 ∩ K2 == [:intervene]
       quote
-        println("nt1")
-        println(nt1)
-        println("nt2")
-        println(nt2)
-        
         ks = []
         values = [] 
         for (k,v) in zip(keys(nt1), nt1)
@@ -82,11 +77,7 @@ mergef(f, nt1, nt2)
         end
         
         push!(ks, :intervene)
-        push!(values, f(nt1[:intervene], nt2[:intervene]))
-        
-        println("namedtuple arguments")
-        println(ks)
-        println(values)
+        push!(values, f(nt2[:intervene], nt1[:intervene]))
 
         NamedTuple{(ks...,)}(values)
       end

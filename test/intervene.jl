@@ -8,7 +8,7 @@ function minimal_example()
   y(ω) = xx(ω) + 10
   yi = intervene(y, xx => (ω -> 200.0)) 
   yi2 = intervene(yi, xx => (ω -> 300.0))
-  @test randsample(yi2) == 200
+  @test randsample(yi2) == 210
 end
 
 function minimal_example_2()
@@ -112,9 +112,11 @@ function test_intervention_logpdf()
 end
 
 @testset "intervene" begin
-  test_intervention()
-  test_intervene_diff_parents()
-  test_two_interventions()
-  test_three_interventions()
+  #test_intervention()
+  #test_intervene_diff_parents()
+  #test_two_interventions()
+  #test_three_interventions()
   # test_intervention_logpdf()
+  minimal_example()
+  minimal_example_2()
 end 
