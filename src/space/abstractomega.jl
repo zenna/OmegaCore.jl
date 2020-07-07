@@ -17,6 +17,9 @@ tag `ω` with `tags`.
 tag(ω::AbstractΩ, tags) =
   replacetags(ω, mergef(mergetag, ω.tags, tags))
 
+tag(ω::AbstractΩ, tags, mergefunc) =
+  replacetags(ω, mergef(mergefunc, ω.tags, tags))
+
 rmtag(ω::AbstractΩ, tag) =
   replacetags(ω, rmkey(ω.tags, tag))
 

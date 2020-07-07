@@ -3,6 +3,23 @@ using OmegaCore
 using Distributions
 using OmegaTest
 
+function minimal_example()
+  xx = 1 ~ Normal(0, 1)
+  y(ω) = xx(ω) + 10
+  yi = intervene(y, xx => (ω -> 200.0)) 
+  yi2 = intervene(yi, xx => (ω -> 300.0))
+  @test randsample(yi2) == 200
+end
+
+function minimal_example_2()
+  xx = 1 ~ Normal(0, 1)
+  y(ω) = xx(ω) + 10
+  xr = 2 ~ Normal(30, 1)
+  yi = intervene(y, xx => xr) 
+  yi2 = intervene(yi, xr => (ω -> 300.0))
+  @test randsample(yi2) == 310
+end
+
 function test_model()
   # Normally distributed random variable with id 1
   x = 1 ~ Normal(0, 1)

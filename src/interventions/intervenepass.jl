@@ -1,6 +1,6 @@
 using ..Tagging, ..Traits, ..Var, ..Space
 # @inline hasintervene(ω) = hastag(ω, Val{:intervene})
-@inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,))
+@inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,), mergeinterventions)
 @inline (x::Intervened)(ω) = x.x(tagintervene(ω, x.i))
 
 @inline function passintervene(traits, i::Intervention{X, V}, x::X, ω) where {X, V}
@@ -14,14 +14,6 @@ using ..Tagging, ..Traits, ..Var, ..Space
   end
 end
 
-"""
-Original signature:
-function passintervene(traits,
-  i::MultiIntervention{Tuple{Intervention{X1, V1},
-                             Intervention{X2, V2}}},
-  x::Union{X1, X2},
-  ω) where {X1, V1, X2, V2}
-"""
 function passintervene(traits,
                        i::Union{MultiIntervention{Tuple{Intervention{X1, V1},
                                                         Intervention{X2, V2}}},
@@ -42,7 +34,7 @@ function passintervene(traits,
   # @show typeof(i.is[1].x)
   is = filter(i -> x == i.x, [i.is...])
   if !isempty(is)
-    last(is).v(ω)
+    first(is).v(ω)
   else
     ctxapply(traits, x, ω)
   end
