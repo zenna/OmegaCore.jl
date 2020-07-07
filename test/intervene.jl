@@ -2,13 +2,26 @@ using Test
 using OmegaCore
 using Distributions
 using OmegaTest
+using ..Interventions
+
+function test_mergetags()
+  x = 1 ~ Normal(0.0, 1.0)
+  y(ω) = x(ω) + 10.0
+  yi = intervene(y, x => (ω -> 100.0))
+  yii = intervene(yi, x => (ω -> 200.0))
+  yiii = intervene(yi, (x => (ω -> 100.0), x => (ω -> 200.0)))
+  nt1 = (intervene = yi.i,)
+  nt2 = (intervene = yii.i,)
+  @test string(mergetags(nt1, nt2)) == string((intervene = yiii.i,))
+end
 
 function test_merge_1()
   xx = 1 ~ Normal(0, 1)
   y(ω) = xx(ω) + 10
-  yi = intervene(y, xx => (ω -> 200.0)) 
+  yi = intervene(y, xx => (ω -> 200.0))
   yi2 = intervene(yi, xx => (ω -> 300.0))
   @test randsample(yi2) == 210
+  @test isinferred(randsample, yi2)
 end
 
 function test_merge_2()
@@ -18,15 +31,16 @@ function test_merge_2()
   yi = intervene(y, xx => xr) 
   yi2 = intervene(yi, xr => (ω -> 300.0))
   @test randsample(yi2) == 310
+  @test isinferred(randsample, yi2)
 end
 
 function test_merge_3()
   xx = 1 ~ Normal(0, 1)
   y(ω) = xx(ω) + 10
-  yi = intervene(y, xx => (ω -> 200.0)) 
-  yi2 = intervene(yi, xx => (ω -> 300.0))
+  yi = intervene(y, xx => (ω -> 200.0, x => (ω -> 300.0))) 
   yi3 = intervene(yi, xx => (ω -> 400.0))
   @test randsample(yi3) == 210
+  @test isinferred(randsample, yi3)
 end
 
 function test_merge_4()
@@ -37,6 +51,7 @@ function test_merge_4()
   yi = intervene(y, xx => xrr) 
   yi2 = intervene(yi, xr => (ω -> 30.0))
   @test randsample(yi2) == 910.0
+  @test isinferred(randsample, yi2)
 end
 
 function test_model()
@@ -136,6 +151,7 @@ end
   #test_two_interventions()
   #test_three_interventions()
   # test_intervention_logpdf()
+  test_mergetags()
   test_merge_1()
   test_merge_2()
   test_merge_3()
