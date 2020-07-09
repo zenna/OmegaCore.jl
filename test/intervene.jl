@@ -2,17 +2,26 @@ using Test
 using OmegaCore
 using Distributions
 using OmegaTest
-using ..Interventions
+using OmegaCore.Interventions
 
 function test_mergetags()
   x = 1 ~ Normal(0.0, 1.0)
   y(ω) = x(ω) + 10.0
-  yi = intervene(y, x => (ω -> 100.0))
-  yii = intervene(yi, x => (ω -> 200.0))
-  yiii = intervene(yi, (x => (ω -> 100.0), x => (ω -> 200.0)))
+  c1 = (ω -> 100.0)
+  c2 = (ω -> 200.0)
+  yi = intervene(y, x => c1)
+  yii = intervene(yi, x => c2)
+  yiii = intervene(yi, (x => c1, x => c2))
+  yiii2 = intervene(yi, (x => c2, x => c1))
+
   nt1 = (intervene = yi.i,)
   nt2 = (intervene = yii.i,)
-  @test string(mergetags(nt1, nt2)) == string((intervene = yiii.i,))
+  ntmerged = mergetags(nt1, nt2)
+  @test isinferred(mergetags, nt1, nt2)
+
+  # Only one of these should be true
+  # @test ntmerged.intervene == yiii.i
+  @test ntmerged.intervene == yiii2.i
 end
 
 function test_merge_1()
@@ -21,6 +30,7 @@ function test_merge_1()
   yi = intervene(y, xx => (ω -> 200.0))
   yi2 = intervene(yi, xx => (ω -> 300.0))
   @test randsample(yi2) == 210
+  # yi2(ω)
   @test isinferred(randsample, yi2)
 end
 
@@ -37,7 +47,7 @@ end
 function test_merge_3()
   xx = 1 ~ Normal(0, 1)
   y(ω) = xx(ω) + 10
-  yi = intervene(y, xx => (ω -> 200.0, x => (ω -> 300.0))) 
+  yi = intervene(y, (xx => (ω -> 200.0), x => (ω -> 300.0)))
   yi3 = intervene(yi, xx => (ω -> 400.0))
   @test randsample(yi3) == 210
   @test isinferred(randsample, yi3)

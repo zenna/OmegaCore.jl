@@ -14,8 +14,13 @@ abstract type AbstractΩ end
 
 tag `ω` with `tags`.
 """
-tag(ω::AbstractΩ, tags, mergefunc=mergetag) =
+function tag(ω::AbstractΩ, tags, mergefunc=mergetag)
+  # @show ω.tags
+  # @show tags
+  # println()
+  # @assert false
   replacetags(ω, mergef(mergefunc, ω.tags, tags))
+end
 
 rmtag(ω::AbstractΩ, tag) =
   replacetags(ω, rmkey(ω.tags, tag))

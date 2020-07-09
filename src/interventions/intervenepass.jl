@@ -32,9 +32,19 @@ function passintervene(traits,
                        x::Union{X1, X2, X3, X4, X5},
                        ω) where {X1, X2, X3, X4, X5, V1, V2, V3, V4, V5}
   # @show typeof(i.is[1].x)
-  is = filter(i -> x == i.x, [i.is...])
-  if !isempty(is)
-    first(is).v(ω)
+  # is = filter(i -> x == i.x, [i.is...])
+  # if !isempty(is)
+  #   first(is).v(ω)
+  # else
+  #   ctxapply(traits, x, ω)
+  # end
+
+  index = 1;
+  while (index <= length(i.is) && x != i.is[index].x)
+    index += 1
+  end
+  if (index <= length(i.is))
+    i.is[index].v(ω)
   else
     ctxapply(traits, x, ω)
   end
