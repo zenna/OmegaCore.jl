@@ -12,6 +12,12 @@ notifications:
   email: false
 env:
   - DOCUMENTER_DEBUG="true" CONDA_JL_VERSION="2" PYTHON=""
+
+script:
+  - julia --project --check-bounds=yes -e 'using Pkg;
+                                           Pkg.develop(PackageSpec(path=joinpath(pwd(), "test/OmegaTest/"));
+                                           Pkg.test("OmegaCore"; coverage=true)'
+
 after_success:
   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
 matrix:
