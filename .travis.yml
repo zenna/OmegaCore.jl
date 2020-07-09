@@ -15,7 +15,7 @@ env:
 
 script:
   - julia --project --check-bounds=yes -e 'using Pkg;
-                                           Pkg.develop(PackageSpec(path=joinpath(pwd(), "test/OmegaTest/"));
+                                           Pkg.develop(PackageSpec(path=joinpath(pwd(), "test/OmegaTest/")));
                                            Pkg.test("OmegaCore"; coverage=true)'
 
 after_success:
