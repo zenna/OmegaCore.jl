@@ -10,8 +10,11 @@ export StdNormal, StdUniform
 function returntype end
 
 "Parameterless Distribution"
-abstract type PrimitiveDist end
-struct StdNormal <: PrimitiveDist end # FIXME: Should be parametezed by type
+abstract type ParamFreeDist end
+
+(p::ParamFreeDist)(id, ω) = resolve(p, id, ω)
+
+struct StdNormal <: ParamFreeDist end # FIXME: Should be parametezed by type
 Base.eltype(::Type{StdNormal}) = Float64
 Distributions.logpdf(::StdNormal, x) =
   Distributions.logpdf(Normal(0, 1), x)
@@ -19,7 +22,7 @@ Base.rand(rng::AbstractRNG, ::StdNormal) = rand(rng, Normal(0, 1))
 Base.rand(rng::AbstractRNG, ::StdNormal, shape::Dims) = rand(rng, Normal(0, 1), shape)
 
 
-struct StdUniform <: PrimitiveDist end
+struct StdUniform <: ParamFreeDist end
 Base.eltype(::Type{StdUniform}) = Float64
 Base.rand(rng::AbstractRNG, ::StdUniform) = rand(rng, Uniform(0, 1))
 badger(rng::AbstractRNG, ::StdUniform, shape::Dims) = rand(rng, Uniform(0, 1), shape)

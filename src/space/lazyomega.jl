@@ -35,8 +35,3 @@ end
 # resolve(dist::LazyΩ{Tags, T{ID}}, id::ID, ω) where {ID, T} = 
 #   @assert false
 
-function Distributions.logpdf(ω::LazyΩ)
-  reduce(ω.data; init = 0.0) do logpdf_, (id, (dist, val))
-    logpdf_ + logpdf(dist, val)
-  end
-end

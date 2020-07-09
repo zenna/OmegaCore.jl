@@ -1,4 +1,16 @@
-module LogPdf
+module Proposals
+
+"""
+`proposal(x)`
+
+# Returns
+- `(ω = ω_, proposalenergy = proposalenergy_)` named tuple
+"""
+function proposal(x, ω)
+end
+
+function 
+
 
 # import Distributions: logpdf, Distribution
 
