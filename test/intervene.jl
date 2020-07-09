@@ -161,9 +161,9 @@ end
   #test_two_interventions()
   #test_three_interventions()
   # test_intervention_logpdf()
-  test_mergetags()
+  # test_mergetags()
   test_merge_1()
-  test_merge_2()
-  test_merge_3()
-  test_merge_4()
+  # test_merge_2()
+  # test_merge_3()
+  # test_merge_4()
 end 
