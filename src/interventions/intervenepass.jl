@@ -54,14 +54,29 @@ function passintervene(traits,
   # method 3
   # if x == i.is[1].x
   #   i.is[1].v(ω)
-  # elseif x == i.is[1].x
+  # elseif x == i.is[2].x
   #   i.is[2].v(ω)
   # else  
   #   ctxapply(traits, x, ω)
   # end
 
   # method 4
-  helper(i, 1, traits, x, ω)
+  # helper(i, 1, traits, x, ω)
+
+  # method 5: works, probably most concise method outside of (?) generated functions
+  if x == i.is[1].x
+    i.is[1].v(ω)
+  elseif x == i.is[2].x
+    i.is[2].v(ω)
+  elseif length(i.is) >= 3 && x == i.is[3].x
+    i.is[3].v(ω)
+  elseif length(i.is) >= 4 && x == i.is[4].x 
+    i.is[4].v(ω)
+  elseif length(i.is) >= 5 && x == i.is[5].x
+    i.is[5].v(ω)
+  else
+    ctxapply(traits, x, ω)
+  end
 
 end
 

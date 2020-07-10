@@ -47,7 +47,7 @@ end
 function test_merge_3()
   xx = 1 ~ Normal(0, 1)
   y(ω) = xx(ω) + 10
-  yi = intervene(y, (xx => (ω -> 200.0), x => (ω -> 300.0)))
+  yi = intervene(y, (xx => (ω -> 200.0), xx => (ω -> 300.0)))
   yi3 = intervene(yi, xx => (ω -> 400.0))
   @test randsample(yi3) == 210
   @test isinferred(randsample, yi3)
@@ -158,12 +158,12 @@ end
 @testset "intervene" begin
   #test_intervention()
   #test_intervene_diff_parents()
-  #test_two_interventions()
-  #test_three_interventions()
+  test_two_interventions()
+  test_three_interventions()
   # test_intervention_logpdf()
-  # test_mergetags()
+  test_mergetags()
   test_merge_1()
-  # test_merge_2()
-  # test_merge_3()
-  # test_merge_4()
+  test_merge_2()
+  test_merge_3()
+  test_merge_4()
 end 
