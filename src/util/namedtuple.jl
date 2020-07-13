@@ -58,10 +58,10 @@ mergef(f, nt1, nt2)
   if isempty(K1 ∩ K2)
     :(merge(nt1, nt2))
   else
-    Core.println(K1, " naa ", K2)
-    @assert false "Unimplemented"
+    :(f(nt1, nt2))
   end
 end
+
 @post keys(res) == keys(nt1) ∪ keys(nt2)
 @post all((res[k] == nt1[k] for k in keys if k in nt1 && k ∉ nt2))
 @post all((res[k] == nt2[k] for k in keys if k in nt2 && k ∉ nt1))

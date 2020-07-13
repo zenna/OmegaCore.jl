@@ -1,6 +1,6 @@
 using ..Tagging, ..Traits, ..Var, ..Space
 # @inline hasintervene(ω) = hastag(ω, Val{:intervene})
-@inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,))
+@inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,), mergetags)
 @inline (x::Intervened)(ω) = x.x(tagintervene(ω, x.i))
 
 @inline function passintervene(traits, i::Intervention{X, V}, x::X, ω) where {X, V}
@@ -15,15 +15,47 @@ using ..Tagging, ..Traits, ..Var, ..Space
 end
 
 function passintervene(traits,
-                       i::MultiIntervention{Tuple{Intervention{X1, V1},
-                                                  Intervention{X2, V2}}},
-                       x::Union{X1, X2},
-                       ω) where {X1, V1, X2, V2}
-  # @show typeof(i.is[1].x)
+                       i::Union{MultiIntervention{Tuple{Intervention{X1, V1},
+                                                        Intervention{X2, V2}}},
+                                MultiIntervention{Tuple{Intervention{X1, V1},
+                                                        Intervention{X2, V2},
+                                                        Intervention{X3, V3}}},
+                                MultiIntervention{Tuple{Intervention{X1, V1},
+                                                        Intervention{X2, V2},
+                                                        Intervention{X3, V3},
+                                                        Intervention{X4, V4}}},
+                                MultiIntervention{Tuple{Intervention{X1, V1},
+                                                        Intervention{X2, V2},
+                                                        Intervention{X3, V3},
+                                                        Intervention{X4, V4},
+                                                        Intervention{X5, V5}}}},
+                       x::Union{X1, X2, X3, X4, X5},
+                       ω) where {X1, X2, X3, X4, X5, V1, V2, V3, V4, V5}
   if x == i.is[1].x
     i.is[1].v(ω)
   elseif x == i.is[2].x
     i.is[2].v(ω)
+  elseif length(i.is) >= 3 && x == i.is[3].x
+    i.is[3].v(ω)
+  elseif length(i.is) >= 4 && x == i.is[4].x 
+    i.is[4].v(ω)
+  elseif length(i.is) >= 5 && x == i.is[5].x
+    i.is[5].v(ω)
+  else
+    ctxapply(traits, x, ω)
+  end
+end
+
+function passintervene(traits,
+                       i::MultiIntervention{XS},
+                       x,
+                       ω) where XS
+  index = 1;
+  while (index <= length(i.is) && x != i.is[index].x)
+    index += 1
+  end
+  if (index <= length(i.is))
+    i.is[index].v(ω)
   else
     ctxapply(traits, x, ω)
   end
