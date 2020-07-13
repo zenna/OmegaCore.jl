@@ -29,8 +29,8 @@ function test_changed_rettype_merge()
   y(ω) = xx(ω) + 1 # int 
   yi = intervene(y, xx => (ω -> 200.0)) # float
   @test randsample(yi) == 201
-  # yi2(ω)
-  @test isinferred(randsample, yi)
+  ω = defω()
+  @test Base.return_types(yi, Base.typesof(ω))[1] == Union{Int64, Float64}
 end
 
 function test_merge_1()
