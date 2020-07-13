@@ -35,7 +35,6 @@ function mergetags(nt1::NamedTuple{K1, V1}, nt2::NamedTuple{K2, V2}) where {K1, 
   if K1 ∩ K2 == [:intervene]    
     merge(merge(nt1, nt2), (intervene = mergeinterventions(nt2[:intervene], nt1[:intervene]),))
   else
-    Core.println(K1, " naa ", K2)
     @assert false "Unimplemented"
   end
 end

@@ -24,6 +24,15 @@ function test_mergetags()
   @test ntmerged.intervene == yiii2.i
 end
 
+function test_changed_rettype_merge()
+  xx = 1 ~ Categorical([0.5, 0.5])
+  y(ω) = xx(ω) + 1 # int 
+  yi = intervene(y, xx => (ω -> 200.0)) # float
+  @test randsample(yi) == 201
+  # yi2(ω)
+  @test isinferred(randsample, yi)
+end
+
 function test_merge_1()
   xx = 1 ~ Normal(0, 1)
   y(ω) = xx(ω) + 10
@@ -63,6 +72,20 @@ function test_merge_4()
   @test randsample(yi2) == 910.0
   @test isinferred(randsample, yi2)
 end
+
+function test_merge_more_than_5_interventions()
+  xx = 1 ~ Normal(0, 1)
+  y(ω) = xx(ω) + 10
+  yi = intervene(y, xx => (ω -> 200.0))
+  yi2 = intervene(yi, xx => (ω -> 300.0))
+  yi3 = intervene(yi2, xx => (ω -> 400.0))
+  yi4 = intervene(yi3, xx => (ω -> 500.0))
+  yi5 = intervene(yi4, xx => (ω -> 600.0))
+  yi6 = intervene(yi5, xx => (ω -> 700.0))
+  @test randsample(yi6) == 210
+  # isinferred fails
+end
+
 
 function test_model()
   # Normally distributed random variable with id 1
@@ -166,4 +189,6 @@ end
   test_merge_2()
   test_merge_3()
   test_merge_4()
+  test_changed_rettype_merge()
+  test_merge_more_than_5_interventions()
 end 
