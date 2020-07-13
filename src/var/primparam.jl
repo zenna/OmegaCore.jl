@@ -1,50 +1,31 @@
-export unit, bounded, choice, finite
-export isprimparam, PrimParam
+export Unit, Choice, 𝕀, ℝ
+export PrimitiveParam, Param
 
 # # Primitives
 # These are primitive parameters.
 
-"""
-Choice over Boolean valued variable.
+abstract type PrimitiveParam end
 
-`choice(ϕ, T)`
-"""
-function choice end
+"Nondeterministic choice of true or false"
+struct BinaryChoice{T <: Integer} <: PrimitiveParam end
+Base.eltype(::Type{BinaryChoice{T}}) where T = T
 
-"""
-A variable of type T bounded between 0 and 1
+"A Real-valued variable of type `T` in the unit interval: [0, 1]"
+struct Unit{T} <: PrimitiveParam end
+Base.eltype(::Type{Unit{T}}) where T = T
+const 𝕀 = Unit
 
-```
-x(ϕ) = unit(ϕ, Float16)
-```
-"""
-function unit end
+# # Families of parameters
+"Parameter family"
+abstract type Param end
 
-"""
-A variable of type T bounded between `lb` and `ub`
-
-```julia
-function f(φ)
-  x = 1 ~ bounded(φ, Float64, 0.0, 10.0)
-  y = 2 ~ bounded(φ, Float64, 0.0, 10.0)
-  x + y
+"Nondeterministic choice of values in collection"
+struct Choice{T} <: Param
+  of::T
 end
-```
-"""
-bounded(φ, T, lb, ub) = unit(φ, T) * (ub - lb) + lb
+@inline f(d::Choice, id, ω) =
+  resolve(StdNormal(), id, ω) * d.σ + d.μ
 
-"""
-Variable ranging over finite set
-
-```
-finite(φ, 1:10)
-finite(φ, (1,2,3))
-```
-"""
-function finite end
-
-
-"Trait: Is `T` a primitive parameter function -- by default no"
-isprimparam(::Type{T}) where T = false
-# isprimparam(t::Type{T}) where {T <: Union{choice, unit, finite, bounded}} = true
-PrimParam = Union{typeof(choice), typeof(unit), typeof(finite), typeof(bounded)}
+"The Real numbers"
+struct Reals{T} end
+ℝ = Reals

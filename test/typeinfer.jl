@@ -1,8 +1,10 @@
 using OmegaCore
+using OmegaTest
+using OmegaCore.Traits
+
 using Test
 using Distributions
 using Random
-using OmegaCore.Traits
 
 function testtraits()
   ω = SimpleΩ(Dict())

@@ -1,6 +1,7 @@
 using OmegaCore
 using Test
 using Distributions
+using OmegaTest
 
 function samplemodel()
   x = 1 ~ Normal(0, 1)
@@ -17,12 +18,12 @@ function test_ciid()
 end
 
 function test_shared_parent()
-  parent = 1 ~ ω -> Bool(Bernoulli(0.5)(ω)) ? -100 : 100
-  x(ω) = (~parent)(ω) + Uniform(0, 1)(ω)
+  parent(ω) = Bool(Bernoulli(0.5)((1,), ω)) ? -100 : 100
+  x(id, ω) = parent(ω) + Uniform(0, 1)(id, ω)
   x1 = 2 ~ x
   x2 = 3 ~ x
   z = ω -> (x1(ω), x2(ω))
-  samples = [randsample(z) for i = 1:10]
+  samples = randsample(z, 10)
   t1 = [(x1_ != x2_) for (x1_, x2_) in samples]
   t2 = [(abs(x1_ - x2_) <= 2) for (x1_, x2_) in samples]
   @test all(t1)

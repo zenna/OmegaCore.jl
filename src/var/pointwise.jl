@@ -33,6 +33,8 @@ sample(pw(l(f), 3))
 struct PwVar{ARGS, D}
   f::D
   args::ARGS
+  PwVar(f::F, args::A) where {F, A} = new{A, F}(f, args)
+  PwVar(f::Type{T}, args::A) where {T, A} = new{A, Type{T}}(f, args)
 end
 
 pw(f) = (args...) -> PwVar(f, args)
@@ -98,6 +100,7 @@ export ==ₚ, >=ₚ, <=ₚ
 @inline x <=ₚ y = pw(<=, x, y)
 
 using Distributions
+#FIXme generalize this
 Normalₚ(args...) = pw(Distributions.Normal, args...)
 Uniformₚ(args...) = pw(Distributions.Uniform, args...)
 Gammaₚ(args...) = pw(Distributions.Gamma, args...)

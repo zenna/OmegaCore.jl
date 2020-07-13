@@ -61,6 +61,7 @@ function passintervene(traits,
   end
 end
 
+
 # We only consider intervention if the intervention types match
 @inline passintervene(traits, i::AbstractIntervention, x, ω) =
   ctxapply(traits, x, ω)

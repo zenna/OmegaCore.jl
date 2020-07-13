@@ -1,44 +1,41 @@
-module LogPdf
+module Proposals
+using Distributions: Distributions. logpdf
+using Random: AbstractRNG
 
-# import Distributions: logpdf, Distribution
+using ..Tag, ..Rng
 
-# @inline taglogpdf(ω, logpdf_, see) = 
-#   tag(ω, (logpdf = Box(0.0), seen = seen))
+"""
+`proposal(x)`
 
-# "Logdensity of `f` on trace `ω`"
-# function logpdf(f, ω, ID::Type{T} = defID()) where T
-#   tω = taglogpdf(ω, Box(0.0), Set{ID}())
-#   f(tω)  
-#   tω.tags.logpdf.val
-# end
+# Returns
+- `(ω = ω_, proposalenergy = proposalenergy_)` named tuple
+"""
+function propose end
 
-# # Traits
-# struct HasLogPdf end
-# struct NotHasLogPdf end
+@inline taglogpdf(ω, logpdf_, see) = 
+  tag(ω, (logpdf = Box(0.0), seen = seen))
 
-# traithaslogpdf(::Type{<:Distribution}) = HasLogPdf()
-# traithaslogpdf(_) = NotHasLogPdf()
-# handle_logpdf(ret, f::FT, ω::ΩT) where {FT, ΩT} =
-#   handle_logpdf(traithastag(ΩT, Val{:logpdf}), traithaslogpdf(FT), ret, f, ω)
+function propose(rng::AbstractRNG, x, ID::Type{T} = defID(), Ω = defΩ())
+  ω = tagrng(Ω(), rng)
+  ω = taglogpdf(ω, Box(0.0), Set{ID}())
+  ## F
+  ## when you encounter a conditioned variable
+  #3 Update its base
+  ## Update logpdf
+end
 
-# function handle_logpdf(::HasTag{:logpdf}, ::HasLogPdf, ret, f, ω)
-#   if scope(ω) ∉ ω.tags.seen
-#     ω.tags.logpdf.val += logpdf(f, ret)
-#     push!(ω.tags.seen, scope(ω))
-#   end
-#   ret
-# end
+function Var.posthook(::trait(Cond), ret, f::Distribution, ω)
+  ω.tags.logpdf.val += logpdf(f, ret)
+  if scope(ω) ∉ ω.tags.seen
+    ω.tags.logpdf.val += logpdf(f, ret)
+    push!(ω.tags.seen, scope(ω))
+  end
+  ret
+end
 
-# handle_logpdf(_, _, ret, f, ω) = ret
-
-# DataShould instead store
-
-# id => Dist
-
-# id => (Dist, Value)
-# (id, Dist) => Value
-
-# logpdf(ω::AbstractΩ) = 
-#   reduce((l, r) -> logpdf(l) + r; init = 0.0)
+## Probs
+# id or without id
+# avoid duplicats, need seen
+# generalize to anything with a logpdf
 
 end

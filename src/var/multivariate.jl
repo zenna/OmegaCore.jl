@@ -50,5 +50,5 @@ g(x::Dims) = Iterators.product(f(x)...)
 @inline Space.recurse(mv::Mv{<:T}, id, ω) where T =
   map(id_ -> mv.dist(append(id, id_), ω), g(mv.shape))
 
-Base.rand(rng::AbstractRNG, mv::Mv{<:PrimitiveDist}) = 
+Base.rand(rng::AbstractRNG, mv::Mv{<:ParamFreeDist}) = 
   rand(rng, mv.dist, mv.shape)

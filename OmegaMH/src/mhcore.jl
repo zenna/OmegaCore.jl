@@ -51,11 +51,11 @@ function mh(rng,
 end
 
 function OmegaCore.randsample(rng,
-                       ΩT::Type{OT},
-                       x,
-                       n,
-                       alg::MHAlg) where {OT}
+                              ΩT::Type{OT},
+                              x,
+                              n,
+                              alg::MHAlg) where {OT}
 end
 
 OmegaCore.randsample(rng, ΩT, x, n, ::MHAlg; kwargs...) = 
-  mh(rng, ΩT, condvar(x), n; kwargs...)
+  mh(rng, ΩT, condvar(x), n; kwargs...) 
