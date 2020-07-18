@@ -44,8 +44,8 @@ include("sample.jl")            # Sample
 include("trackerror.jl")
 using .TrackError
 
-# include("logpdf.jl")            # Log density
-# @reexport using LogPdf
+include("logpdf.jl")            # Log density
+@reexport using .Proposals
 
 include("solution.jl")               # Satisfy
 @reexport using .Solution

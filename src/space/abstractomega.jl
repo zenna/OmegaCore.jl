@@ -1,4 +1,4 @@
-export AbstractΩ, defΩ, defω, recurse, resolve, logenergy, ℓ
+export AbstractΩ, defΩ, defω, recurse, resolve, logenergy, ℓ, idtype
 
 # # Sample Space
 # A sample space represents a set of possible values.
@@ -46,6 +46,8 @@ function resolve end
 
 "`ids(ω)` Collection of ids in `ω`, i.e. domain of ω"
 function ids end
+
+function idtype end
 
 """
 `logenergy(ω)`

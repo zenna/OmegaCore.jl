@@ -12,9 +12,9 @@ In particular, each realization of ``X ∥ Θ`` is the random variable ``X`` con
 
 The random conditional distribution (rcd) of a random variable ``X: Ω → τ_1`` given ``Θ: Ω → τ_2`` is a random variable ``X ∥ Θ:  Ω → ( Ω → τ_1)``, defined as:
 
-``
+```
 (x ∥ θ) = ω -> x | (Θ = Θ(ω))
-``
+```
 """
 
 
