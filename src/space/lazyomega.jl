@@ -25,7 +25,7 @@ traits(::Type{LazyΩ{TAGS, T}}) where {TAGS, T} = traits(TAGS)
 Base.setindex!(ω::LazyΩ, value, id) = 
   ω.data[convertid(idtype(ω), id)] = value
 
-function resolve(dist, id, ω)
+function resolve(dist, id, ω::LazyΩ)
   id_ = convertid(idtype(ω), id)
   # id_ = id
   d, val = get!(() -> (dist, rand(rng(ω), dist)), ω.data, id_)

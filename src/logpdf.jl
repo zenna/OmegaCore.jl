@@ -9,10 +9,14 @@ abstract type ProposalAlg end
 export propose
 
 """
-`proposal(x)`
+  `propose(rng::AbstractRNG, x, Ω = defΩ())`
+
+Propose `ω::Ω` such that `x(ω)` is well defined with corresnponding proposal probability/density
 
 # Returns
-- `(ω = ω_, ℓ = ℓ_)::NamedTuple`
+- `ret = (ω = ω_, ℓ = ℓ_)::NamedTuple` where
+  - `ret.ω`:
+  - `ret.ℓ`:
 """
 function propose end
 
@@ -27,9 +31,6 @@ function propose(rng::AbstractRNG, x, Ω = defΩ())
   # FIXME, should we return ω with rng tagged? Feel like i answers this with rejsample
 end
 
-# After the execution of a random variable update the logpdf
-# The value is 0.3
-# FIXME: Should this be Cond trait?
 function Var.posthook(::trait(LogPdf), ret, f::Distribution, id, ω)
   #ω.tags.logpdf.val += logpdf(f, ret)
   # FIXME: scope doesn't exist.

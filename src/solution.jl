@@ -48,8 +48,7 @@ function solution(rng::AbstractRNG,
 end
 
 idof(m::Member) = m.id
-idof(v::Variable) = v.f.id
-
+  idof(v::Variable) = v.f.id
 
 function Var.prehook(::trait(Cond), d::Distribution, id, ω)
   # FIXME: Is this correct?
@@ -74,3 +73,10 @@ end
 # Can we distinguish from X == X to X == Const at type level?
 # how are we actually distapplyign to do it !
 # what more do we need for MH
+
+# Changes 
+# change condition such that we also wat condition and add default behaviour
+#   to do this erroring
+# setup function barrier in this prehook such that if logpdf is there we update
+# get rid of seen shit and rely on fact that rand in lazyomega is statefuk
+# account for fact that we may have already done the update
