@@ -28,8 +28,13 @@ Base.setindex!(ω::LazyΩ, value, id) =
 function resolve(dist, id, ω::LazyΩ)
   id_ = convertid(idtype(ω), id)
   # id_ = id
-  d, val = get!(() -> (dist, rand(rng(ω), dist)), ω.data, id_)
-  val::eltype(dist)  
+  if haskey(ω.data,  id_)
+    d, val = ω.data[id_]
+  else
+    ω.data[id_] = (dist, rand(rng(ω), dist))
+    d, val = ω.data[id_]
+  end
+  val::eltype(dist)   
 end
 
 # resolve(dist::LazyΩ{Tags, T{ID}}, id::ID, ω) where {ID, T} = 

@@ -11,8 +11,8 @@ function OmegaGrad.lineargradient(rv, ω, ::ZygoteGradAlg)
   @assert false "unimplemented"
 end
 
-function OmegaGrad.grad(rv, ω, v, ::ZygoteGradAlg)
-  @assert false "unimplemented"
+function OmegaGrad.grad(rv, ω, ::ZygoteGradAlg)
+  Zygote.gradient(rv, ω)
 end
 
 
