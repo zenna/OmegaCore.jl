@@ -1,5 +1,4 @@
-export rcd, ∥ₛ
-
+export rcd, ∥ₛ, ∥
 """
     `rcd(x, θ)`
 
