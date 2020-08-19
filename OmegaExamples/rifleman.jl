@@ -34,3 +34,5 @@ function test_rifleman()
   @test isapprox(p, 0.33, atol = 0.01)
 end
 
+## CF: Would u have been dead if RF shot, give that you are dead in the real world
+## if RF shot and you would be dead

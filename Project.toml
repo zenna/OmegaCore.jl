@@ -13,8 +13,8 @@ Spec = "b8ccf107-3a88-5e0f-823b-b838c6a0f327"
 
 [extras]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 OmegaTest = "1de29bd8-166e-46b2-8642-f181c225c031"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Test", "Distributions", "OmegaTest"]

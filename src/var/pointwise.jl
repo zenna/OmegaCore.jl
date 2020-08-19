@@ -1,7 +1,8 @@
 # module Pointwise
 
 using ..Var
-export pw, ==ₚ, l, dl, ₚ, PwVar
+export pw, l, dl, ₚ, PwVar
+export ==ₚ, >=ₚ, <=ₚ, >ₚ, <ₚ
  
 """
 Pointwise application.
@@ -94,9 +95,10 @@ traitlift(::Type{<:DontLiftBox}) = DontLift()
   p.f(id, (liftapply(arg, ω) for arg in p.args)...)
 
 # # Notation
-export ==ₚ, >=ₚ, <=ₚ
 @inline x ==ₚ y = pw(==, x, y)
 @inline x >=ₚ y = pw(>=, x, y)
+@inline x >ₚ y = pw(>, x, y)
+@inline x <ₚ y = pw(<, x, y)
 @inline x <=ₚ y = pw(<=, x, y)
 
 using Distributions

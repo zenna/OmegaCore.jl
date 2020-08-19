@@ -23,6 +23,8 @@ struct ConditionException <: Exception end
 
 @inline condf(ω::Ω, x, y) where Ω = condf(traits(Ω), ω, x, y)
 
+@inline tagcondition(ω, condition) = tag(ω, (condition = condition,))
+
 # If error are violated then throw error
 @inline (c::Conditional)(ω) = condf(ω, c.x, c.y)
 
