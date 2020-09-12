@@ -23,6 +23,9 @@ traits(::Type{SimpleΩ{TAGS, T}}) where {TAGS, T} = traits(TAGS)
 
 function resolve(dist, id, ω::SimpleΩ)
   # @assert false
+  @show ω
+  @show id
+  @show ω.data[id]
   d, val = ω.data[id]
   val::eltype(dist)
 end

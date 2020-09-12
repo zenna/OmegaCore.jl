@@ -27,7 +27,7 @@ end
 function test_density_cond()
   rng = Random.MersenneTwister(0)
   μ = 1 ~ Normal(0, 1)
-  x = Normal(μ, 1.0)
+  x = Normalₚ(μ, 1.0)
 
   μ_ = -0.4321
   x_ = 0.1234
