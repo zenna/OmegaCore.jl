@@ -13,6 +13,11 @@ struct Member{F, ID}
   class::F
 end
 
+Base.:(==)(m1::Member, m2::Member) =
+  m1.id == m2.id && m1.class == m2.class
+
+Base.hash(x::Member) = hash(x.id)
+
 # @inline (x::Member)(ω) = x.f(appendscope(ω, x.id))
 @inline Var.recurse(x::Member, ω) = x.class(x.id, ω)
 

@@ -32,7 +32,7 @@ function test_density_cond()
   μ_ = -0.4321
   x_ = 0.1234
   μₓ = μ |ᶜ (x ==ₚ x_)
-  ω = SimpleΩ(Dict((1,) => μ_))
+  ω = LazyΩ(μ => μ_)
   logpdf_ = logpdf(Normal(0, 1), μ_) + logpdf(Normal(μ_, 1), x_)
   @test logpdf(μₓ, ω) == logpdf_
 end
@@ -41,14 +41,14 @@ function test_out_of_order_condition()
   x = 1 ~ Poisson(1.3)
   function f(ω)
     n = x(ω)
-    x = 0.0
+    x_ = 0.0
     for i = 1:n
-      x += (i + 1) ~ Normal(0, 1)(ω)
+      x_ += (i + 1 ~ Normal(0, 1))(ω)
     end
-    x
+    x_
   end
 
-  f_ = f |ᶜ (x ==ₚ 3.0)
+  x_ = x |ᶜ (f ==ₚ 3.0)
   g_ = ω -> (x(ω), f_(ω))
 end
 

@@ -1,4 +1,4 @@
-using Distributions: Normal, Uniform, quantile, cdf, Distribution
+using Distributions
 import Distributions
 using Random: AbstractRNG
 
