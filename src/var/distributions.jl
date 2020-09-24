@@ -20,16 +20,21 @@ Base.rand(rng::AbstractRNG, ::StdNormal{T}) where {T} = rand(rng, Normal(zero(T)
 
 # This is called from dispatch
 @inline (d::Normal{T})(id, ω) where T =
-  @show(Member(id, StdNormal{T}()))(ω) * d.σ + d.μ
+  Member(id, StdNormal{T}())(ω) * d.σ + d.μ
 
 
-# struct StdUniform <: PrimDist end
-# Base.eltype(::Type{StdUniform}) = Float64
-# Base.rand(rng::AbstractRNG, ::StdUniform) = rand(rng, Uniform(0, 1))
+struct StdUniform{T} <: PrimDist end
+Base.eltype(::Type{StdUniform{T}}) where T = T
+Base.rand(rng::AbstractRNG, ::StdUniform{T}) where T = 
+  rand(rng, Uniform(zero(T), one(T)))
 # @inline Space.recurse(d::Distribution, id, ω) =
 #   quantile(d, resolve(StdUniform(), id, ω))
-# # @inline (d::Distribution)(id, ω) =
-# #   quantile(d, resolve(StdUniform(), id, ω))
+
+@inline (d::Bernoulli)(id, ω) = 
+  Member(id, StdUniform{Float64}())(ω) < d.p
+
+@inline (d::Distribution)(id, ω) =
+  quantile(d, Member(id, StdUniform{Float64}())(ω))
 
 """`primdist(d::Distribution)``
 Primitive (parameterless) distribution that `d` is defined in terms of"""
