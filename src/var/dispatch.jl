@@ -1,5 +1,5 @@
 using Distributions: Distribution
-using ..Space, ..Traits
+using ..Basis, ..Traits
 export ctxapply, Vari
 
 # # Dispatch
@@ -9,7 +9,7 @@ export ctxapply, Vari
 # Our implementation models Cassette.jl
 
 "Interceptable Variable"
-const Vari = Union{Variable, Distribution, Mv}
+const Vari = Union{Variable, Distribution, Mv, Member}
 
 (f::Vari)(ω::Ω) where {Ω <: AbstractΩ} = f(traits(Ω), ω)
 (f::Vari)(traits::Trait, ω::Ω) where {Ω <: AbstractΩ} = ctxapply(traits, f, ω)

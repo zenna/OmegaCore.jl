@@ -1,46 +1,56 @@
 module Proposal
+using Distributions
 
-using Distributions: Distribution
-import ..Var
+export propose
 
-function proposal(d::Distribution, id, val, ω)
-  # FIXME: Is this correct?
-  # matches = idof(ω.tags.condition.a) == id
-  # if matches
-  #   ω[id] = (primdist(d), inv)
-  # end
-  # nothing
-  inv = invert(d, val)
-  primdist(d, id) => inv
+function propose!(x::StdUnif, ω)
+  if x ∉ keys(ω.data)
+    ω.data[x] = rand()
+  end
 end
 
-"""Proposal values for other variables given value of `f`
+propose(T, x_, ω) = nothing
 
-# Returns
-"""
-proposal(f, val, ω) = nothing
-
-function Var.prehook(traits, f, ω)
-  proposl_ = proposal(f, ω)
-  updateω!(ω, proposl_)
-  # If I haven't already does this:
-    # check if there is a proposal distribution for this variable
-      # if there is then then apply it
-
-  # FIXME: Is this correct?
-  matches = idof(ω.tags.condition.a) == id
-  if matches
-    inv = invert(d, ω.tags.condition.b)
-    ω[id] = (primdist(d), inv)
+"Make a proposal for random variable `f`"
+function propose!(f, ω)
+  @show ω.data
+  # FIXME: don't want to make proposal more than once do we?
+  for (x, x_) in ω.data
+    @show x, x_
+    proposal_ = propose(x, x_, ω)
+    if !isnothing(proposal_)
+      ω.data = merge(ω.data, proposal_)
+    end
   end
-end'
+  ω
+end
 
+## Where am I making these proposals?
 
-## Where to store dist values?
-## condition / omega itself
-## If we store in Omega then
-## Omega needs to store non-primitives
-  ## complicate logpdf? prolly not realy
-  ## Currently structure of omega is prim rand var, id, val
+Cassette.@context ProposalCtx
+function Cassette.posthook(::trait(Proposeal), ret, f, ω::Ω)
+  ## Add f to ω, since some proposal might depend on it
+  if f in keys(ω.data)
+    @assert ω.data[f] == ret
+  else
+    ω.data[f] = ret
+  end
+  @show f
+  propose!(f, ω)
+end
+
+function Space.prehook(::trait(Proposeal), f::StdUnif, ω::Ω)
+  propose!(f, ω)
+end
+
+"""
+Generate proposal for random variables within `f`, returns ω::Ω
+# Input
+- `f`   Random variable.  Proposal will generate values for depenends of `f`
+- `ω` Initial mapping, to condition variables add to here
+# Returns
+- `ω::Ω` mapping from random variables ot values
+"""
+propose(f, ω) = (f(tagpropose(ω)); ω)
 
 end

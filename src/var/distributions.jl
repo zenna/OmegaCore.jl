@@ -1,57 +1,35 @@
 using Distributions: Normal, Uniform, quantile, cdf, Distribution
 import Distributions
-using Random
-using ..Space
+using Random: AbstractRNG
 
 export invert, primdist, distapply
 export StdNormal, StdUniform
+export PrimDist, ExoRandVar
 
-"returntype(x, ω) is return type of variable `x` on space `ω`"
-function returntype end
+"Primitive Distribution"
+abstract type PrimDist end
 
-"Parameterless Distribution"
-abstract type ParamFreeDist end
+"An exogenous random variable"
+ExoRandVar{F, ID} = Member{F, ID} where {F <: PrimDist}
 
-(p::ParamFreeDist)(id, ω) = resolve(p, id, ω)
+struct StdNormal{T<:Real} <: PrimDist end
+Base.eltype(::Type{StdNormal{T}}) where T = T
+Distributions.logpdf(::StdNormal{T}, x) where T =
+  Distributions.logpdf(Normal(zero(T), one(T)), x)
+Base.rand(rng::AbstractRNG, ::StdNormal{T}) where {T} = rand(rng, Normal(zero(T), one(T)))
 
-struct StdNormal <: ParamFreeDist end # FIXME: Should be parametezed by type
-Base.eltype(::Type{StdNormal}) = Float64
-Distributions.logpdf(::StdNormal, x) =
-  Distributions.logpdf(Normal(0, 1), x)
-Base.rand(rng::AbstractRNG, ::StdNormal) = rand(rng, Normal(0, 1))
-Base.rand(rng::AbstractRNG, ::StdNormal, shape::Dims) = rand(rng, Normal(0, 1), shape)
-
-
-struct StdUniform <: ParamFreeDist end
-Base.eltype(::Type{StdUniform}) = Float64
-Base.rand(rng::AbstractRNG, ::StdUniform) = rand(rng, Uniform(0, 1))
-badger(rng::AbstractRNG, ::StdUniform, shape::Dims) = rand(rng, Uniform(0, 1), shape)
-# FIXME: Generalize to all dist
+# This is called from dispatch
+@inline (d::Normal)(id, ω) =
+  StdNormal(id, ω) * d.σ + d.μ
 
 
-# "`distapply(traits, d, id, ω)` apply `idth` member of distribution family d to ω"
-# function distapply end
-
-# (d::Distribution)(id, ω::AbstractΩ) =
-#   distapply(traits(ω), d, id, ω) #FIXME rename "distapply"
-
-# # Primitive distribution families
-# @inline distapply(traits, d::Distribution, id, ω) =
-#   distapply_(d, id, ω)
-
-# @inline distapply_(d::Normal, id, ω) =
-#   resolve(StdNormal(), id, ω) * d.σ + d.μ
-
-# @inline distapply_(d::Distribution, id, ω) =
+# struct StdUniform <: PrimDist end
+# Base.eltype(::Type{StdUniform}) = Float64
+# Base.rand(rng::AbstractRNG, ::StdUniform) = rand(rng, Uniform(0, 1))
+# @inline Space.recurse(d::Distribution, id, ω) =
 #   quantile(d, resolve(StdUniform(), id, ω))
-
-## 
-@inline Space.recurse(d::Normal, id, ω) =
-  resolve(StdNormal(), id, ω) * d.σ + d.μ
-
-@inline Space.recurse(d::Distribution, id, ω) =
-  quantile(d, resolve(StdUniform(), id, ω))
-
+# # @inline (d::Distribution)(id, ω) =
+# #   quantile(d, resolve(StdUniform(), id, ω))
 
 """`primdist(d::Distribution)``
 Primitive (parameterless) distribution that `d` is defined in terms of"""

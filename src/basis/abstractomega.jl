@@ -1,4 +1,4 @@
-export AbstractΩ, defΩ, defω, recurse, resolve, logenergy, ℓ, idtype
+export AbstractΩ, defΩ, defω, resolve, idtype
 
 # # Sample Space
 # A sample space represents a set of possible values.
@@ -37,10 +37,7 @@ function defΩ end
 function defω end
 
 # FIXME MOve this somewhere (shouldnt really be in AbstractΩ)
-"""
-`recurse(f, ω)`
-Recursively apply contextual execution to internals of `f`"""
-function recurse end
+
 
 function resolve end
 
@@ -48,16 +45,3 @@ function resolve end
 function ids end
 
 function idtype end
-
-"""
-`logenergy(ω)`
-
-Unnormalized joint log density
-"""
-function logenergy(ω::AbstractΩ)
-  reduce(ω.data; init = 0.0) do logpdf_, (id, (dist, val))
-    logpdf_ + logpdf(dist, val)
-  end
-end
-
-const ℓ = logenergy

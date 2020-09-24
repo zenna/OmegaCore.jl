@@ -1,4 +1,3 @@
-import ..Space
 export Variable
 
 # # Variable
@@ -11,6 +10,6 @@ export Variable
 struct Variable{F}
   f::F
 end
-Space.recurse(f::Variable, ω) = f.f(ω)
+recurse(f::Variable, ω) = f.f(ω)
 
 Base.show(io::IO, f::Variable) = Base.print(io, "ᵛ", f.f)

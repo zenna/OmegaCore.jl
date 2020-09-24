@@ -1,5 +1,5 @@
 # # Causal interventions
-using ..Var
+using ..Var, ..Basis
 export |ᵈ, intervene, mergetags
 
 

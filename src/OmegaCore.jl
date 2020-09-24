@@ -18,11 +18,14 @@ using ..RNG
 include("ids/ids.jl")           # IDs
 @reexport using .IDS
 
-include("space/space.jl")       # Probability / Paramter Spaces
-@reexport using .Space
+include("basis/basis.jl")
+@reexport using .Basis
 
 include("var/var.jl")           # Random / Parameteric Variables
 @reexport using .Var
+
+include("space/space.jl")       # Probability / Paramter Spaces
+@reexport using .Space
 
 # include("ciid.jl")            # Conditional Independence
 # @reexport using .CIID
