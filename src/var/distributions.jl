@@ -19,8 +19,8 @@ Distributions.logpdf(::StdNormal{T}, x) where T =
 Base.rand(rng::AbstractRNG, ::StdNormal{T}) where {T} = rand(rng, Normal(zero(T), one(T)))
 
 # This is called from dispatch
-@inline (d::Normal)(id, ω) =
-  StdNormal(id, ω) * d.σ + d.μ
+@inline (d::Normal{T})(id, ω) where T =
+  @show(Member(id, StdNormal{T}()))(ω) * d.σ + d.μ
 
 
 # struct StdUniform <: PrimDist end

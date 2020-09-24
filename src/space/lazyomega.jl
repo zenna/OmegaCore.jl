@@ -1,7 +1,9 @@
 using Distributions
 export LazyΩ
 using Random
-using ..IDS, ..Util, ..Tagging, ..RNG, ..Space, ..Var
+using ..IDS, ..Util, ..Tagging, ..RNG, ..Space
+import ..Basis: replacetags
+import ..Var
 
 "Lazily constructs randp, values as they are needed"
 struct LazyΩ{TAGS <: Tags, T} <: AbstractΩ
@@ -24,10 +26,10 @@ traits(::Type{LazyΩ{TAGS, T}}) where {TAGS, T} = traits(TAGS)
 Base.setindex!(ω::LazyΩ, value, id) = 
   ω.data[convertid(idtype(ω), id)] = value
 
-function Var.recurse(exo::ExoRandVar, ω::LazyΩ)
+function (exo::Var.ExoRandVar)(ω::LazyΩ)
   result = get(ω.data, exo, 0)
   if result === 0
-    ω.data[member] = rand(rng(ω), dist)
+    ω.data[exo] = rand(rng(ω), exo.class)
   else
     result
   end::eltype(exo.class)

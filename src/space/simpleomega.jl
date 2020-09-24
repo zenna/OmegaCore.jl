@@ -3,6 +3,7 @@ export defΩ, SimpleΩ, LazyΩ
 using ..IDS, ..Util, ..Tagging
 using Distributions: Distribution
 using Random: AbstractRNG
+import ..Basis: replacetags
 
 "Simplest, immutable Omega"
 struct SimpleΩ{TAGS <: Tags, T} <: AbstractΩ

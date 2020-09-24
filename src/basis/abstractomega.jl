@@ -1,4 +1,7 @@
-export AbstractΩ, defΩ, defω, resolve, idtype
+import ..Tagging: hastag, traithastag, tag, mergetag
+import ..Util: mergef
+import ..Traits: traits
+export AbstractΩ, defΩ, defω, resolve, idtype, replacetags
 
 # # Sample Space
 # A sample space represents a set of possible values.
@@ -38,6 +41,7 @@ function defω end
 
 # FIXME MOve this somewhere (shouldnt really be in AbstractΩ)
 
+function replacetags end
 
 function resolve end
 
