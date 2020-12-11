@@ -3,6 +3,20 @@ using Distributions
 
 export propose
 
+## The general approach here is:
+## Assume as given some random variable `f` and some initial ω
+## The initial ω may have some random variables that we wish to remain fixed
+## Or it may be empty
+## Execute the random variable `f`  and periodically fill in values of ω
+## Our proposals are of the form:
+## Given some preconditions (on ω) make some change to ω
+## For example, suppose: x(ω) =   I have a normal distribution x = Normal(μ, σ)
+## Given that `x`, μ, and σ are known then I may update the value of its StdNormal
+## Alternatively given that I know
+
+
+### If there's some primitive distribution within `f`
+
 function propose!(x::StdUnif, ω)
   if x ∉ keys(ω.data)
     ω.data[x] = rand()
@@ -39,7 +53,7 @@ function Cassette.posthook(::trait(Proposeal), ret, f, ω::Ω)
   propose!(f, ω)
 end
 
-function Space.prehook(::trait(Proposeal), f::StdUnif, ω::Ω)
+function Space.prehook(::trait(Proposal), f::StdUnif, ω::Ω)
   propose!(f, ω)
 end
 
