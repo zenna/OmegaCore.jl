@@ -2,7 +2,7 @@
 
 using ..Var
 export pw, l, dl, ₚ, PwVar
-export ==ₚ, >=ₚ, <=ₚ, >ₚ, <ₚ
+export ==ₚ, >=ₚ, <=ₚ, >ₚ, <ₚ, !ₚ, &ₚ, |ₚ
  
 """
 Pointwise application.
@@ -67,6 +67,7 @@ traitlift(::Type{<:Variable}) = Lift()
 traitlift(::Type{<:Member}) = Lift()
 traitlift(::Type{<:DataType}) = DontLift()
 traitlift(::Type{<:LiftBox}) = Lift()
+traitlift(::Type{<:PwVar}) = Lift()
 traitlift(::Type{<:DontLiftBox}) = DontLift()
 
 @inline liftapply(f::T, ω) where T = liftapply(traitlift(T), f, ω)
@@ -100,6 +101,9 @@ traitlift(::Type{<:DontLiftBox}) = DontLift()
 @inline x >ₚ y = pw(>, x, y)
 @inline x <ₚ y = pw(<, x, y)
 @inline x <=ₚ y = pw(<=, x, y)
+@inline x |ₚ y = pw(|, x, y)
+@inline x &ₚ y = pw(&, x, y)
+@inline !ₚ(x) = pw(!, x)
 
 using Distributions
 #FIXme generalize this

@@ -41,6 +41,9 @@ include("cassette.jl")
 include("condition.jl")         # Conditioning variables
 @reexport using .Condition
 
+include("queries.jl")           # Query Templtes
+@reexport using .Queries
+
 include("sample.jl")            # Sample
 @reexport using .Sample
 
@@ -62,5 +65,9 @@ include("rejection.jl")         # Rejection sampling Inference
 
 # include("pointwise.jl")
 # @reexport using .Pointwise
+
+include("syntax/syntax.jl")
+@reexport using .Syntax
+
 
 end

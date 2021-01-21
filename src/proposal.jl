@@ -39,10 +39,8 @@ function propose!(f, ω)
   ω
 end
 
-## Where am I making these proposals?
 
-Cassette.@context ProposalCtx
-function Cassette.posthook(::trait(Proposeal), ret, f, ω::Ω)
+function Space.posthook(::trait(Proposeal), ret, f, ω::Ω)
   ## Add f to ω, since some proposal might depend on it
   if f in keys(ω.data)
     @assert ω.data[f] == ret
