@@ -1,6 +1,6 @@
 # # Causal interventions
 using ..Var, ..Basis
-export |ᵈ, intervene, mergetags
+export |ᵈ, intervene, mergetags, Intervention
 
 
 abstract type AbstractIntervention end

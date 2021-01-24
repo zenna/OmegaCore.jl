@@ -2,7 +2,7 @@
 
 using ..Var
 export pw, l, dl, ₚ, PwVar
-export ==ₚ, >=ₚ, <=ₚ, >ₚ, <ₚ, !ₚ, &ₚ, |ₚ
+
  
 """
 Pointwise application.
@@ -78,48 +78,26 @@ traitlift(::Type{<:DontLiftBox}) = DontLift()
 @inline liftapply(::Lift, f::ABox, ω::ABox) = (f.val)(ω.val)
 @inline liftapply(::Lift, f, ω::ABox) = f(ω.val)
 
-(p::PwVar{Tuple{T1}})(ω) where {T1} =
-  p.f(liftapply(p.args[1], ω))
-(p::PwVar{Tuple{T1}})(id, ω) where {T1} =
-  p.f(liftapply(p.args[1], ω))(id, ω)
 
-(p::PwVar{Tuple{T1, T2}})(ω) where {T1, T2} =
+recurse(p::PwVar{Tuple{T1}}, ω) where {T1} =
+  p.f(liftapply(p.args[1], ω))
+# recurse(p::PwVar{Tuple{T1}})(id, ω) where {T1} =
+#   p.f(liftapply(p.args[1], ω))(id, ω)
+
+recurse(p::PwVar{Tuple{T1, T2}}, ω) where {T1, T2} =
   p.f(liftapply(p.args[1], ω), liftapply(p.args[2], ω))
-(p::PwVar{Tuple{T1, T2}})(id, ω) where {T1, T2} =
-  p.f(liftapply(p.args[1], ω), liftapply(p.args[2], ω))(id, ω)
+# recurse(p::PwVar{Tuple{T1, T2}})(id, ω) where {T1, T2} =
+#   p.f(liftapply(p.args[1], ω), liftapply(p.args[2], ω))(id, ω)
 
 # Normal(x(ω), y(ω))(id, ω)
 
-(p::PwVar{<:Tuple})(ω) =
+recurse(p::PwVar{<:Tuple}, ω) =
   p.f((liftapply(arg, ω) for arg in p.args)...)
-(p::PwVar{<:Tuple})(id, ω) =
-  p.f(id, (liftapply(arg, ω) for arg in p.args)...)
+# recurse(p::PwVar{<:Tuple})(id, ω) =
+#   p.f(id, (liftapply(arg, ω) for arg in p.args)...)
 
 # # Notation
-@inline x ==ₚ y = pw(==, x, y)
-@inline x >=ₚ y = pw(>=, x, y)
-@inline x >ₚ y = pw(>, x, y)
-@inline x <ₚ y = pw(<, x, y)
-@inline x <=ₚ y = pw(<=, x, y)
-@inline x |ₚ y = pw(|, x, y)
-@inline x &ₚ y = pw(&, x, y)
-@inline !ₚ(x) = pw(!, x)
 
-using Distributions
-#FIXme generalize this
-Normalₚ(args...) = pw(Distributions.Normal, args...)
-Uniformₚ(args...) = pw(Distributions.Uniform, args...)
-Gammaₚ(args...) = pw(Distributions.Gamma, args...)
-DiscreteUniformₚ(args...) = pw(Distributions.DiscreteUniform, args...)
-Poissonₚ(args...) = pw(Distributions.Poisson, args...)
-NegativeBinomialₚ(args...) = pw(Distributions.NegativeBinomial, args...)
-
-export Normalₚ,
-       Uniformₚ,
-       Gammaₚ,
-       DiscreteUniformₚ,
-       Poissonₚ,
-       NegativeBinomialₚ
 
 # # Collections
 # @inline randcollection(xs) = ω -> 32(x -> liftapply(x, ω), xs)

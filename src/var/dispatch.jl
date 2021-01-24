@@ -8,8 +8,11 @@ export ctxapply, Vari
 # such as do causal interventions, track loglikelihood information, etc
 # Our implementation models Cassette.jl
 
+# FIXME: Add Conditional to Vari
+
 "Interceptable Variable"
-const Vari = Union{Variable, Distribution, Mv, Member}
+const Vari = Union{Variable, Distribution, Mv, Member, PwVar}
+
 
 (f::Vari)(ω::Ω) where {Ω <: AbstractΩ} = f(traits(Ω), ω)
 (f::Vari)(traits::Trait, ω::Ω) where {Ω <: AbstractΩ} = ctxapply(traits, f, ω)

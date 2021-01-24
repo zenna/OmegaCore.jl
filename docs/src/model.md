@@ -1,5 +1,6 @@
 In Omega a probabilistic model is a collection of random variables.
-Random Variables are of type `RandVar`.
+An object `x` is random variable if `f(rng::AbstractRNG)` is defined, and `x` is __pure__ in the sense it does not modify global state.
+
 There are two ways to construct random variables: the statistical style, which can be less verbose, and more intuitive, but has some limitations, and the explicit style, which is more general.
 
 ## Statistical Style

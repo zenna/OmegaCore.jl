@@ -47,15 +47,18 @@ If you use Omega, please cite Omega papers:
 }
 ```
 
-[Soft Constraints for Inference with Declarative Knowedlge](http://www.zenna.org/publications/icmlsoft.pdf)
+[Predicate exchange: Inference with declarative knowledge](http://www.zenna.org/publications/icmlsoft.pdf)
 
 ```
-@article{tavares2019soft,
-  title={Soft Constraints for Inference with Declarative Knowledge},
-  author={Tavares, Zenna and Burroni, Javier and Minaysan, Edgar and Lezama, Armando Solar and Ranganath, Rajesh},
-  journal={arXiv preprint arXiv:1901.05437},
-  year={2019}
+@inproceedings{tavares2019predicate,
+  title={Predicate exchange: Inference with declarative knowledge},
+  author={Tavares, Zenna and Burroni, Javier and Minasyan, Edgar and Solar-Lezama, Armando and Ranganath, Rajesh},
+  booktitle={International Conference on Machine Learning},
+  pages={6186--6195},
+  year={2019},
+  organization={PMLR}
 }
+
 ```
 
 If you use the causal inference features (`replace`), please cite:
@@ -63,9 +66,9 @@ If you use the causal inference features (`replace`), please cite:
 [A Language for Counterfactual Generative Models](http://www.zenna.org/publications/causal.pdf)
 
 ```
-@article{tavares2019counterfactual,
-  title={Soft Constraints for Inference with Declarative Knowledge},
-  author={Tavares, Zenna and Zhang, Xin and Koppel, James and Lezama, Armando Solar},
+@misc{tavares2019language,
+  title={A language for counterfactual generative models},
+  author={Tavares, Zenna and Koppel, James and Zhang, Xin and Solar-Lezama, Armando},
   year={2019}
 }
 ```
