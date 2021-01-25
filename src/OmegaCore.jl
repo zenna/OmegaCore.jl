@@ -50,8 +50,8 @@ include("sample.jl")            # Sample
 include("trackerror.jl")
 using .TrackError
 
-include("logpdf.jl")            # Log density
-@reexport using .Proposals
+include("proposal/proposal.jl")            # Log density
+@reexport using .Proposal
 
 include("solution.jl")               # Satisfy
 @reexport using .Solution

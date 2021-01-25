@@ -31,3 +31,19 @@ function test()
   propose(μ, ω)
 end
 
+function test()
+  μ = 1 ~ Normal(0, 1)
+  x(ω) = (2 ~ Normal(x(ω), 1))(ω)
+  joint = OmegaCore.@joint μ x
+
+  function subpropose1(qω, f, ω)
+    # 1. Return new values, which are just merged,
+    # with null case being empty set
+    # 2. Make it mutative, modify ω
+    # 3. 
+  end
+  qω = OmegaCore.defω()
+  ω = OmegaCore.defω()
+  cp = CompProposal((stdpropose,))
+  ω_ = propose(qω, joint, ω, cp)
+end

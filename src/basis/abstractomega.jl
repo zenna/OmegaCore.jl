@@ -1,7 +1,7 @@
 import ..Tagging: hastag, traithastag, tag, mergetag
 import ..Util: mergef
 import ..Traits: traits
-export AbstractΩ, defΩ, defω, resolve, idtype, replacetags
+export AbstractΩ, defΩ, defω, resolve, idtype, replacetags, like
 
 # # Sample Space
 # A sample space represents a set of possible values.
@@ -49,3 +49,5 @@ function resolve end
 function ids end
 
 function idtype end
+
+function like end

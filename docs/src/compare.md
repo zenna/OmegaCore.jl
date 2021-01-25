@@ -1,12 +1,14 @@
 # Comparison
 
-There are a number of other languages and libraries that have some form of support for causal queries.
+There are a few other languages and libraries that have some form of support for causal queries.
 Here, we shall look at how these compare to Omega.
 
 ## Pyro
 
-Pyro is popular python based probabilistic programming language.
+Pyro is popular python based probabilistic programming language, with some support for causal queries.
+Below is the rifleman example taken from Pearl expressedi in both Omega and Pyro.
 
+In Omega:
 
 ```julia
 using OmegaCore, Distributions
@@ -39,6 +41,8 @@ mean(randsample(order |ᶜ dead, 100000))
 mean(randsample((Anerves |ᵈ (Anerves => false)) |ᶜ dead, 10000)) 
 mean(randsample((joint |ᵈ (Anerves => false)) |ᶜ dead, 10000)) # .886
 ```
+
+In Pyro:
 
 ```python
 import pyro
@@ -90,21 +94,27 @@ print("Counterfactual probability of death is", mean(b_samples))
 
 In short, this example samples from the posterior of the exogeneous variables, then constructs a new model where (i) these exogenous variables take their posterior values, and (ii) the model structure has been changed through an intervention.
 
-- Although we can compute counterfactual queries, we cannot construct counterfactual models.  
-- Interleaves inference computations (e.g., sampling) with construction of counterfactual.  In other words, we cannnot construct a counterfactual that is inference method agnostic
+__Superficial differences:__
+- dd
+
+__Fundamental differences:__
+- Pyro allows us to intervene only on primitive variables.  This precludes.
+
+- Pyro's approach interleaves inference computations (sampling, in this case) with the construction of counterfactuals.
+
+In practice, this is relatively unproblematic if one only constructs a vanila counterfactual query.  However, if you introduce new conditions in say the interventional world, it becomes more problematic, because it forcses us to compose inference computations
+
+- In this example we defined exogenous variables but this is not imposed by Pyro.  Instead, has takes distribution families such as `Normal(\mu, \sigma)` to be.  
+
+For example, suppose `\mu = 1, \sigma = 0, X = Normal(\mu, \sigma)`.  The interventional distribution `X | do(\mu => 10)` is meaningful in Omega but not in Pyro, Omega defines the generative process of `X` whereas this is opque in Pyro.  
+
+The semantic difference is that that in Pyro we can, with some effort, compute counterfactual queries.  In contrast, in Omega, one constructs counterfactual models.  The computations of inference queries (samples, expectations, etc) remain strictly delineated from the model.  This delineation is perhaps the reason d'etre of probabilistic programming, but it is violated by the approach that one must take in Pyro.
+
+
+  In other words, we cannnot construct a counterfactual that is inference method agnostic
 - Can only intervene labelled distributions.  We have had to use the `dist.Delta` trick to be able to condition and intervene transformations of random variables
 - Can't take advantage of optimizations
 
-## Notation
-A counterfactual in Omega is `(x |ᵈ i) |ᶜ y`.  This may look odd, or even wrong, as it seems to suggest that we are constructing an interventional distribution over `x` and then conditioning that interventional distribution, but that is not the case.
-Looking at the expanded form: 
-
-ω -> y(ω) : (x |ᵈ i)(ω) ? ⊥
-
-
-which in turn is
-
-ω -> (y |ᵈ i)(ω) : x(ω) ? ⊥
 
 ## MetaVerse
 
@@ -168,3 +178,15 @@ print("ExpectedValue(Y' | Y = 1, do(X = 1))")
 print(calculate_expectation(results))
 print("***")
 ```
+
+Metaverse computes counterfactuals by performing three steps in sequence:
+
+1. Compute the posterior $P(X \mid Y)$.  Crucially, this posterior is represented as a set of samples samples $s_1,\dots, s_N$, and correspoinding weights $w_1,\dots, w_N$.
+
+2. Perform an intervention by fixing values of variables
+
+3. ...
+
+
+- MetaVerse and Pyro do inference "in the middle", that is they directly compute (approximations to the posterior) and then replay these through the intervened model
+- Both metaVerse and Omega have optimisations to avoid performing extra work

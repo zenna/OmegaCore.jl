@@ -6,9 +6,10 @@ struct MHAlg end
 const MH = MHAlg()
 
 """
-Metropolis Hastings Sampler
 
 `mh(rng, ΩT, logdensity, n; proposal, ωinit)`
+
+Metropolis Hastings Sampler
 
 Starting from `ωinit` produce `n` samples using Metropolis Hastings algorithm
 
@@ -26,8 +27,9 @@ Starting from `ωinit` produce `n` samples using Metropolis Hastings algorithm
 function mh(rng,
             ΩT::Type{OT},
             logdensity,
+            f,
             n;
-            proposal = moveproposal,
+            proposal = SSProposal(),
             ωinit = ΩT()) where OT # should this be sat(f)
   ω = ωinit
   plast = logdensity(ω)
@@ -37,7 +39,7 @@ function mh(rng,
   # zt: what about burn-in
   for i = 1:n
     # ω_, logtransitionp = isempty(ω) ? (ω,0) : proposal(rng, ω)
-    ω_, logtransitionp = proposal(rng, ω)
+    ω_, logtransitionp = propose_and_logratio(rng, ω, f, proposal)
     p_ = logdensity(ω_)
     ratio = p_ - plast + logtransitionp # zt: assumes symmetric?
     if log(rand(rng)) < ratio

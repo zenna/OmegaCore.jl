@@ -11,13 +11,21 @@ struct LazyΩ{TAGS <: Tags, T} <: AbstractΩ
   tags::TAGS
 end
 
+# AbstractDict interface 
+
+Base.keys(ω::LazyΩ) = Base.keys(ω.data)
+Base.values(ω::LazyΩ) = Base.values(ω.data)
+# Move to specific omega types
+Base.merge!(ω::LazyΩ, ω_) = error("Unimplemented")
+Basis.like(ω::LazyΩ{Tags, T}, kv::Pair) where {Tags, T} = T(kv)
+
 const EmptyTags = Tags{(),Tuple{}}
 LazyΩ{EmptyTags, T}() where T = LazyΩ(T(), Tags())
 
 "Construct `LazyΩ` from `rng` -- `ω.data` will be generated from `rng`"
 LazyΩ{T}(rng::AbstractRNG) where T = tagrng(LazyΩ{T}(), rng)
 
-idtype(ω::LazyΩ{TAGS, Dict{T, V}}) where {TAGS, T, V} = T
+Basis.idtype(ω::LazyΩ{TAGS, Dict{T, V}}) where {TAGS, T, V} = T
 ids(ω::LazyΩ) = keys(ω.data)
 
 replacetags(ω::LazyΩ, tags) = LazyΩ(ω.data, tags)

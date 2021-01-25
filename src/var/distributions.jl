@@ -10,7 +10,7 @@ export PrimDist, ExoRandVar
 abstract type PrimDist end
 
 "An exogenous random variable"
-ExoRandVar{F, ID} = Member{F, ID} where {F <: PrimDist}
+ExoRandVar{F <: PrimDist, ID} = Member{F, ID}
 
 struct StdNormal{T<:Real} <: PrimDist end
 Base.eltype(::Type{StdNormal{T}}) where T = T

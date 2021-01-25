@@ -6,17 +6,17 @@ using OmegaCore:StdNormal, StdUniform
 # 3. Dont modify derived values
 # 4. 
 
-function propose(rng, ::StdNormal, x)
+# function propose(rng, ::StdNormal, x)
 
-end
+# end
 
-function propose(rng, ::StdUniform, x)
-  x_ = transform(asℝ, x) + σ * randn(rng)
-  inverse()
+# function propose(rng, ::StdUniform, x)
+#   x_ = transform(asℝ, x) + σ * randn(rng)
+#   inverse()
 
 
-  inv_transform(transform(x) + σ * randn(rng))
-end
+#   inv_transform(transform(x) + σ * randn(rng))
+# end
 
 "Compute a score using the change in prior of the *single* changed site"
 function proposalkernel(kernel, x)
