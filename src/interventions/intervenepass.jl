@@ -2,6 +2,8 @@ using ..Tagging, ..Traits, ..Var, ..Space
 # @inline hasintervene(ω) = hastag(ω, Val{:intervene})
 @inline tagintervene(ω, intervention) = tag(ω, (intervene = intervention,), mergetags)
 @inline (x::Intervened)(ω) = x.x(tagintervene(ω, x.i))
+@inline (x::Intervened{X, <:HigherIntervention})(ω) where X =
+  x.x(tagintervene(ω, x.i(ω)))
 
 @inline function passintervene(traits, i::Intervention{X, V}, x::X, ω) where {X, V}
   # If the variable ` x` to be applied to ω is the variable to be replaced

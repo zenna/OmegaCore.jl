@@ -40,7 +40,7 @@ function mergetags(nt1::NamedTuple{K1, V1}, nt2::NamedTuple{K2, V2}) where {K1, 
 end
 
 "intervened"
-intervene(x, intervention::Intervention) = Intervened(x, intervention)
+intervene(x, intervention::AbstractIntervention) = Intervened(x, intervention)
 intervene(x, intervention::Pair) = Intervened(x, Intervention(intervention))
 intervene(x, interventions::Tuple) =
   Intervened(x, MultiIntervention(map(Intervention, interventions)))
